@@ -24,6 +24,7 @@ import 'package:futblha/presentation/widgets/custom_text.dart';
 import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 
 import 'login_page.dart';
+import 'package:futblha/presentation/widgets/app_date_picker.dart';
 
 @RoutePage()
 class RegisterPage extends StatefulWidget {
@@ -288,12 +289,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showAppDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null) {
       setState(() {

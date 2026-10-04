@@ -7,6 +7,7 @@ import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/diwaniyat/utils/game_data_helper.dart';
 import 'package:futblha/presentation/pages/diwaniyat/widgets/upcoming_game_card.dart';
 import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
 import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
@@ -18,7 +19,9 @@ class UpcomingGamesHomeWidget extends StatelessWidget {
   final GeneralBloc generalBloc;
 
   List<GameModel> _getUpcomingGames(GeneralBloc generalBloc) {
-    return generalBloc.homeData?.upcomingGames ?? [];
+    return GameDataHelper.sortUpcomingGames(
+      generalBloc.homeData?.upcomingGames ?? [],
+    );
   }
 
   @override
@@ -81,7 +84,7 @@ class UpcomingGamesHomeWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final game = upcomingGames[index];
                     return Padding(
-                      padding: EdgeInsets.only(right: 12.w),
+                      padding: EdgeInsets.only(left: 12.w),
                       child: SizedBox(
                         width: 330.w,
                         child: UpcomingGameCard(

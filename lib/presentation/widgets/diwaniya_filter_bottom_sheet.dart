@@ -10,9 +10,9 @@ class DiwaniyaFilterBottomSheet {
     BuildContext context, {
     DiwaniyaFilterResult? initialFilters,
   }) async {
-    final types = [LocaleKeys.public.tr(), LocaleKeys.private.tr(), LocaleKeys.friendly.tr()];
+    final types = [LocaleKeys.public.tr(), LocaleKeys.private.tr()];
     final levels = [LocaleKeys.beginner.tr(), LocaleKeys.intermediate.tr(), LocaleKeys.advanced.tr()];
-    String? selectedType = initialFilters?.type;
+    String? selectedType = types.contains(initialFilters?.type) ? initialFilters?.type : null;
     String? selectedLevel = initialFilters?.level;
     final TextEditingController membersController = TextEditingController(
       text: initialFilters?.membersCount?.toString() ?? '',

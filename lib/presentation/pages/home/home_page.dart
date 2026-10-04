@@ -94,14 +94,15 @@ class _HomePageState extends State<HomePage> {
                     // Banner Section
                     HomeBannerWidget(generalBloc),
                     20.heightBox(),
-                    // Diwaniya Ranking Section
-                    DiwaniyaRankingWidget(generalBloc),
 
                     // My Upcoming Games Section (matches user is registered for)
                     UpcomingGamesHomeWidget(generalBloc),
                     // Active Games Section
                     ActiveGamesWidget(generalBloc),
+                    20.heightBox(),
 
+                    // Diwaniya Ranking Section
+                    DiwaniyaRankingWidget(generalBloc),
                     20.heightBox(),
                     // Playgrounds Section
                     PlaygroundsWidget(generalBloc),

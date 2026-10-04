@@ -7,6 +7,7 @@ import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/diwaniyat/utils/game_data_helper.dart';
 import 'package:futblha/presentation/pages/diwaniyat/widgets/upcoming_game_card.dart';
 import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
 import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
@@ -37,7 +38,7 @@ class _MyUpcomingGamesPageState extends State<MyUpcomingGamesPage> {
       bloc: generalBloc,
       listener: (context, state) {},
       builder: (context, state) {
-        final upcomingGames = generalBloc.upcomingGames;
+        final upcomingGames = GameDataHelper.sortUpcomingGames(generalBloc.upcomingGames);
 
         return Scaffold(
           appBar: AppBar(title: Text(LocaleKeys.upcoming_games.tr())),

@@ -37,6 +37,15 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
     diwaniyaBloc.add(GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: 1));
   }
 
+  // Games history shows only the private games the diwaniya played
+  List<GameModel> get _privateGames =>
+      diwaniyaBloc.diwaniyaGames.where((game) => game.type == 'private').toList();
+
+  void _loadNextPage() {
+    final nextPage = (diwaniyaBloc.diwaniyaGamesPagination?.currentPage ?? 1) + 1;
+    diwaniyaBloc.add(GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: nextPage));
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomBlocConsumer<DiwaniyaBloc, DiwaniyaState>(
@@ -45,9 +54,13 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
         if (state is DiwaniyaError) {
           context.showMessage(isError: true, state.message);
         }
+        // Only private games are shown, so keep fetching while a page yields too few of them
+        if (state is DiwaniyaSuccess && !diwaniyaBloc.diwaniyaGamesReachedMax && _privateGames.length < 10) {
+          _loadNextPage();
+        }
       },
       builder: (context, state) {
-        final historyGames = diwaniyaBloc.diwaniyaGames;
+        final historyGames = _privateGames;
 
         return Scaffold(
           appBar: AppBar(title: Text(LocaleKeys.games_history.tr())),
@@ -66,10 +79,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                   onReachBottom: () {
                     if (diwaniyaBloc.diwaniyaGamesReachedMax) return;
                     if (state is DiwaniyaLoading) return;
-                    final nextPage = (diwaniyaBloc.diwaniyaGamesPagination?.currentPage ?? 1) + 1;
-                    diwaniyaBloc.add(
-                      GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: nextPage),
-                    );
+                    _loadNextPage();
                   },
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                   separator: 12.heightBox(),

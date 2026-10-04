@@ -36,6 +36,7 @@ class DiwaniyaRankingWidget extends StatelessWidget {
       final points = int.tryParse(diwaniya.totalPoints ?? '0') ?? 0;
 
       return DiwaniyaRankingItem(
+        id: diwaniya.id,
         rank: rank,
         name: diwaniya.name ?? '',
         points: points,

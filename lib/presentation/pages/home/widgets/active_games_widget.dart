@@ -134,7 +134,7 @@ class ActiveGamesWidget extends StatelessWidget {
 
     return Container(
       width: 280.w,
-      margin: EdgeInsets.only(right: 12.w),
+      margin: EdgeInsets.only(left: 12.w),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,

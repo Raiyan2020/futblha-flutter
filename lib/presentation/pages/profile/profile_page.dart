@@ -66,15 +66,20 @@ class _ProfilePageState extends State<ProfilePage> {
           if (!CacheManager.instance.isGuestMode()) const NotificationBellButton(),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: symmetricPadding(0, 15),
-        child: CustomBlocConsumer<AuthenticationBloc, AuthenticationState>(
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          padding: symmetricPadding(0, 15),
+          child: ConstrainedBox(
+            // Lets the guest content be centered vertically when it is shorter than the screen
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: CustomBlocConsumer<AuthenticationBloc, AuthenticationState>(
           bloc: authBloc,
           listener: (context, state) {},
           builder: (context, state) {
             final isGuestMode = CacheManager.instance.isGuestMode();
 
             return Column(
+              mainAxisAlignment: isGuestMode ? MainAxisAlignment.center : MainAxisAlignment.start,
               children: [
                 if (isGuestMode) ...[
                   // Guest User Card
@@ -121,6 +126,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   // Guest Menu Items Section (only public items)
                   Column(
                     children: [
+                      MenuItem(
+                        icon: Icons.settings,
+                        text: LocaleKeys.settings,
+                        onTap: () {
+                          context.router.push(const SettingsRoute());
+                        },
+                      ),
                       MenuItem(
                         icon: Icons.description,
                         text: LocaleKeys.terms_and_conditions,
@@ -398,6 +410,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             );
           },
+        ),
+          ),
         ),
       ),
     );

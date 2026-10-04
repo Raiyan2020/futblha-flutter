@@ -31,6 +31,7 @@ import '../../widgets/custom_toolbar.dart';
 import '../auth/bloc/authentication_bloc.dart';
 import 'widgets/profile_image_button.dart';
 import '../../../application/core/utils/helpers/app_images/image_pick_crop_helper.dart';
+import 'package:futblha/presentation/widgets/app_date_picker.dart';
 
 @RoutePage()
 class EditProfilePage extends StatefulWidget {
@@ -123,12 +124,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> _selectDate(BuildContext context) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showAppDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

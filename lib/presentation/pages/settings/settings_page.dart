@@ -27,6 +27,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final UserModel? user = locator<AuthenticationBloc>().user;
   final ThemeNotifier _themeNotifier = ThemeNotifier.instance;
+  // Guests have no account, so settings are kept locally and never sent to the API
+  final bool isGuestMode = CacheManager.instance.isGuestMode();
   bool isNotification = true;
   bool isDarkMode = false;
 
@@ -35,8 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
 
     setState(() {
-      isNotification =
-          CacheManager.instance.getNotification() ?? user?.notification_enabled ?? true;
+      isNotification = CacheManager.instance.getNotification() ?? user?.notification_enabled ?? true;
       isDarkMode = CacheManager.instance.getDarkMode() ?? false;
       user?.language;
       //   isVoice = CacheManager.instance.getVoice() ?? true;
@@ -61,13 +62,12 @@ class _SettingsPageState extends State<SettingsPage> {
               trailing: LanguageButton(
                 parentContext: context,
                 onChange: () {
+                  if (isGuestMode) return;
                   locator<AuthenticationBloc>().add(
                     UpdateUserSettingsEvent(
                       requestModel: UpdateUserSettingsRequestModel(
                         language: CacheManager.instance.getLanguage() ?? 'en',
-                        notificationEnabled: CacheManager.instance.getNotification() == true
-                            ? '1'
-                            : '0',
+                        notificationEnabled: CacheManager.instance.getNotification() == true ? '1' : '0',
                       ),
                     ),
                   );
@@ -75,37 +75,38 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               onTap: () {},
             ),
-            DrawerListItem(
-              text: LocaleKeys.notifications,
-              trailing: Switch.adaptive(
-                value: isNotification,
-                activeTrackColor: AppColors.primaryColor,
-                onChanged: (value) async {
-                  setState(() {
-                    isNotification = value;
-                  });
-                  try {
-                    // if (value) {
-                    //   await FirebaseMessaging.instance.subscribeToTopic('general');
-                    // } else {
-                    //   await FirebaseMessaging.instance.unsubscribeFromTopic('general');
-                    // }
-                    CacheManager.instance.setNotification(value);
-                  } catch (e) {
-                    debugPrint(e.toString());
-                  }
-                  locator<AuthenticationBloc>().add(
-                    UpdateUserSettingsEvent(
-                      requestModel: UpdateUserSettingsRequestModel(
-                        notificationEnabled: value == true ? '1' : '0',
-                        language: CacheManager.instance.getLanguage() ?? 'en',
+            if (!isGuestMode)
+              DrawerListItem(
+                text: LocaleKeys.notifications,
+                trailing: Switch.adaptive(
+                  value: isNotification,
+                  activeTrackColor: AppColors.primaryColor,
+                  onChanged: (value) async {
+                    setState(() {
+                      isNotification = value;
+                    });
+                    try {
+                      // if (value) {
+                      //   await FirebaseMessaging.instance.subscribeToTopic('general');
+                      // } else {
+                      //   await FirebaseMessaging.instance.unsubscribeFromTopic('general');
+                      // }
+                      CacheManager.instance.setNotification(value);
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                    locator<AuthenticationBloc>().add(
+                      UpdateUserSettingsEvent(
+                        requestModel: UpdateUserSettingsRequestModel(
+                          notificationEnabled: value == true ? '1' : '0',
+                          language: CacheManager.instance.getLanguage() ?? 'en',
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
+                onTap: () {},
               ),
-              onTap: () {},
-            ),
             DrawerListItem(
               text: LocaleKeys.dark_mode,
               isDivider: false,

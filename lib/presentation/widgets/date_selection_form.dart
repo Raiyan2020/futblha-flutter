@@ -5,6 +5,7 @@ import 'package:futblha/generated/locale_keys.g.dart';
 
 import '../../application/config/app_assets.dart';
 import '../../application/config/design_system/app_colors.dart';
+import 'package:futblha/presentation/widgets/app_date_picker.dart';
 
 class DateSelectionForm extends StatefulWidget {
   final Function(String) onDateSelected;
@@ -70,12 +71,11 @@ class _DateSelectionFormState extends State<DateSelectionForm> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showAppDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
     );
     if (picked != null) {
       setState(() {

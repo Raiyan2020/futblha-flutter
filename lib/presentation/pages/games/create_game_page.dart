@@ -16,6 +16,7 @@ import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:intl/intl.dart';
 import 'package:futblha/data/models/enums/position_enum.dart';
+import 'package:futblha/presentation/widgets/app_date_picker.dart';
 
 enum GameType { myDiwaniyaOnly, privateGame, publicGame }
 
@@ -68,12 +69,11 @@ class _CreateGamePageState extends State<CreateGamePage> {
   final List<int> _playerCounts = [8, 10, 12, 14, 16, 18, 20, 22];
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showAppDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

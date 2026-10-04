@@ -11,6 +11,7 @@ import 'package:futblha/presentation/pages/playgrounds/bloc/playgrounds_bloc.dar
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:intl/intl.dart';
+import 'package:futblha/presentation/widgets/app_date_picker.dart';
 
 @RoutePage()
 class BookPlaygroundPage extends StatefulWidget {
@@ -48,12 +49,11 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    final DateTime? picked = await showAppDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

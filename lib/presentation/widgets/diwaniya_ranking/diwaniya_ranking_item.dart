@@ -1,4 +1,5 @@
 class DiwaniyaRankingItem {
+  final int? id;
   final int rank;
   final String name;
   final int points;
@@ -8,6 +9,7 @@ class DiwaniyaRankingItem {
   final double? containerHeight;
 
   const DiwaniyaRankingItem({
+    this.id,
     required this.rank,
     required this.name,
     required this.points,

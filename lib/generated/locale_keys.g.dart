@@ -510,6 +510,9 @@ abstract class LocaleKeys {
   static const game_created_successfully = 'game_created_successfully';
   static const charge_fees = 'charge_fees';
   static const confirm = 'confirm';
+  static const date_year = 'date_year';
+  static const date_month = 'date_month';
+  static const date_day = 'date_day';
   static const payment_done_successfully = 'payment_done_successfully';
   static const member_deleted_successfully = 'member_deleted_successfully';
   static const view_as_guest = 'view_as_guest';
