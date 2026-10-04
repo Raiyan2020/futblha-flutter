@@ -21,8 +21,9 @@ class GetNotificationsLoading extends NotificationsState {
 }
 
 class ReadNotificationsSuccess extends NotificationsState {
+  final date = DateTime.now();
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [date];
 }
 
 class ReadNotificationsLoading extends NotificationsState {
@@ -43,8 +44,9 @@ class GetUnreadCountLoading extends NotificationsState {
 }
 
 class GetUnreadCountSuccess extends NotificationsState {
+  final date = DateTime.now();
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [date];
 }
 
 class ClearNotificationsLoading extends NotificationsState {

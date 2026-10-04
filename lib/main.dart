@@ -1,23 +1,25 @@
 import 'dart:async';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+
 import 'application/config/design_system/app_theme.dart';
 import 'application/config/l10n.dart';
 import 'application/core/di/app_component/app_component.dart';
 import 'application/core/utils/auto_router_setup/app_router.dart';
-import 'package:auto_route/auto_route.dart';
-
-// import 'application/core/utils/fcm/fcm_handler.dart';
-// import 'application/core/utils/fcm/notification_handler.dart';
+import 'application/core/utils/fcm/fcm_handler.dart';
+import 'application/core/utils/fcm/notification_handler.dart';
 import 'application/core/utils/helpers/app_flavor_helper/app_flavors_helper.dart';
 import 'application/core/utils/helpers/app_flavor_helper/environment_config.dart';
 import 'application/core/utils/helpers/cache/cache_manager.dart';
 import 'application/core/utils/helpers/connectivity_helper/connectivity_service.dart';
 import 'application/core/utils/helpers/responsive_ui_helper/responsive_config.dart';
 import 'application/core/utils/helpers/theme_helper/theme_notifier.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'firebase_options.dart';
+
 FutureOr<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -30,9 +32,10 @@ FutureOr<void> main() async {
   // Initialize theme notifier after cache is ready
   ThemeNotifier.instance.initialize();
 
-  // await Firebase.initializeApp();
-  // await LocalNotificationHandler.initializeNotifications();
-  // await FCMHandler().initializeFCM();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await LocalNotificationHandler.initializeNotifications();
+  // Not awaited: the iOS permission prompt must not block app start.
+  unawaited(FCMHandler().initializeFCM());
 
   final configService = locator<AppFlavorsHelper>();
   final productFlavor = EnvironmentConfig.DEV_VARIANT.toProductFlavor();
@@ -100,7 +103,9 @@ class _MyAppState extends State<MyApp> {
           locale: context.locale,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: _themeNotifier.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          themeMode: _themeNotifier.isDarkMode
+              ? ThemeMode.dark
+              : ThemeMode.light,
           routerConfig: _appRouter.config(
             deepLinkBuilder: (deepLink) async {
               // Always return default path - let AppLinksService handle deep link navigation

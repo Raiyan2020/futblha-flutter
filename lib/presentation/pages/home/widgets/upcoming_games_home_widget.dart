@@ -46,7 +46,10 @@ class UpcomingGamesHomeWidget extends StatelessWidget {
                 children: [
                   Text(
                     LocaleKeys.upcoming_games.tr(),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -54,7 +57,10 @@ class UpcomingGamesHomeWidget extends StatelessWidget {
                     },
                     child: Text(
                       LocaleKeys.see_all.tr(),
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -83,7 +89,9 @@ class UpcomingGamesHomeWidget extends StatelessWidget {
                           gamesBloc: gamesBloc,
                           onTap: () {
                             context.router.push(
-                              GameDetailsRoute(bloc: gamesBloc..gameDetails = game),
+                              GameDetailsRoute(
+                                bloc: gamesBloc..gameDetails = game,
+                              ),
                             );
                           },
                         ),

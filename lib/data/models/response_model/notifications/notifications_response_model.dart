@@ -22,7 +22,9 @@ class NotificationsResponseModel {
 
 @JsonSerializable()
 class NotificationModel {
-  final num? id;
+  // The backend sends UUID strings; older rows may still be numeric.
+  @JsonKey(fromJson: _idFromJson)
+  final String? id;
   @JsonKey(name: 'user_id')
   final num? userId;
   @JsonKey(name: 'order_id')
@@ -32,7 +34,7 @@ class NotificationModel {
   final String? body;
   final String? data; // This is a JSON string
   @JsonKey(name: 'is_read')
-  final num? isRead;
+  num? isRead;
   @JsonKey(name: 'created_at')
   final String? createdAt;
 
@@ -48,8 +50,12 @@ class NotificationModel {
     this.createdAt,
   });
 
+  bool get isUnread => isRead != 1;
+
   factory NotificationModel.fromJson(Map<String, dynamic> json) =>
       _$NotificationModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$NotificationModelToJson(this);
 }
+
+String? _idFromJson(dynamic value) => value?.toString();

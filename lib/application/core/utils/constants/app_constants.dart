@@ -103,6 +103,10 @@ const String GamesUpcoming = '/games-upcoming';
 
 ///notifications
 const String GetNotifications = '/notifications';
+const String NotificationsUnreadCount = '/notifications/unread-count';
+const String NotificationsReadAll = '/notifications/read-all';
+String notificationRead(String id) => '/notifications/$id/read';
+const String gameInvitationNotificationType = 'game_invitation';
 // const String MarkAllRead = '/mobile/api/DriverTaskNotification/MarkAsRead';
 // const String GetUnReadCount = '/mobile/api/DriverTaskNotification/GetUnReadCount';
 // const String ClearNotification = '/mobile/api/DriverTaskNotification/Clear';

@@ -4,7 +4,9 @@ import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../application/core/commundomain/entitties/based_api_result/api_result_model.dart';
+import '../../../../application/core/di/app_component/app_component.dart';
 import '../../../../data/datasources/games_remote_datasource/games_remote_datasource.dart';
+import '../../notifications/bloc/notifications_bloc.dart';
 import '../../../../data/models/response_model/games/game_model.dart';
 import '../../../../data/models/response_model/games/game_invitations_response_model.dart';
 import '../../../../data/models/response_model/games/game_members_response_model.dart';
@@ -138,6 +140,8 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       success: (data) {
         // Refresh game invitations after acceptance
         add(GetGameInvitationsEvent());
+        // The backend clears the invitation badge for every member.
+        locator<NotificationsBloc>().add(GetUnreadCountEvent());
         emit(AcceptGameSuccess(data ?? LocaleKeys.success));
       },
       failure: (error) {
@@ -153,6 +157,8 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
       success: (data) {
         // Refresh game invitations after rejection
         add(GetGameInvitationsEvent());
+        // The backend clears the invitation badge for every member.
+        locator<NotificationsBloc>().add(GetUnreadCountEvent());
         emit(GamesSuccess());
       },
       failure: (error) {

@@ -25,6 +25,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../application/core/utils/helpers/cache/cache_manager.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_loading_widget.dart';
+import '../../widgets/notification_bell_button.dart';
 
 @RoutePage()
 class DiwaniyatPage extends StatefulWidget {
@@ -204,36 +205,7 @@ class _DiwaniyatPageState extends State<DiwaniyatPage> {
           appBar: AppBar(
             title: Text(LocaleKeys.diwaniyat.tr()),
             actions: [
-              if (!CacheManager.instance.isGuestMode())
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Stack(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          context.router.push(NotificationsRoute());
-                        },
-                        icon: const Icon(Icons.notifications_none, color: AppColors.primaryColor),
-                      ),
-                      // Positioned(
-                      //   right: 8,
-                      //   top: 8,
-                      //   child: Container(
-                      //     width: 8,
-                      //     height: 8,
-                      //     decoration: const BoxDecoration(
-                      //       color: AppColors.primaryRed,
-                      //       shape: BoxShape.circle,
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
+              if (!CacheManager.instance.isGuestMode()) const NotificationBellButton(),
             ],
           ),
           body: CacheManager.instance.isGuestMode()

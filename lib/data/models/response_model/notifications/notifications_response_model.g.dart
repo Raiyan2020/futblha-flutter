@@ -28,7 +28,7 @@ Map<String, dynamic> _$NotificationsResponseModelToJson(
 
 NotificationModel _$NotificationModelFromJson(Map<String, dynamic> json) =>
     NotificationModel(
-      id: json['id'] as num?,
+      id: _idFromJson(json['id']),
       userId: json['user_id'] as num?,
       orderId: json['order_id'] as num?,
       type: json['type'] as String?,

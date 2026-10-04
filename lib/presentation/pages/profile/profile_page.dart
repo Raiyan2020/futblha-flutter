@@ -16,6 +16,9 @@ import '../../../generated/locale_keys.g.dart';
 import '../../widgets/scaffold_pading.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../auth/bloc/authentication_bloc.dart';
+import '../../widgets/notification_bell_button.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../notifications/bloc/notifications_bloc.dart';
 
 @RoutePage()
 class ProfilePage extends StatefulWidget {
@@ -60,43 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 0,
         actions: [
           // Only show notifications for authenticated users
-          if (!CacheManager.instance.isGuestMode())
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: AppColors.secondaryColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Stack(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      context.router.push(NotificationsRoute());
-                    },
-                    icon: const Icon(Icons.notifications_none, color: AppColors.primaryColor),
-                  ),
-                  // Positioned(
-                  //   right: 4,
-                  //   top: 4,
-                  //   child: Container(
-                  //     padding: const EdgeInsets.all(4),
-                  //     decoration: const BoxDecoration(
-                  //       color: AppColors.primaryRed,
-                  //       shape: BoxShape.circle,
-                  //     ),
-                  //     child: const Text(
-                  //       '1',
-                  //       style: TextStyle(
-                  //         color: AppColors.primaryWhite,
-                  //         fontSize: 10,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            ),
+          if (!CacheManager.instance.isGuestMode()) const NotificationBellButton(),
         ],
       ),
       body: SingleChildScrollView(
@@ -355,12 +322,16 @@ class _ProfilePageState extends State<ProfilePage> {
                             ? '${authBloc.user?.balance} ${LocaleKeys.kwd.tr()}'
                             : '0.000 ${LocaleKeys.kwd.tr()}',
                       ),
-                      MenuItem(
-                        icon: Icons.link,
-                        text: LocaleKeys.games_invitations,
-                        onTap: () {
-                          context.router.push(const GamesInvitationsRoute());
-                        },
+                      BlocBuilder<NotificationsBloc, NotificationsState>(
+                        bloc: locator<NotificationsBloc>(),
+                        builder: (context, _) => MenuItem(
+                          icon: Icons.link,
+                          text: LocaleKeys.games_invitations,
+                          badgeCount: locator<NotificationsBloc>().pendingInvitationsCount,
+                          onTap: () {
+                            context.router.push(const GamesInvitationsRoute());
+                          },
+                        ),
                       ),
                       MenuItem(
                         icon: Icons.access_time,
@@ -441,12 +412,14 @@ class MenuItem extends StatelessWidget {
     required this.onTap,
     this.trailing,
     this.isLast = false,
+    this.badgeCount = 0,
   });
   final IconData icon;
   final String text;
   final VoidCallback onTap;
   final String? trailing;
   final bool isLast;
+  final int badgeCount;
 
   @override
   Widget build(BuildContext context) {
@@ -482,6 +455,10 @@ class MenuItem extends StatelessWidget {
                   ),
                 ),
               ),
+              if (badgeCount > 0) ...[
+                RedCountBadge(count: badgeCount),
+                8.widthBox(),
+              ],
               if (trailing != null) ...[
                 Text(
                   trailing!,

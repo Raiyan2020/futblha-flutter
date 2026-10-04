@@ -299,7 +299,7 @@
   "join": "انضم",
   "level_review": "مراجعة المستوى",
   "clean_game": "لعبة نظيفة",
-  "upcoming_games": "المباريات القادمة",
+  "upcoming_games": "مبارياتي القادمة",
   "no_diwaniyas_found": "لم يتم العثور على ديوانيات",
   "private": "خاص",
   "public": "عام",
@@ -532,5 +532,6 @@
   "invalid_position": "مركز غير صحيح",
   "goalkeeper_position_filled": "مركز حارس المرمى ممتلئ لهذا الفريق",
   "sorry": "عذراً!",
-  "playground_not_available_at_game_time": "{playground} غير متاح في وقت المباراة، الرجاء حجز ملعب آخر أو تغيير وقت المباراة"
+  "playground_not_available_at_game_time": "{playground} غير متاح في وقت المباراة، الرجاء حجز ملعب آخر أو تغيير وقت المباراة",
+  "waiting_admin_response": "بانتظار رد مسؤول الديوانية"
 }

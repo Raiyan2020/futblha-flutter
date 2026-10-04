@@ -17,9 +17,11 @@ import '../../../application/core/utils/helpers/cache/cache_manager.dart';
 import '../../../application/core/utils/helpers/maintenance_check/maintenance_check_helper.dart';
 import '../../../application/core/utils/helpers/launch_url.dart';
 import '../../../application/core/utils/app_links_service.dart';
+import '../../../application/core/utils/fcm/notification_navigation.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../auth/bloc/authentication_bloc.dart';
 import '../diwaniyat/bloc/diwaniya_bloc.dart';
+import '../notifications/bloc/notifications_bloc.dart';
 import '../settings/bloc/settings_bloc.dart';
 
 @RoutePage()
@@ -30,13 +32,14 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
-class _LandingPageState extends State<LandingPage> {
+class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
   final settingsBloc = locator<SettingsBloc>();
   final AppLinksService _appLinksService = AppLinksService();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkMaintenanceAndRedirect();
     settingsBloc.add(GetSettingsEvent());
 
@@ -45,13 +48,29 @@ class _LandingPageState extends State<LandingPage> {
         !CacheManager.instance.isGuestMode()) {
       locator<DiwaniyaBloc>().add(GetDiwaniyasOverviewEvent());
     }
+    locator<NotificationsBloc>().add(GetUnreadCountEvent());
 
     // Initialize deep linking
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _appLinksService.init(context);
+        NotificationNavigation.markLandingReady();
       }
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      locator<NotificationsBloc>().add(GetUnreadCountEvent());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    NotificationNavigation.markLandingDisposed();
+    super.dispose();
   }
 
   Future<void> _checkMaintenanceAndRedirect() async {

@@ -10,11 +10,11 @@ import '../../../application/config/design_system/app_colors.dart';
 import '../../../application/core/basecomponents/base_view_model_view.dart';
 import '../../../application/core/utils/helpers/app_images/image_pick_crop_helper.dart';
 import '../../../application/core/utils/helpers/extension_functions/size_extension.dart';
+import '../../../data/models/request_model/diwaniya/create_diwaniya_request_model.dart';
+import '../../../generated/locale_keys.g.dart';
 import '../../widgets/app_size_boxes.dart';
 import '../../widgets/snackbar_utill.dart';
 import 'bloc/diwaniya_bloc.dart';
-import '../../../data/models/request_model/diwaniya/create_diwaniya_request_model.dart';
-import '../../../generated/locale_keys.g.dart';
 
 @RoutePage()
 class DiwaniyaSettingsPage extends StatefulWidget {
@@ -84,11 +84,17 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
     }
 
     if (_nameController.text.isEmpty) {
-      context.showMessage(isError: true, LocaleKeys.please_enter_diwaniya_name.tr());
+      context.showMessage(
+        isError: true,
+        LocaleKeys.please_enter_diwaniya_name.tr(),
+      );
       return;
     }
     if (_selectedType == null) {
-      context.showMessage(isError: true, LocaleKeys.please_select_diwaniya_type.tr());
+      context.showMessage(
+        isError: true,
+        LocaleKeys.please_select_diwaniya_type.tr(),
+      );
       return;
     }
 
@@ -119,22 +125,32 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
       },
       builder: (context, state) {
         final diwaniya = bloc.myDiwaniya ?? bloc.diwaniyaDetails;
-        final displayImage = _diwaniyaImage != null ? _diwaniyaImage!.path : diwaniya?.image;
+        final displayImage = _diwaniyaImage != null
+            ? _diwaniyaImage!.path
+            : diwaniya?.image;
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+        final textColor = isDark
+            ? AppColors.primaryWhite
+            : AppColors.primaryBlack;
+        final secondaryTextColor = isDark
+            ? AppColors.primaryWhite
+            : AppColors.primaryDark;
 
         return Scaffold(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: theme.scaffoldBackgroundColor,
           appBar: AppBar(
-            backgroundColor: AppColors.backgroundColor,
+            backgroundColor: theme.scaffoldBackgroundColor,
             elevation: 0,
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primaryBlack),
+              icon: Icon(Icons.arrow_back_ios_new, color: textColor),
               onPressed: () => context.router.maybePop(),
             ),
             title: Text(
               LocaleKeys.diwaniya_settings.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryBlack,
+              style: TextStyle(
+                color: textColor,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
@@ -155,10 +171,12 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                         height: 130.h,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.primaryWhite, width: 4),
+                          border: Border.all(color: theme.cardColor, width: 4),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryBlack.withValues(alpha: 0.08),
+                              color: AppColors.primaryBlack.withValues(
+                                alpha: 0.08,
+                              ),
                               blurRadius: 12,
                               offset: const Offset(0, 6),
                             ),
@@ -172,7 +190,10 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                                   displayImage,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(AppAssets.ic_profile, fit: BoxFit.cover);
+                                    return Image.asset(
+                                      AppAssets.ic_profile,
+                                      fit: BoxFit.cover,
+                                    );
                                   },
                                 )
                               : Image.asset(
@@ -217,8 +238,8 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                 32.heightBox(),
                 Text(
                   LocaleKeys.name.tr(),
-                  style: const TextStyle(
-                    color: AppColors.primaryBlack,
+                  style: TextStyle(
+                    color: textColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -226,13 +247,16 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                 8.heightBox(),
                 TextFormField(
                   controller: _nameController,
-                  decoration: _inputDecoration(LocaleKeys.enter_diwaniya_name.tr()),
+                  decoration: _inputDecoration(
+                    context,
+                    LocaleKeys.enter_diwaniya_name.tr(),
+                  ),
                 ),
                 20.heightBox(),
                 Text(
                   LocaleKeys.description.tr(),
-                  style: const TextStyle(
-                    color: AppColors.primaryBlack,
+                  style: TextStyle(
+                    color: textColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -242,30 +266,36 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                   controller: _descriptionController,
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
                   maxLines: 4,
-                  decoration: _inputDecoration(LocaleKeys.describe_your_diwaniya.tr()),
+                  decoration: _inputDecoration(
+                    context,
+                    LocaleKeys.describe_your_diwaniya.tr(),
+                  ),
                 ),
                 20.heightBox(),
                 Text(
                   LocaleKeys.diwaniya_type.tr(),
-                  style: const TextStyle(
-                    color: AppColors.primaryBlack,
+                  style: TextStyle(
+                    color: textColor,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 8.heightBox(),
                 DropdownButtonFormField<String>(
-                  value: _selectedType,
-                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.primaryDark),
-                  decoration: _inputDecoration(null),
+                  initialValue: _selectedType,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: secondaryTextColor,
+                  ),
+                  decoration: _inputDecoration(context, null),
                   items: bloc.diwaniyaTypes
                       .map(
                         (type) => DropdownMenuItem(
                           value: type.key,
                           child: Text(
                             type.name ?? type.key ?? '',
-                            style: const TextStyle(
-                              color: AppColors.primaryDark,
+                            style: TextStyle(
+                              color: secondaryTextColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -285,7 +315,9 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 14.h),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
                     onPressed: state is DiwaniyaLoading ? null : _onSavePressed,
                     child: state is DiwaniyaLoading
@@ -294,7 +326,9 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryWhite),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primaryWhite,
+                              ),
                             ),
                           )
                         : Text(
@@ -311,7 +345,9 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
                 if (diwaniya?.userPermission?.isAdmin == true) ...[
                   Center(
                     child: TextButton(
-                      onPressed: state is DiwaniyaLoading ? null : () => _showDeleteDiwaniyaDialog(context),
+                      onPressed: state is DiwaniyaLoading
+                          ? null
+                          : () => _showDeleteDiwaniyaDialog(context),
                       child: Text(
                         LocaleKeys.delete_diwaniya.tr(),
                         style: const TextStyle(
@@ -358,11 +394,13 @@ class _DiwaniyaSettingsPageState extends State<DiwaniyaSettingsPage> {
     );
   }
 
-  InputDecoration _inputDecoration(String? hint) {
+  InputDecoration _inputDecoration(BuildContext context, String? hint) {
     return InputDecoration(
       hintText: hint,
       filled: true,
-      fillColor: AppColors.primaryWhite,
+      fillColor:
+          Theme.of(context).inputDecorationTheme.fillColor ??
+          AppColors.primaryWhite,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),

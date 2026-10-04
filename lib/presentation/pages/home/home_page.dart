@@ -1,23 +1,22 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
-import 'package:flutter/material.dart';
 
 import '../../../application/config/app_assets.dart';
-import '../../../application/config/design_system/app_colors.dart';
-import '../../../application/core/utils/auto_router_setup/app_router.dart';
 import '../../../application/core/utils/helpers/cache/cache_manager.dart';
+import '../../widgets/notification_bell_button.dart';
 import '../auth/bloc/authentication_bloc.dart';
-import '../general/bloc/general_bloc.dart';
 import '../games/bloc/games_bloc.dart';
-import 'widgets/home_banner_widget.dart';
-import 'widgets/diwaniya_ranking_widget.dart';
+import '../general/bloc/general_bloc.dart';
 import 'widgets/active_games_widget.dart';
-import 'widgets/upcoming_games_home_widget.dart';
-import 'widgets/playgrounds_widget.dart';
+import 'widgets/diwaniya_ranking_widget.dart';
 import 'widgets/game_result_dialog.dart';
+import 'widgets/home_banner_widget.dart';
+import 'widgets/playgrounds_widget.dart';
+import 'widgets/upcoming_games_home_widget.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -62,7 +61,9 @@ class _HomePageState extends State<HomePage> {
         return CustomBlocConsumer<GamesBloc, GamesState>(
           bloc: gamesBloc,
           listener: (context, state) {
-            if (state is GamesResultLoaded && state.games.isNotEmpty && !_gameResultDialogOpen) {
+            if (state is GamesResultLoaded &&
+                state.games.isNotEmpty &&
+                !_gameResultDialogOpen) {
               _gameResultDialogOpen = true;
               GameResultDialog.showIfNeeded(context, gamesBloc).then((_) {
                 if (mounted) setState(() => _gameResultDialogOpen = false);
@@ -82,19 +83,7 @@ class _HomePageState extends State<HomePage> {
                 centerTitle: false,
                 actions: [
                   if (!CacheManager.instance.isGuestMode())
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          context.router.push(NotificationsRoute());
-                        },
-                        icon: const Icon(Icons.notifications_none, color: AppColors.primaryColor),
-                      ),
-                    ),
+                    const NotificationBellButton(),
                 ],
               ),
               body: SingleChildScrollView(
@@ -108,11 +97,11 @@ class _HomePageState extends State<HomePage> {
                     // Diwaniya Ranking Section
                     DiwaniyaRankingWidget(generalBloc),
 
+                    // My Upcoming Games Section (matches user is registered for)
+                    UpcomingGamesHomeWidget(generalBloc),
                     // Active Games Section
                     ActiveGamesWidget(generalBloc),
 
-                    // My Upcoming Games Section (matches user is registered for)
-                    UpcomingGamesHomeWidget(generalBloc),
                     20.heightBox(),
                     // Playgrounds Section
                     PlaygroundsWidget(generalBloc),

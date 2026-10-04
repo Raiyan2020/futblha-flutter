@@ -8,7 +8,9 @@ import '../../../application/core/utils/constants/app_constants.dart';
 import '../../../application/core/utils/helpers/custom_exceptions/custom_connection_exception.dart';
 import '../../models/request_model/notifications/notifications_request_model.dart';
 import '../../models/response_model/notifications/notifications_response_model.dart';
+import '../../models/response_model/notifications/unread_count_model.dart';
 import '../../network/dio_strategy_helper/concrete_strategies/get_request_strategy.dart';
+import '../../network/dio_strategy_helper/concrete_strategies/post_request_strategy.dart';
 import '../../network/dio_strategy_helper/dio_request_context.dart';
 import 'notifications_remote_datasource.dart';
 
@@ -47,18 +49,43 @@ class NotificationsRemoteDataSourceImpl implements NotificationsRemoteDataSource
   }
 
   @override
-  Future<ApiResultModel<int?>> getUnReadCount() async {
+  Future<ApiResultModel<UnreadCountModel?>> getUnReadCount() async {
     try {
       final ApiResultModel<Response> result = (await _apiCallHelper.makeRequest(
         dioRequestStrategy: locator<GetRequestStrategy>(),
-        uri: 'GetUnReadCount',
+        uri: NotificationsUnreadCount,
       ));
       return result.when(
         success: (Response response) {
-          return ApiResultModel<int?>.success(data: response.data);
+          return ApiResultModel<UnreadCountModel?>.success(
+            data: UnreadCountModel.fromJson(response.data['data']),
+          );
         },
         failure: (ErrorResultModel errorModel) {
-          return ApiResultModel<int?>.failure(errorResultEntity: errorModel);
+          return ApiResultModel<UnreadCountModel?>.failure(errorResultEntity: errorModel);
+        },
+      );
+    } on CustomConnectionException catch (exception) {
+      throw CustomConnectionException(
+        exceptionMessage: exception.exceptionMessage,
+        exceptionCode: exception.exceptionCode,
+      );
+    }
+  }
+
+  @override
+  Future<ApiResultModel<String?>> markNotificationRead({required String id}) async {
+    try {
+      final ApiResultModel<Response> result = (await _apiCallHelper.makeRequest(
+        dioRequestStrategy: locator<PostRequestStrategy>(),
+        uri: notificationRead(id),
+      ));
+      return result.when(
+        success: (Response response) {
+          return ApiResultModel<String?>.success(data: response.data.toString());
+        },
+        failure: (ErrorResultModel errorModel) {
+          return ApiResultModel<String?>.failure(errorResultEntity: errorModel);
         },
       );
     } on CustomConnectionException catch (exception) {
@@ -73,8 +100,8 @@ class NotificationsRemoteDataSourceImpl implements NotificationsRemoteDataSource
   Future<ApiResultModel<String?>> markAllNotificationsRead() async {
     try {
       final ApiResultModel<Response> result = (await _apiCallHelper.makeRequest(
-        dioRequestStrategy: locator<GetRequestStrategy>(),
-        uri: 'MarkAllRead',
+        dioRequestStrategy: locator<PostRequestStrategy>(),
+        uri: NotificationsReadAll,
       ));
       return result.when(
         success: (Response response) {

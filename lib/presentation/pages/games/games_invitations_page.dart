@@ -304,8 +304,19 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
             ),
             // Status Badge (for sending games)
             if (_selectedTab == 1) ...[12.heightBox(), _buildStatusBadge(_getStatus(game))],
+            // Only admins of the invited Diwaniya can accept/reject; members see a read-only note.
+            if (_selectedTab == 0 && !_canRespond(game)) ...[
+              12.heightBox(),
+              Center(
+                child: Text(
+                  LocaleKeys.waiting_admin_response.tr(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: AppColors.primaryOrange, fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
             // Action Buttons (for receiving games)
-            if (_selectedTab == 0) ...[
+            if (_selectedTab == 0 && _canRespond(game)) ...[
               16.heightBox(),
               Row(
                 children: [
@@ -422,6 +433,8 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
       ),
     );
   }
+
+  bool _canRespond(GameModel game) => game.opponentDiwaniya?.userPermission?.isAdmin == true;
 
   void _handleAccept(GameModel game) {
     if (game.id != null) {

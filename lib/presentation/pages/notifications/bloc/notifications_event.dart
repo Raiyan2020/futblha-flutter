@@ -26,3 +26,10 @@ class ClearNotificationsEvent extends NotificationsEvent {
   @override
   List<Object?> get props => [];
 }
+
+class MarkNotificationReadEvent extends NotificationsEvent {
+  const MarkNotificationReadEvent(this.id);
+  final String id;
+  @override
+  List<Object?> get props => [id];
+}

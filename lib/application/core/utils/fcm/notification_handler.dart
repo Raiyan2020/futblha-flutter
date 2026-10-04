@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'notification_navigation.dart';
 
 class LocalNotificationHandler {
   static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
@@ -25,7 +29,16 @@ class LocalNotificationHandler {
       iOS: initializationSettingsIOS,
     );
 
-    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (response) => _onTap(response.payload),
+    );
+
+    // App launched by tapping a local notification.
+    final launchDetails = await _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (launchDetails?.didNotificationLaunchApp ?? false) {
+      _onTap(launchDetails?.notificationResponse?.payload);
+    }
 
     // ✅ Create Android notification channel (required for Android 8+)
     await _flutterLocalNotificationsPlugin
@@ -39,7 +52,16 @@ class LocalNotificationHandler {
   }
 
   /// Display a local notification
-  static Future<void> displayNotification(String title, String body) async {
+  static void _onTap(String? payload) {
+    if (payload == null || payload.isEmpty) return;
+    try {
+      NotificationNavigation.handleData(Map<String, dynamic>.from(jsonDecode(payload)));
+    } catch (e) {
+      debugPrint('Error handling notification tap: $e');
+    }
+  }
+
+  static Future<void> displayNotification(String title, String body, {Map<String, dynamic>? payload}) async {
     try {
       const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'futblha',
@@ -61,6 +83,7 @@ class LocalNotificationHandler {
         title,
         body,
         platformChannelSpecifics,
+        payload: payload == null ? null : jsonEncode(payload),
       );
     } catch (e) {
       debugPrint('Error displaying notification: $e');

@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
-import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
-import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
-import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/data/models/response_model/games/game_player_model.dart';
+import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
 
 import '../../../../application/core/utils/helpers/extension_functions/date_extension_functions.dart';
 import '../../../widgets/app_size_boxes.dart';
@@ -48,7 +48,10 @@ class ActiveGamesWidget extends StatelessWidget {
                 children: [
                   Text(
                     LocaleKeys.active_games.tr(),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -56,7 +59,10 @@ class ActiveGamesWidget extends StatelessWidget {
                     },
                     child: Text(
                       LocaleKeys.see_all.tr(),
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -95,8 +101,10 @@ class ActiveGamesWidget extends StatelessWidget {
   }
 
   Widget _buildGameCard(BuildContext context, GameModel game) {
-    final joinedPlayers = int.tryParse(game.playersJoines?.toString() ?? '0') ?? 0;
-    final totalPlayers = int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
+    final joinedPlayers =
+        int.tryParse(game.playersJoines?.toString() ?? '0') ?? 0;
+    final totalPlayers =
+        int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
     final creatorName = game.creatorName ?? '';
     final diwaniyaName = game.creatorDiwaniya?.name ?? '';
     final diwaniyaImage = game.creatorDiwaniya?.image ?? AppAssets.ic_profile;
@@ -151,7 +159,10 @@ class ActiveGamesWidget extends StatelessWidget {
                             width: 40.w,
                             height: 40.h,
                             color: AppColors.primaryLiteGrey,
-                            child: const Icon(Icons.person, color: AppColors.primaryColor),
+                            child: const Icon(
+                              Icons.person,
+                              color: AppColors.primaryColor,
+                            ),
                           );
                         },
                       )
@@ -165,7 +176,10 @@ class ActiveGamesWidget extends StatelessWidget {
                             width: 40.w,
                             height: 40.h,
                             color: AppColors.primaryLiteGrey,
-                            child: const Icon(Icons.person, color: AppColors.primaryColor),
+                            child: const Icon(
+                              Icons.person,
+                              color: AppColors.primaryColor,
+                            ),
                           );
                         },
                       ),
@@ -210,7 +224,10 @@ class ActiveGamesWidget extends StatelessWidget {
               if (joinedPlayers > 6)
                 Container(
                   margin: EdgeInsetsDirectional.only(start: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryLiteGrey,
                     borderRadius: BorderRadius.circular(12),
@@ -226,7 +243,7 @@ class ActiveGamesWidget extends StatelessWidget {
                 ),
               const Spacer(),
               Text(
-                '${joinedPlayers} ${LocaleKeys.of.tr()} ${totalPlayers} ${LocaleKeys.player_joined.tr()}',
+                '$joinedPlayers ${LocaleKeys.of.tr()} $totalPlayers ${LocaleKeys.player_joined.tr()}',
                 style: const TextStyle(
                   color: AppColors.lightTextColor,
                   fontSize: 11,
@@ -270,7 +287,9 @@ class ActiveGamesWidget extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: List.generate(visibleCount, (index) {
-          final left = isRTL ? stackWidth - avatarSize - (index * step) : (index * step).toDouble();
+          final left = isRTL
+              ? stackWidth - avatarSize - (index * step)
+              : (index * step).toDouble();
           return Positioned(
             left: left,
             top: 0,
@@ -289,7 +308,9 @@ class ActiveGamesWidget extends StatelessWidget {
                 ],
               ),
               child: ClipOval(
-                child: _buildPlayerAvatar(index < players.length ? players[index].image : null),
+                child: _buildPlayerAvatar(
+                  index < players.length ? players[index].image : null,
+                ),
               ),
             ),
           );
@@ -310,7 +331,11 @@ class ActiveGamesWidget extends StatelessWidget {
             return const CircleAvatar(
               radius: 12,
               backgroundColor: AppColors.primaryLiteGrey,
-              child: Icon(Icons.person, size: 14, color: AppColors.primaryColor),
+              child: Icon(
+                Icons.person,
+                size: 14,
+                color: AppColors.primaryColor,
+              ),
             );
           },
         ),
@@ -339,7 +364,10 @@ class ActiveGamesWidget extends StatelessWidget {
               icon,
               width: 14,
               height: 14,
-              colorFilter: const ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(
+                AppColors.primaryColor,
+                BlendMode.srcIn,
+              ),
             )
           else
             Icon(icon as IconData, size: 14, color: AppColors.primaryColor),

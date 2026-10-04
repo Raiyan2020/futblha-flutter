@@ -19,10 +19,7 @@ flutter test --plain-name "test name"                      # single test by name
 ./test_deep_link.sh [android|ios]                          # fire a diwaniya deep link at a running emulator/simulator
 ```
 
-Regenerate locale keys after editing `assets/l10n/en.json` / `ar.json`:
-```bash
-dart run easy_localization:generate -S assets/l10n -f keys -O lib/generated -o locale_keys.g.dart
-```
+When adding a string, add it to both `assets/l10n/en.json` and `ar.json`, and add the matching constant to `lib/generated/locale_keys.g.dart` by hand (see below for why).
 
 ## Code generation
 
@@ -30,7 +27,9 @@ Never hand-edit generated files; rerun build_runner instead:
 - `app_component.config.dart` — injectable/get_it registrations. Any new `@injectable` / `@singleton` / `@Injectable(as: ...)` class won't be resolvable from `locator` until regenerated.
 - `app_router.gr.dart` — auto_route routes from `@RoutePage()` pages. New pages must also be added to the routes list in `app_router.dart`.
 - `*.freezed.dart`, `*.g.dart` — freezed unions and json_serializable models.
-- `lib/generated/locale_keys.g.dart` — easy_localization keys (`LocaleKeys.xxx.tr()`).
+- `lib/generated/locale_keys.g.dart` — easy_localization keys (`LocaleKeys.xxx.tr()`). This file has hand edits (e.g. `continue_key`, because `continue` is a reserved word), so **add new keys by hand** instead of running the generator.
+
+`build_runner` currently exits with errors from `freezed` ("requires the 'dot-shorthands' language feature") on files using `.center`-style shorthand. This is a known issue: the json_serializable, injectable and auto_route outputs are still written.
 
 ## Architecture
 
@@ -52,7 +51,8 @@ Other cross-cutting pieces:
 - **Local state** — `CacheManager.instance` (shared_preferences/Hive) for token, language, theme, locale; `ThemeNotifier.instance` drives theme mode.
 - **Deep links** — `AppLinksService` handles `https://futblha.com/diwaniya/<encoded id>` (ids encoded via `id_encryption.dart`). The router's `deepLinkBuilder` always returns `/`, and navigation happens after app init to avoid initial-route resolution errors.
 - **Realtime** — Pusher services in `lib/application/core/utils/pusher/` (chat + general events).
-- **Firebase/FCM** — initialization is currently commented out in `main.dart`; handlers live in `lib/application/core/utils/fcm/`.
+- **Firebase/FCM** — initialized in `main.dart` with `lib/firebase_options.dart` (generated from `google-services.json` / `GoogleService-Info.plist`, so no Gradle plugin or Xcode file reference is needed). Handlers live in `lib/application/core/utils/fcm/`. Every notification tap, from a push or from the in-app list, goes through `NotificationNavigation`, which holds a tap until `LandingPage` is mounted.
+- **Notification badges** — the singleton `NotificationsBloc` holds `unreadCount` (bell) and `pendingInvitationsCount` (Games Invitations), loaded from `GET /notifications/unread-count`. The bell widget is `NotificationBellButton`. Skip authenticated calls for guests: any 401 triggers a logout.
 - **UI** — design system/theme in `lib/application/config/design_system/`; responsive sizing via `ResponsiveUiConfig` (initialized in `MyApp.build`); shared widgets in `lib/presentation/widgets/`. Fonts are SF Arabic.
 
 ## Lint

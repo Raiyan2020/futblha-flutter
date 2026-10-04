@@ -537,4 +537,5 @@ abstract class LocaleKeys {
   static const goalkeeper_position_filled = 'goalkeeper_position_filled';
   static const sorry = 'sorry';
   static const playground_not_available_at_game_time = 'playground_not_available_at_game_time';
+  static const waiting_admin_response = 'waiting_admin_response';
 }
