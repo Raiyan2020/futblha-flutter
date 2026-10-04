@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.raiyansoft.futblha",
+      "sha256_cert_fingerprints": [
+        "10:CE:54:95:12:71:B8:4B:4B:48:80:18:B8:A3:A5:F8:89:5B:2D:3B:6A:5D:4B:79:24:87:CA:60:1C:25:2F:E1"
+      ]
+    }
+  }
+]
