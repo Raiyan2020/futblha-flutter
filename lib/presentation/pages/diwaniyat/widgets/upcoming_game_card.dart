@@ -40,8 +40,8 @@ class UpcomingGameCard extends StatelessWidget {
     final timeStr = GameDataHelper.formatTime(game.booking?.periods);
     final playersStr = GameDataHelper.getPlayersString(game.playersTarget);
     final location = game.booking?.playground?.name ?? '';
-    final statusText = game.gameStatusText ?? game.invitationStatus ?? game.gameStatus ?? '';
-    final statusColor = GameDataHelper.getGameStatusColor(game);
+    final statusText = GameDataHelper.getGameStatusText(game);
+    final statusColor = GameDataHelper.getGameStatusColor(context, game);
 
     return GestureDetector(
       onTap: onTap,

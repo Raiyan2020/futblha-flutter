@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/data/models/response_model/playgrounds/booking_period_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -65,12 +66,28 @@ class GameDataHelper {
     ];
   }
 
-  static Color getGameStatusColor(GameModel game) {
-    if (isConfirmed(game)) return AppColors.primaryColor;
+  static bool isPending(GameModel game) => game.gameStatus?.toLowerCase() == 'pending';
+
+  /// Status label for a game card. Invitation outcomes use the app's own labels so
+  /// they read the same in both languages; other statuses use the backend's text.
+  static String getGameStatusText(GameModel game) {
+    final status = game.gameStatus?.toLowerCase() ?? '';
+    if (status == 'rejected') return LocaleKeys.rejected.tr();
+    if (status.contains('cancel')) return LocaleKeys.cancelled.tr();
+    if (isPending(game)) return LocaleKeys.pending.tr();
+    final backendText = game.gameStatusText ?? game.invitationStatus ?? game.gameStatus ?? '';
+    if (isConfirmed(game) && backendText.isEmpty) return LocaleKeys.accepted.tr();
+    return backendText;
+  }
+
+  /// Pending: orange. Rejected/cancelled: red. Confirmed/accepted: green.
+  static Color getGameStatusColor(BuildContext context, GameModel game) {
+    if (isConfirmed(game)) return context.brandOnSurface;
     if (isCancelled(game)) return AppColors.primaryRed;
+    if (isPending(game)) return AppColors.primaryOrange;
     final status = game.gameStatus ?? '';
-    if (status.isNotEmpty) return getStatusColor(status);
-    return getStatusColor(game.gameStatusText ?? game.invitationStatus);
+    final color = getStatusColor(status.isNotEmpty ? status : game.gameStatusText ?? game.invitationStatus);
+    return color == AppColors.primaryColor ? context.brandOnSurface : color;
   }
 
   static Color getStatusColor(String? statusText) {

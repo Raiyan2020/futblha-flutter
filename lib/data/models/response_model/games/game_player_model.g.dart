@@ -13,7 +13,7 @@ GamePlayerModel _$GamePlayerModelFromJson(Map<String, dynamic> json) =>
       image: json['image'] as String?,
       position: json['position'] as String?,
       positionText: json['position_text'] as String?,
-      slotIndex: json['slot_index'] as String?,
+      slotIndex: _stringOrNull(json['slot_index']),
       teamIndex: (json['team_index'] as num?)?.toInt(),
     );
 

@@ -10,7 +10,8 @@ class GamePlayerModel {
   final String? position;
   @JsonKey(name: 'position_text')
   final String? positionText;
-  @JsonKey(name: 'slot_index')
+  // Some endpoints send slot_index as a number, others as a string.
+  @JsonKey(name: 'slot_index', fromJson: _stringOrNull)
   final String? slotIndex;
   @JsonKey(name: 'team_index')
   final int? teamIndex;
@@ -41,3 +42,5 @@ class GamePlayerModel {
     );
   }
 }
+
+String? _stringOrNull(Object? value) => value?.toString();

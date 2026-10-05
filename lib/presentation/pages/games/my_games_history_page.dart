@@ -365,7 +365,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
 
     switch (status) {
       case GameStatus.win:
-        statusText = 'Win';
+        statusText = LocaleKeys.win.tr();
         statusColor = context.brandOnSurface;
         break;
       case GameStatus.lose:

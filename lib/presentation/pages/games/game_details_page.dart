@@ -11,20 +11,24 @@ import 'package:futblha/data/models/request_model/games/join_game_request_model.
 import 'package:futblha/data/models/response_model/games/game_members_response_model.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/data/models/response_model/playgrounds/playground_model.dart';
+import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:futblha/presentation/pages/auth/bloc/authentication_bloc.dart';
 import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
-import 'package:futblha/presentation/pages/games/widgets/game_info_card.dart';
 import 'package:futblha/presentation/pages/games/utils/game_formation_utils.dart';
+import 'package:futblha/presentation/pages/games/widgets/game_info_card.dart';
 import 'package:futblha/presentation/pages/games/widgets/game_players_pitch_section.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/presentation/widgets/custom_loading_widget.dart';
 import 'package:futblha/presentation/widgets/playground_not_available_dialog.dart';
 import 'package:futblha/presentation/widgets/snackbar_utill.dart';
-import 'package:futblha/generated/locale_keys.g.dart';
 
 @RoutePage()
 class GameDetailsPage extends StatefulWidget {
-  const GameDetailsPage({super.key, required this.bloc, this.isFromHistory = false});
+  const GameDetailsPage({
+    super.key,
+    required this.bloc,
+    this.isFromHistory = false,
+  });
 
   final GamesBloc bloc;
   final bool isFromHistory;
@@ -71,17 +75,24 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 5.h,
+                          ),
                           child: GameInfoCard(
                             game: game,
-                            onChatPressed: () => setState(() => game.unreadMessagesCount = 0),
+                            onChatPressed: () =>
+                                setState(() => game.unreadMessagesCount = 0),
                           ),
                         ),
                         if (game.gameStatus == 'players_completed' &&
                             game.booking?.paymentMethod == null &&
                             game.userPermission?.canBook == true)
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 5.h,
+                            ),
                             child: _buildBookPlaygroundButton(context, game),
                           ),
                         Padding(
@@ -92,16 +103,26 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                             bloc: bloc,
                             isFromHistory: widget.isFromHistory,
                             userTeamIndex: _getUserTeamIndex(game),
-                            onForfeitTap: () => _handleForfeitGame(context, game),
-                            onJoinFromPosition: (coords, teamIndex, slotIndex) =>
-                                _joinGameFromPosition(coords, teamIndex, slotIndex),
+                            onForfeitTap: () =>
+                                _handleForfeitGame(context, game),
+                            onJoinFromPosition:
+                                (coords, teamIndex, slotIndex) =>
+                                    _joinGameFromPosition(
+                                      coords,
+                                      teamIndex,
+                                      slotIndex,
+                                    ),
                             isChangingPosition: _isChangingPosition,
                             changePositionTeamIndex: _isChangingPosition
                                 ? _getCurrentUserTeamIndex(members)
                                 : null,
                             onChangePositionSlot: _isChangingPosition
                                 ? (teamIndex, slotIndex) =>
-                                      _changePositionFromSlot(teamIndex, slotIndex, game)
+                                      _changePositionFromSlot(
+                                        teamIndex,
+                                        slotIndex,
+                                        game,
+                                      )
                                 : null,
                           ),
                         ),
@@ -112,9 +133,13 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                             padding: EdgeInsets.symmetric(horizontal: 16.w),
                             child: _buildJoinButton(context),
                           ),
-                        if (game.userPermission?.isMember == true && !widget.isFromHistory)
+                        if (game.userPermission?.isMember == true &&
+                            !widget.isFromHistory)
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 5.h,
+                            ),
                             child: _buildChangePositionButton(context, game),
                           ),
                         20.heightBox(),
@@ -163,7 +188,10 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     }
   }
 
-  void _handleCheckBookingAvailable(BuildContext context, CheckBookingAvailableSuccess state) {
+  void _handleCheckBookingAvailable(
+    BuildContext context,
+    CheckBookingAvailableSuccess state,
+  ) {
     final game = bloc.gameDetails;
     if (game?.id == null) {
       context.showMessage(isError: true, 'Game ID not found');
@@ -177,7 +205,9 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           booking?.periods != null &&
           booking!.periods!.isNotEmpty) {
         final timeSlots = booking.periods!
-            .map((period) => '${period.startTime ?? ''} - ${period.endTime ?? ''}')
+            .map(
+              (period) => '${period.startTime ?? ''} - ${period.endTime ?? ''}',
+            )
             .where((slot) => slot.isNotEmpty && slot != ' - ')
             .join(', ');
 
@@ -202,7 +232,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     } else {
       PlaygroundNotAvailableDialog.show(
         context,
-        playgroundName: game!.booking?.playground?.name ?? LocaleKeys.playground.tr(),
+        playgroundName:
+            game!.booking?.playground?.name ?? LocaleKeys.playground.tr(),
         onContinue: () => _navigateToChoosePlayground(context, game),
       );
     }
@@ -216,7 +247,9 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         onPressed: () => context.router.push(JoinGameRoute(gamesBloc: bloc)),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: Text(
           LocaleKeys.join.tr(),
@@ -243,11 +276,17 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: _isChangingPosition ? AppColors.primaryGrey : AppColors.primaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          backgroundColor: _isChangingPosition
+              ? AppColors.primaryGrey
+              : AppColors.primaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: Text(
-          _isChangingPosition ? LocaleKeys.cancel.tr() : LocaleKeys.change_position.tr(),
+          _isChangingPosition
+              ? LocaleKeys.cancel.tr()
+              : LocaleKeys.change_position.tr(),
           style: const TextStyle(
             color: AppColors.primaryWhite,
             fontSize: 16,
@@ -272,7 +311,9 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primaryColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: Text(
           LocaleKeys.book_playground.tr(),
@@ -301,7 +342,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       context.showMessage(isError: true, 'Game ID not found');
       return;
     }
-    final totalPlayers = int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
+    final totalPlayers =
+        int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
     final playersPerTeam = totalPlayers ~/ 2;
     final positionKey = getPositionKeyForSlotIndex(slotIndex, playersPerTeam);
 
@@ -310,11 +352,20 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         (teamIndex == 0 && game.goalkeeperTeam1Close == true) ||
         (teamIndex == 1 && game.goalkeeperTeam2Close == true);
     if (isGoalkeeperSlot && goalkeeperClosed) {
-      context.showMessage(isError: true, LocaleKeys.goalkeeper_position_filled.tr());
+      context.showMessage(
+        isError: true,
+        LocaleKeys.goalkeeper_position_filled.tr(),
+      );
       return;
     }
 
-    bloc.add(ChangePositionEvent(gameId: game.id!, position: positionKey, slotIndex: slotIndex));
+    bloc.add(
+      ChangePositionEvent(
+        gameId: game.id!,
+        position: positionKey,
+        slotIndex: slotIndex,
+      ),
+    );
     setState(() => _isChangingPosition = false);
   }
 
@@ -350,10 +401,17 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     );
   }
 
-  Future<void> _navigateToChoosePlayground(BuildContext context, GameModel game) async {
-    final playground = await context.router.push<PlaygroundModel>(const PlaygroundSelectionRoute());
+  Future<void> _navigateToChoosePlayground(
+    BuildContext context,
+    GameModel game,
+  ) async {
+    final playground = await context.router.push<PlaygroundModel>(
+      const PlaygroundSelectionRoute(),
+    );
     if (playground != null && game.id != null) {
-      context.router.push(BookPlaygroundRoute(playground: playground, gameId: game.id));
+      context.router.push(
+        BookPlaygroundRoute(playground: playground, gameId: game.id),
+      );
     }
   }
 
@@ -376,7 +434,11 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     return null;
   }
 
-  void _joinGameFromPosition(Map<String, double> coords, int teamIndex, int slotIndex) {
+  void _joinGameFromPosition(
+    Map<String, double> coords,
+    int teamIndex,
+    int slotIndex,
+  ) {
     final game = bloc.gameDetails;
     if (game == null || game.id == null) return;
 
@@ -412,7 +474,10 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           : game.goalkeeperTeam2Close == true;
       if (gkClosed) {
         if (context.mounted) {
-          context.showMessage(isError: true, LocaleKeys.goalkeeper_position_filled.tr());
+          context.showMessage(
+            isError: true,
+            LocaleKeys.goalkeeper_position_filled.tr(),
+          );
         }
         return;
       }
