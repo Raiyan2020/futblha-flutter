@@ -89,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: symmetricPadding(20, 20),
                     margin: EdgeInsets.only(top: 20.h),
                     decoration: BoxDecoration(
-                      color: context.chipBackground,
+                      color: context.cardBackground,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
@@ -181,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         padding: symmetricPadding(10, 20),
                         margin: EdgeInsets.only(top: 50.h),
                         decoration: BoxDecoration(
-                          color: context.chipBackground,
+                          color: context.cardBackground,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -445,7 +445,7 @@ class MenuItem extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: context.chipBackground,
+            color: context.cardBackground,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
