@@ -4,20 +4,22 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/phone_number.dart';
-// ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
+import 'package:futblha/presentation/widgets/app_date_picker.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/presentation/widgets/custom_phone_field.dart';
 import 'package:futblha/presentation/widgets/snackbar_utill.dart';
+// ignore: depend_on_referenced_packages
+import 'package:intl/intl.dart';
+import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/phone_number.dart';
 
 import '../../../application/config/app_assets.dart';
 import '../../../application/config/design_system/app_colors.dart';
 import '../../../application/core/di/app_component/app_component.dart';
 import '../../../application/core/utils/auto_router_setup/app_router.dart';
+import '../../../application/core/utils/helpers/app_images/image_pick_crop_helper.dart';
 import '../../../application/core/validations/validations.dart';
 import '../../../data/models/enums/position_enum.dart';
 import '../../../data/models/request_model/auth/login/login_request_model.dart';
@@ -30,8 +32,6 @@ import '../../widgets/custom_text.dart';
 import '../../widgets/custom_toolbar.dart';
 import '../auth/bloc/authentication_bloc.dart';
 import 'widgets/profile_image_button.dart';
-import '../../../application/core/utils/helpers/app_images/image_pick_crop_helper.dart';
-import 'package:futblha/presentation/widgets/app_date_picker.dart';
 
 @RoutePage()
 class EditProfilePage extends StatefulWidget {
@@ -66,14 +66,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (userCountryCode != null && userCountryCode.isNotEmpty) {
       countryCode = userCountryCode.replaceAll('+', '');
       try {
-        countryISOCode = countries.firstWhere((element) => element.dialCode == countryCode).code;
+        countryISOCode = countries
+            .firstWhere((element) => element.dialCode == countryCode)
+            .code;
       } catch (e) {
         // country not found, fallback to KW
         countryISOCode = 'KW';
         countryCode = '965';
       }
     }
-    numberWithoutCode.text = bloc.user?.phone?.replaceFirst(userCountryCode ?? '', '') ?? '';
+    numberWithoutCode.text =
+        bloc.user?.phone?.replaceFirst(userCountryCode ?? '', '') ?? '';
     email.text = bloc.user?.email ?? '';
 
     // Initialize birth date from user data if available
@@ -152,7 +155,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> _navigateToEditPositions() async {
     final result = await context.router.push(
-      EditPositionsRoute(initialPositions: _selectedPositions, initialIsJocker: _isJocker),
+      EditPositionsRoute(
+        initialPositions: _selectedPositions,
+        initialIsJocker: _isJocker,
+      ),
     );
     if (result != null && result is Map) {
       setState(() {
@@ -170,7 +176,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     if (_selectedPositions.isEmpty) {
       return LocaleKeys.select_skilled_position.tr();
     }
-    return Position.fromKeys(_selectedPositions).map((po) => po.displayName).join(', ');
+    return Position.fromKeys(
+      _selectedPositions,
+    ).map((po) => po.displayName).join(', ');
   }
 
   @override
@@ -183,7 +191,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         listener: (context, state) {
           if (state is UpdateProfileSuccess) {
             Navigator.pop(context);
-            context.showMessage(LocaleKeys.edit_personal_details_success_message.tr());
+            context.showMessage(
+              LocaleKeys.edit_personal_details_success_message.tr(),
+            );
           } else if (state is AuthenticationError) {
             context.showMessage(isError: true, state.message);
           }
@@ -204,7 +214,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       alignment: Alignment.center,
                       children: [
                         _image != null
-                            ? CircleAvatar(radius: 50, backgroundImage: FileImage(_image!))
+                            ? CircleAvatar(
+                                radius: 50,
+                                backgroundImage: FileImage(_image!),
+                              )
                             : const ProfileImageButton(clickable: false),
                         Positioned(
                           bottom: 0,
@@ -212,14 +225,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           child: IconButton(
                             onPressed: () async {
                               try {
-                                final file = await ImagePickCropHelper.pickAndCropImage(
-                                  context,
-                                  shape: ImageCropShape.circle,
-                                  lockSquareAspectRatio: true,
-                                  maxWidth: 1080,
-                                  maxHeight: 1080,
-                                  toolbarTitle: 'Crop',
-                                );
+                                final file =
+                                    await ImagePickCropHelper.pickAndCropImage(
+                                      context,
+                                      shape: ImageCropShape.circle,
+                                      lockSquareAspectRatio: true,
+                                      maxWidth: 1080,
+                                      maxHeight: 1080,
+                                      toolbarTitle: 'Crop',
+                                    );
                                 if (file != null) {
                                   setState(() => _image = file);
                                 }
@@ -230,7 +244,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 }
                               }
                             },
-                            icon: const Icon(Icons.camera_alt, color: AppColors.primaryColor),
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: AppColors.primaryColor,
+                            ),
                           ),
                         ),
                       ],
@@ -268,7 +285,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   // 10.heightBox(),
                   // E-mail Address (optional)
-                  CustomText('${LocaleKeys.email_address.tr()}${LocaleKeys.optional.tr()}'),
+                  CustomText(
+                    '${LocaleKeys.email_address.tr()}${LocaleKeys.optional.tr()}',
+                  ),
                   5.heightBox(),
                   AppTextField(
                     controller: email,
@@ -304,7 +323,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       controller: positions,
                       hintKey: LocaleKeys.select_skilled_position,
                       userInput: false,
-                      suffixIcon: const Icon(Icons.edit, color: AppColors.primaryColor),
+                      suffixIcon: const Icon(
+                        Icons.edit,
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                   ),
                   20.heightBox(),
@@ -339,7 +361,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     name: name.text,
                                     phone: numberWithoutCode.text,
                                     countryCode: '+$countryCode',
-                                    email: email.text.trim().isEmpty ? null : email.text.trim(),
+                                    email: email.text.trim().isEmpty
+                                        ? null
+                                        : email.text.trim(),
                                   ),
                                   image: _image,
                                   positions: _selectedPositions.isNotEmpty
@@ -359,7 +383,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: Text(LocaleKeys.delete_account.tr()),
-                            content: Text(LocaleKeys.delete_account_confirmation.tr()),
+                            content: Text(
+                              LocaleKeys.delete_account_confirmation.tr(),
+                            ),
                             actions: <Widget>[
                               TextButton(
                                 child: Text(

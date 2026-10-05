@@ -12,6 +12,7 @@ import 'package:futblha/data/models/response_model/games/game_player_model.dart'
 import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
 import 'package:futblha/presentation/pages/games/utils/game_formation_utils.dart';
+import 'package:futblha/presentation/pages/games/widgets/player_info_bottom_sheet.dart';
 import 'package:futblha/presentation/pages/games/widgets/soccer_field_painter.dart';
 
 class GamePlayersPitchSection extends StatelessWidget {
@@ -134,7 +135,7 @@ class GamePlayersPitchSection extends StatelessWidget {
                         int.parse(slotIdx),
                         playersPerTeam,
                       );
-                      playerWidgets.add(_buildPlayerWidget(player, coords, constraints));
+                      playerWidgets.add(_buildPlayerWidget(context, player, coords, constraints));
                     }
 
                     final opposingTeamUsedIndices = <int>{};
@@ -148,7 +149,7 @@ class GamePlayersPitchSection extends StatelessWidget {
                         int.parse(slotIdx),
                         playersPerTeam,
                       );
-                      playerWidgets.add(_buildPlayerWidget(player, coords, constraints));
+                      playerWidgets.add(_buildPlayerWidget(context, player, coords, constraints));
                     }
 
                     for (int i = 0; i < playersPerTeam; i++) {
@@ -182,49 +183,74 @@ class GamePlayersPitchSection extends StatelessWidget {
   }
 
   Widget _buildPlayerWidget(
+    BuildContext context,
     GamePlayerModel player,
     Map<String, double> coords,
     BoxConstraints constraints,
   ) {
     final x = coords['x'] ?? 0.5;
     final y = coords['y'] ?? 0.5;
+    final name = player.name ?? '';
     return Positioned(
-      left: x * constraints.maxWidth - 25.w,
+      // Wider than the 50.w avatar so the name has room; still centered on the slot.
+      left: x * constraints.maxWidth - 35.w,
       top: y * constraints.maxHeight - 25.w,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 50.w,
-            height: 50.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primaryWhite, width: 2.5),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primaryBlack.withValues(alpha: 0.3),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: player.image != null && player.image!.isNotEmpty
-                  ? Image.network(
-                      player.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+      width: 70.w,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => PlayerInfoBottomSheet.show(context, player),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 50.w,
+              height: 50.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.primaryWhite, width: 2.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryBlack.withValues(alpha: 0.3),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: player.image != null && player.image!.isNotEmpty
+                    ? Image.network(
+                        player.image!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          color: AppColors.primaryLiteGrey,
+                          child: Icon(Icons.person, color: AppColors.primaryColor, size: 30),
+                        ),
+                      )
+                    : Container(
                         color: AppColors.primaryLiteGrey,
                         child: Icon(Icons.person, color: AppColors.primaryColor, size: 30),
                       ),
-                    )
-                  : Container(
-                      color: AppColors.primaryLiteGrey,
-                      child: Icon(Icons.person, color: AppColors.primaryColor, size: 30),
-                    ),
+              ),
             ),
-          ),
-        ],
+            if (name.isNotEmpty) ...[
+              2.heightBox(),
+              Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.primaryWhite,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  shadows: [
+                    Shadow(color: AppColors.primaryBlack.withValues(alpha: 0.6), blurRadius: 3),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../../../application/config/app_assets.dart';
 import '../../../../application/config/design_system/app_colors.dart';
@@ -47,9 +46,11 @@ class _ProfileImageButtonState extends State<ProfileImageButton> {
                       height: widget.size,
                       width: widget.size,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => SvgPicture.asset(
+                      // ic_profile is a PNG, so it must not go through SvgPicture.
+                      errorBuilder: (context, error, stackTrace) => Image.asset(
                         AppAssets.ic_profile,
-                        colorFilter: const ColorFilter.mode(AppColors.primaryBlack, BlendMode.srcIn),
+                        height: widget.size,
+                        width: widget.size,
                       ),
                     ),
                   )

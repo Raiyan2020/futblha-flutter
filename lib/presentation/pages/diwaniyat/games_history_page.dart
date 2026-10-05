@@ -6,14 +6,14 @@ import 'package:futblha/application/config/design_system/app_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
-import 'package:futblha/presentation/widgets/app_size_boxes.dart';
-import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
-import 'package:futblha/presentation/pages/diwaniyat/bloc/diwaniya_bloc.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
-import 'package:futblha/presentation/widgets/custom_loading_widget.dart';
-import 'package:futblha/presentation/widgets/snackbar_utill.dart';
-import 'package:futblha/presentation/widgets/pagination_list.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/diwaniyat/bloc/diwaniya_bloc.dart';
+import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
+import 'package:futblha/presentation/widgets/app_size_boxes.dart';
+import 'package:futblha/presentation/widgets/custom_loading_widget.dart';
+import 'package:futblha/presentation/widgets/pagination_list.dart';
+import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 
 import '../../../application/core/utils/helpers/extension_functions/date_extension_functions.dart';
 
@@ -34,16 +34,17 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
   @override
   void initState() {
     super.initState();
-    diwaniyaBloc.add(GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: 1));
+    diwaniyaBloc.add(
+      GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: 1),
+    );
   }
 
-  // Games history shows only the private games the diwaniya played
-  List<GameModel> get _privateGames =>
-      diwaniyaBloc.diwaniyaGames.where((game) => game.type == 'private').toList();
-
   void _loadNextPage() {
-    final nextPage = (diwaniyaBloc.diwaniyaGamesPagination?.currentPage ?? 1) + 1;
-    diwaniyaBloc.add(GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: nextPage));
+    final nextPage =
+        (diwaniyaBloc.diwaniyaGamesPagination?.currentPage ?? 1) + 1;
+    diwaniyaBloc.add(
+      GetDiwaniyaGamesEvent(diwaniyaId: widget.diwaniyaId, page: nextPage),
+    );
   }
 
   @override
@@ -54,13 +55,9 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
         if (state is DiwaniyaError) {
           context.showMessage(isError: true, state.message);
         }
-        // Only private games are shown, so keep fetching while a page yields too few of them
-        if (state is DiwaniyaSuccess && !diwaniyaBloc.diwaniyaGamesReachedMax && _privateGames.length < 10) {
-          _loadNextPage();
-        }
       },
       builder: (context, state) {
-        final historyGames = _privateGames;
+        final historyGames = diwaniyaBloc.diwaniyaGames;
 
         return Scaffold(
           appBar: AppBar(title: Text(LocaleKeys.games_history.tr())),
@@ -70,7 +67,10 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
               ? Center(
                   child: Text(
                     LocaleKeys.no_game_history_found.tr(),
-                    style: TextStyle(color: AppColors.lightTextColor, fontSize: 16),
+                    style: TextStyle(
+                      color: AppColors.lightTextColor,
+                      fontSize: 16,
+                    ),
                   ),
                 )
               : PaginationList(
@@ -81,7 +81,10 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                     if (state is DiwaniyaLoading) return;
                     _loadNextPage();
                   },
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   separator: 12.heightBox(),
                   itemBuilder: (context, index) {
                     final game = historyGames[index];
@@ -103,7 +106,9 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
     final isMyDiwanyaGame = game.type == 'my_diwanya';
 
     // Get team names and images
-    final team1Name = isMyDiwanyaGame ? LocaleKeys.team_1.tr() : (game.creatorDiwaniya?.name ?? '');
+    final team1Name = isMyDiwanyaGame
+        ? LocaleKeys.team_1.tr()
+        : (game.creatorDiwaniya?.name ?? '');
     final team1Image = game.creatorDiwaniya?.image ?? AppAssets.ic_profile;
     final team2Name = isMyDiwanyaGame
         ? LocaleKeys.team_2.tr()
@@ -149,7 +154,9 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
     }
 
     // Get players count
-    final playersCount = ((game.playersTarget as int).round() / 2).round().toString();
+    final playersCount = ((game.playersTarget as int).round() / 2)
+        .round()
+        .toString();
     final playersStr = '$playersCount ${LocaleKeys.vs.tr()} $playersCount';
 
     // Get location
@@ -190,7 +197,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildTeamLogo(team1Name, team1Image),
-              16.widthBox(),
+              40.widthBox(),
               Text(
                 LocaleKeys.vs.tr(),
                 style: TextStyle(
@@ -199,7 +206,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              16.widthBox(),
+              40.widthBox(),
               _buildTeamLogo(team2Name, team2Image),
             ],
           ),
@@ -207,7 +214,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
           // Status button
           Center(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 6.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
               decoration: BoxDecoration(
                 color: statusColor,
                 borderRadius: BorderRadius.circular(20),
@@ -234,17 +241,24 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
           ),
           12.heightBox(),
           // Game details row 1
-          Wrap(
-            spacing: 8.w,
-            runSpacing: 8.h,
-            children: [
-              if (dateStr.isNotEmpty) _buildInfoChip(Icons.calendar_today, dateStr),
-              if (dateStr.isNotEmpty && timeStr.isNotEmpty)
-                if (timeStr.isNotEmpty) _buildInfoChip(Icons.access_time, timeStr),
-              if ((dateStr.isNotEmpty || timeStr.isNotEmpty) && playersStr.isNotEmpty)
-                if (playersStr.isNotEmpty) _buildInfoChip(Icons.people, playersStr),
-              if (location.isNotEmpty) _buildInfoChip(Icons.location_on, location),
-            ],
+          Center(
+            child: Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: [
+                if (dateStr.isNotEmpty)
+                  _buildInfoChip(Icons.calendar_today, dateStr),
+                if (dateStr.isNotEmpty && timeStr.isNotEmpty)
+                  if (timeStr.isNotEmpty)
+                    _buildInfoChip(Icons.access_time, timeStr),
+                if ((dateStr.isNotEmpty || timeStr.isNotEmpty) &&
+                    playersStr.isNotEmpty)
+                  if (playersStr.isNotEmpty)
+                    _buildInfoChip(Icons.people, playersStr),
+                if (location.isNotEmpty)
+                  _buildInfoChip(Icons.location_on, location),
+              ],
+            ),
           ),
         ],
       ),
@@ -257,21 +271,32 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
         Container(
           width: 50.w,
           height: 50.h,
-          decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.primaryLiteGrey),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.primaryLiteGrey,
+          ),
           child: ClipOval(
             child: imagePath.startsWith('http')
                 ? Image.network(
                     imagePath,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.person, color: AppColors.primaryColor, size: 30);
+                      return Icon(
+                        Icons.person,
+                        color: AppColors.primaryColor,
+                        size: 30,
+                      );
                     },
                   )
                 : Image.asset(
                     imagePath,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return Icon(Icons.person, color: AppColors.primaryColor, size: 30);
+                      return Icon(
+                        Icons.person,
+                        color: AppColors.primaryColor,
+                        size: 30,
+                      );
                     },
                   ),
           ),
