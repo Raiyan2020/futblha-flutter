@@ -474,7 +474,7 @@ class DiwaniyaRemoteDataSourceImpl implements DiwaniyaRemoteDataSource {
     try {
       final ApiResultModel<Response> result = await _apiCallHelper.makeRequest(
         dioRequestStrategy: locator<PostRequestStrategy>(),
-        uri: '$Diwaniyas/$diwaniyaId/delete',
+        uri: '$Diwaniyas/$diwaniyaId/delete-diwaniya',
       );
       return result.when(
         success: (Response response) async {
