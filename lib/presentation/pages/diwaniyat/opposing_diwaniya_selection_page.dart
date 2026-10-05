@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/debouncer.dart';
@@ -129,19 +130,19 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
         final diwaniyas = _getFilteredDiwaniyas();
 
         return Scaffold(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: context.scaffoldBackground,
           appBar: AppBar(
-            backgroundColor: AppColors.backgroundColor,
+            backgroundColor: context.scaffoldBackground,
             elevation: 0,
             centerTitle: true,
             leading: IconButton(
               onPressed: () => context.router.maybePop(),
-              icon: const Icon(Icons.arrow_back_ios_new, color: AppColors.primaryBlack),
+              icon: Icon(Icons.arrow_back_ios_new, color: context.textPrimary),
             ),
             title: Text(
               LocaleKeys.select_opposing_diwaniya.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryBlack,
+              style: TextStyle(
+                color: context.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
@@ -156,8 +157,8 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
                   children: [
                     Text(
                       LocaleKeys.select_opposing_diwaniya.tr(),
-                      style: const TextStyle(
-                        color: AppColors.primaryBlack,
+                      style: TextStyle(
+                        color: context.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -169,9 +170,9 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
                           child: Container(
                             height: 48.h,
                             decoration: BoxDecoration(
-                              color: AppColors.primaryWhite,
+                              color: context.cardBackground,
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.borderGrey, width: 1),
+                              border: Border.all(color: context.borderColor, width: 1),
                             ),
                             child: TextField(
                               controller: _searchController,
@@ -197,14 +198,14 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
                           width: 48.w,
                           height: 48.h,
                           decoration: BoxDecoration(
-                            color: AppColors.secondaryColor,
+                            color: context.chipBackground,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
                             onPressed: () {
                               DiwaniyaFilterBottomSheet.show(context);
                             },
-                            icon: Icon(Icons.filter_list, color: AppColors.primaryColor, size: 24),
+                            icon: Icon(Icons.filter_list, color: context.brandOnSurface, size: 24),
                           ),
                         ),
                       ],
@@ -236,7 +237,7 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
           bottomNavigationBar: Container(
             padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -253,7 +254,7 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
                   backgroundColor: AppColors.primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  disabledBackgroundColor: AppColors.primaryLiteGrey,
+                  disabledBackgroundColor: context.mutedBackground,
                 ),
                 child: Text(
                   LocaleKeys.select.tr(),
@@ -283,10 +284,10 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.secondaryColor : AppColors.primaryWhite,
+          color: isSelected ? context.chipBackground : context.cardBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppColors.primaryColor : AppColors.borderGrey,
+            color: isSelected ? AppColors.primaryColor : context.borderColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -297,7 +298,7 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
               backgroundImage: diwaniya.image != null && diwaniya.image!.startsWith('http')
                   ? NetworkImage(diwaniya.image!) as ImageProvider
                   : const AssetImage(AppAssets.ic_profile),
-              backgroundColor: AppColors.primaryLiteGrey,
+              backgroundColor: context.mutedBackground,
               onBackgroundImageError: (_, _) {},
             ),
             16.widthBox(),
@@ -307,8 +308,8 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
                 children: [
                   Text(
                     diwaniya.name ?? '',
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: context.textSecondary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -369,7 +370,7 @@ class _OpposingDiwaniyaSelectionPageState extends State<OpposingDiwaniyaSelectio
                   color: isSelected ? AppColors.primaryColor : AppColors.primaryGrey,
                   width: 2,
                 ),
-                color: isSelected ? AppColors.primaryColor : AppColors.primaryWhite,
+                color: isSelected ? AppColors.primaryColor : context.cardBackground,
               ),
               child: isSelected
                   ? const Icon(Icons.check, size: 16, color: AppColors.primaryWhite)

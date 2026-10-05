@@ -8,6 +8,7 @@ import '../../application/core/utils/helpers/extension_functions/size_extension.
 import '../../generated/locale_keys.g.dart';
 import 'app_size_boxes.dart';
 import 'custom_elevated_button.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class LoginRequiredDialog extends StatelessWidget {
   const LoginRequiredDialog({super.key});
@@ -27,7 +28,7 @@ class LoginRequiredDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.w),
         decoration: BoxDecoration(
-          color: Color(0xffF6FDFB),
+          color: context.scaffoldBackground,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -56,10 +57,10 @@ class LoginRequiredDialog extends StatelessWidget {
             // Title
             Text(
               LocaleKeys.login_required.tr(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark,
+                color: context.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -67,10 +68,10 @@ class LoginRequiredDialog extends StatelessWidget {
             // Message
             Text(
               LocaleKeys.you_must_login_first.tr(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: AppColors.primaryDark,
+                color: context.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),

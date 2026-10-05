@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 
 class DiwaniyaSegmentedButton extends StatelessWidget {
@@ -21,14 +22,14 @@ class DiwaniyaSegmentedButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryColor : Color(0xFFECECEC),
+          color: isSelected ? AppColors.primaryColor : (context.isDarkMode ? context.mutedBackground : Color(0xFFECECEC)),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-              color: isSelected ? AppColors.primaryWhite : AppColors.primaryDark,
+              color: isSelected ? AppColors.primaryWhite : context.textSecondary,
               fontSize: 14,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
             ),

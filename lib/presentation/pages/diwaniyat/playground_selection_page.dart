@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -129,7 +130,7 @@ class _PlaygroundSelectionPageState extends State<PlaygroundSelectionPage> {
                               decoration: BoxDecoration(
                                 color: playgroundsBloc.hasActiveFilters()
                                     ? AppColors.primaryColor
-                                    : AppColors.secondaryColor,
+                                    : context.chipBackground,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: IconButton(
@@ -140,7 +141,7 @@ class _PlaygroundSelectionPageState extends State<PlaygroundSelectionPage> {
                                   Icons.filter_list,
                                   color: playgroundsBloc.hasActiveFilters()
                                       ? AppColors.primaryWhite
-                                      : AppColors.primaryColor,
+                                      : context.brandOnSurface,
                                   size: 24,
                                 ),
                               ),
@@ -197,9 +198,9 @@ class _PlaygroundSelectionPageState extends State<PlaygroundSelectionPage> {
   Widget _buildPlaygroundCard(PlaygroundModel playground) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,16 +217,16 @@ class _PlaygroundSelectionPageState extends State<PlaygroundSelectionPage> {
                       return Container(
                         width: double.infinity,
                         height: 180.h,
-                        color: AppColors.primaryLiteGrey,
-                        child: const Icon(Icons.image, color: AppColors.primaryColor),
+                        color: context.mutedBackground,
+                        child: Icon(Icons.image, color: context.brandOnSurface),
                       );
                     },
                   )
                 : Container(
                     width: double.infinity,
                     height: 180.h,
-                    color: AppColors.primaryLiteGrey,
-                    child: const Icon(Icons.image, color: AppColors.primaryColor),
+                    color: context.mutedBackground,
+                    child: Icon(Icons.image, color: context.brandOnSurface),
                   ),
           ),
           Padding(
@@ -235,8 +236,8 @@ class _PlaygroundSelectionPageState extends State<PlaygroundSelectionPage> {
               children: [
                 Text(
                   playground.name ?? '',
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
+                  style: TextStyle(
+                    color: context.brandOnSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -279,8 +280,8 @@ class _PlaygroundSelectionPageState extends State<PlaygroundSelectionPage> {
                         children: [
                           TextSpan(
                             text: '${playground.price ?? '0'} ',
-                            style: const TextStyle(
-                              color: AppColors.primaryColor,
+                            style: TextStyle(
+                              color: context.brandOnSurface,
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),

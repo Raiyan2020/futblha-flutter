@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../application/config/app_assets.dart';
-import '../../../application/config/design_system/app_colors.dart';
 import '../../../application/core/basecomponents/base_view_model_view.dart';
 import '../../../application/core/di/app_component/app_component.dart';
 import '../../../application/core/utils/auto_router_setup/app_router.dart';
@@ -23,6 +22,7 @@ import '../auth/bloc/authentication_bloc.dart';
 import '../diwaniyat/bloc/diwaniya_bloc.dart';
 import '../notifications/bloc/notifications_bloc.dart';
 import '../settings/bloc/settings_bloc.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class LandingPage extends StatefulWidget {
@@ -156,7 +156,7 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
@@ -214,7 +214,7 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
         ? Icon(
             materialIcon,
             size: isActive ? 20 : 24,
-            color: isActive ? AppColors.primaryColor : AppColors.primaryDark,
+            color: isActive ? context.brandOnSurface : context.textSecondary,
           )
         : icon != null && icon.isNotEmpty
         ? SizedBox(
@@ -224,7 +224,7 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
               width: isActive ? 20 : 24,
               height: isActive ? 20 : 24,
               colorFilter: ColorFilter.mode(
-                isActive ? AppColors.primaryColor : AppColors.primaryDark,
+                isActive ? context.brandOnSurface : context.textSecondary,
                 BlendMode.srcIn,
               ),
             ),
@@ -240,7 +240,7 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: AppColors.secondaryColor,
+              color: context.chipBackground,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -253,7 +253,7 @@ class _LandingPageState extends State<LandingPage> with WidgetsBindingObserver {
                   child: Text(
                     label,
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: context.brandOnSurface,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),

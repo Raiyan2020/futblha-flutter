@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -104,7 +105,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -122,13 +123,13 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: AppColors.secondaryColor,
+                color: context.chipBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 bookingId,
-                style: const TextStyle(
-                  color: AppColors.primaryColor,
+                style: TextStyle(
+                  color: context.brandOnSurface,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -138,8 +139,8 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             // Location Name
             Text(
               booking.playground?.name ?? '',
-              style: const TextStyle(
-                color: AppColors.primaryColor,
+              style: TextStyle(
+                color: context.brandOnSurface,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -185,18 +186,18 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                   decoration: BoxDecoration(
-                    color: AppColors.secondaryColor,
+                    color: context.chipBackground,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.calendar_today, size: 14, color: AppColors.primaryColor),
+                      Icon(Icons.calendar_today, size: 14, color: context.brandOnSurface),
                       6.widthBox(),
                       Text(
                         booking.bookingDate ?? '',
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
+                        style: TextStyle(
+                          color: context.brandOnSurface,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -209,18 +210,18 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                     decoration: BoxDecoration(
-                      color: AppColors.secondaryColor,
+                      color: context.chipBackground,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.access_time, size: 14, color: AppColors.primaryColor),
+                        Icon(Icons.access_time, size: 14, color: context.brandOnSurface),
                         6.widthBox(),
                         Text(
                           timeRange,
-                          style: const TextStyle(
-                            color: AppColors.primaryColor,
+                          style: TextStyle(
+                            color: context.brandOnSurface,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),

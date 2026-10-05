@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -95,14 +96,14 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.account_balance_wallet,
-                        color: AppColors.primaryColor,
+                        color: context.brandOnSurface,
                         size: 32,
                       ),
                       16.widthBox(),
@@ -112,8 +113,8 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                           children: [
                             Text(
                               LocaleKeys.charge_wallet.tr(),
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -121,8 +122,8 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                             4.heightBox(),
                             Text(
                               '${widget.amount.toStringAsFixed(3)} ${LocaleKeys.kwd.tr()}',
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -145,7 +146,7 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                   child: Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryWhite,
+                      color: context.cardBackground,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -153,8 +154,8 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                       children: [
                         Text(
                           _selectedPaymentMethod?.name ?? _selectedPaymentMethod?.key ?? '',
-                          style: const TextStyle(
-                            color: AppColors.primaryColor,
+                          style: TextStyle(
+                            color: context.brandOnSurface,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -167,22 +168,22 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.apple, color: AppColors.primaryBlack, size: 20),
+                                  Icon(Icons.apple, color: context.textPrimary, size: 20),
                                   4.widthBox(),
                                   Text(
                                     LocaleKeys.pay.tr(),
-                                    style: const TextStyle(
-                                      color: AppColors.primaryBlack,
+                                    style: TextStyle(
+                                      color: context.textPrimary,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ],
                               ),
-                            const Icon(
+                            Icon(
                               Icons.arrow_forward_ios,
                               size: 16,
-                              color: AppColors.primaryDark,
+                              color: context.textSecondary,
                             ),
                           ],
                         ),
@@ -200,7 +201,7 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -208,16 +209,16 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                     children: [
                       Text(
                         LocaleKeys.charge_fees.tr(),
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                       Text(
                         '${widget.amount.toStringAsFixed(3)} ${LocaleKeys.kwd.tr()}',
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -238,7 +239,7 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
           return Container(
             padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -257,7 +258,7 @@ class _ChargeWalletPageState extends State<ChargeWalletPage> {
                   backgroundColor: AppColors.primaryColor,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  disabledBackgroundColor: AppColors.primaryLiteGrey,
+                  disabledBackgroundColor: context.mutedBackground,
                 ),
                 child: state is WalletLoading
                     ? const SizedBox(
@@ -295,7 +296,7 @@ class _PaymentSuccessDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -310,8 +311,8 @@ class _PaymentSuccessDialog extends StatelessWidget {
             24.heightBox(),
             Text(
               LocaleKeys.payment_done_successfully.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryDark,
+              style: TextStyle(
+                color: context.textSecondary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),

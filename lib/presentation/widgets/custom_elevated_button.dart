@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../application/config/design_system/app_colors.dart';
 import '../../application/core/utils/helpers/keyboard/keyboard_helper.dart';
 import 'custom_text.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String title;
@@ -35,7 +36,7 @@ class CustomElevatedButton extends StatelessWidget {
             }
           : null,
       style: ElevatedButton.styleFrom(
-        backgroundColor: filled ? color : AppColors.primaryWhite,
+        backgroundColor: filled ? color : context.cardBackground,
         minimumSize: const Size(0, 0),
         fixedSize: Size(width ?? MediaQuery.of(context).size.width, 45.h),
         //  padding: symmetricPadding(15, 25),

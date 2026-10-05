@@ -19,6 +19,7 @@ import '../auth/bloc/authentication_bloc.dart';
 import '../../widgets/notification_bell_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../notifications/bloc/notifications_bloc.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class ProfilePage extends StatefulWidget {
@@ -88,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: symmetricPadding(20, 20),
                     margin: EdgeInsets.only(top: 20.h),
                     decoration: BoxDecoration(
-                      color: AppColors.secondaryColor,
+                      color: context.chipBackground,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
@@ -103,8 +104,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: [
                         Text(
                           LocaleKeys.you_are_a_guest_user.tr(),
-                          style: const TextStyle(
-                            color: AppColors.primaryColor,
+                          style: TextStyle(
+                            color: context.brandOnSurface,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -180,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         padding: symmetricPadding(10, 20),
                         margin: EdgeInsets.only(top: 50.h),
                         decoration: BoxDecoration(
-                          color: AppColors.secondaryColor,
+                          color: context.chipBackground,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -219,8 +220,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               children: [
                                 Text(
                                   authBloc.user?.name ?? '',
-                                  style: const TextStyle(
-                                    color: AppColors.primaryColor,
+                                  style: TextStyle(
+                                    color: context.brandOnSurface,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -228,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Text(
                                   '${authBloc.user?.country_code ?? ''} ${authBloc.user?.phone_not_code ?? authBloc.user?.phone ?? ''}',
                                   style: TextStyle(
-                                    color: AppColors.primaryColor.withValues(alpha: 0.7),
+                                    color: context.brandOnSurface.withValues(alpha: 0.7),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                   ),
@@ -304,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 90.h,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.primaryWhite, width: 4),
+                          border: Border.all(color: context.cardBackground, width: 4),
                         ),
                         child: ClipOval(
                           child: authBloc.user?.image != null
@@ -444,7 +445,7 @@ class MenuItem extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: AppColors.secondaryColor,
+            color: context.chipBackground,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -457,13 +458,13 @@ class MenuItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(icon, color: AppColors.primaryColor, size: 24),
+              Icon(icon, color: context.brandOnSurface, size: 24),
               16.widthBox(),
               Expanded(
                 child: Text(
                   text.tr(),
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
+                  style: TextStyle(
+                    color: context.brandOnSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -476,15 +477,15 @@ class MenuItem extends StatelessWidget {
               if (trailing != null) ...[
                 Text(
                   trailing!,
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
+                  style: TextStyle(
+                    color: context.brandOnSurface,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 8.widthBox(),
               ],
-              const Icon(Icons.chevron_right, color: AppColors.primaryColor, size: 24),
+              Icon(Icons.chevron_right, color: context.brandOnSurface, size: 24),
             ],
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -187,7 +188,7 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -195,8 +196,8 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                     children: [
                       Text(
                         widget.playground.name ?? '',
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
+                        style: TextStyle(
+                          color: context.brandOnSurface,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -237,22 +238,22 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                             decoration: BoxDecoration(
-                              color: AppColors.secondaryColor,
+                              color: context.chipBackground,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.calendar_today,
                                   size: 14,
-                                  color: AppColors.primaryColor,
+                                  color: context.brandOnSurface,
                                 ),
                                 6.widthBox(),
                                 Text(
                                   DateFormat('dd MMM yyyy').format(widget.date),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryColor,
+                                  style: TextStyle(
+                                    color: context.brandOnSurface,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -264,22 +265,22 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                           Container(
                             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                             decoration: BoxDecoration(
-                              color: AppColors.secondaryColor,
+                              color: context.chipBackground,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.access_time,
                                   size: 14,
-                                  color: AppColors.primaryColor,
+                                  color: context.brandOnSurface,
                                 ),
                                 6.widthBox(),
                                 Text(
                                   widget.timeSlot,
-                                  style: const TextStyle(
-                                    color: AppColors.primaryColor,
+                                  style: TextStyle(
+                                    color: context.brandOnSurface,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -290,8 +291,8 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                           const Spacer(),
                           Text(
                             '${widget.playground.price ?? '0'} KWD',
-                            style: const TextStyle(
-                              color: AppColors.primaryColor,
+                            style: TextStyle(
+                              color: context.brandOnSurface,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
@@ -313,7 +314,7 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                   child: Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryWhite,
+                      color: context.cardBackground,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -322,14 +323,14 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                           _selectedPaymentMethod?.name ??
                               _selectedPaymentMethod?.key ??
                               LocaleKeys.apple_pay.tr(),
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
+                          style: TextStyle(
+                            color: context.textSecondary,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.primaryDark),
+                        Icon(Icons.arrow_forward_ios, size: 16, color: context.textSecondary),
                       ],
                     ),
                   ),
@@ -338,15 +339,15 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.account_balance_wallet,
                         size: 20,
-                        color: AppColors.primaryColor,
+                        color: context.brandOnSurface,
                       ),
                       12.widthBox(),
                       Expanded(
@@ -355,16 +356,16 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                           children: [
                             Text(
                               LocaleKeys.use_wallet_balance.tr(),
-                              style: const TextStyle(
-                                color: AppColors.primaryDark,
+                              style: TextStyle(
+                                color: context.textSecondary,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             Text(
                               '$_walletBalance KWD',
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -397,9 +398,9 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                       child: Container(
                         height: 48.h,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryWhite,
+                          color: context.cardBackground,
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.borderGrey, width: 1),
+                          border: Border.all(color: context.borderColor, width: 1),
                         ),
                         child: TextField(
                           controller: _voucherController,
@@ -424,7 +425,7 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -434,16 +435,16 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                         children: [
                           Text(
                             LocaleKeys.booking_fees.tr(),
-                            style: const TextStyle(
-                              color: AppColors.primaryDark,
+                            style: TextStyle(
+                              color: context.textSecondary,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           Text(
                             '$_total KWD',
-                            style: const TextStyle(
-                              color: AppColors.primaryDark,
+                            style: TextStyle(
+                              color: context.textSecondary,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -451,23 +452,23 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
                         ],
                       ),
                       12.heightBox(),
-                      Divider(color: AppColors.borderGrey),
+                      Divider(color: context.borderColor),
                       12.heightBox(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             LocaleKeys.total.tr(),
-                            style: const TextStyle(
-                              color: AppColors.primaryBlack,
+                            style: TextStyle(
+                              color: context.textPrimary,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
                             '$_total KWD',
-                            style: const TextStyle(
-                              color: AppColors.primaryColor,
+                            style: TextStyle(
+                              color: context.brandOnSurface,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                             ),
@@ -490,7 +491,7 @@ class _ConfirmGameBookingPageState extends State<ConfirmGameBookingPage> {
           return Container(
             padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -544,7 +545,7 @@ class _BookingSuccessDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -559,8 +560,8 @@ class _BookingSuccessDialog extends StatelessWidget {
             24.heightBox(),
             Text(
               LocaleKeys.game_booking_confirmed_successfully.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryDark,
+              style: TextStyle(
+                color: context.textSecondary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),

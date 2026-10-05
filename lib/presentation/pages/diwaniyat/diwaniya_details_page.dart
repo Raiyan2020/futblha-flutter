@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart' as el;
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -225,7 +226,7 @@ class _DiwaniyaDetailsPageState extends State<DiwaniyaDetailsPage> {
                     // Profile Picture
                     CircleAvatar(
                       radius: 55,
-                      backgroundColor: AppColors.primaryWhite,
+                      backgroundColor: context.cardBackground,
                       backgroundImage: displayImage != null
                           ? NetworkImage(displayImage) as ImageProvider
                           : const AssetImage(AppAssets.ic_profile),

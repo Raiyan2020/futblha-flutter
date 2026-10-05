@@ -5,6 +5,7 @@ import 'package:futblha/presentation/widgets/custom_form_field.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../application/config/design_system/app_colors.dart';
+import '../../../../application/config/design_system/app_theme_colors.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text.dart';
@@ -160,7 +161,7 @@ class _SearchDialogState extends State<SearchDialog>
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Colors.white,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16.0),
         boxShadow: const [
           BoxShadow(
@@ -295,7 +296,7 @@ class _SelectableChipState extends State<SelectableChip> {
             borderRadius: BorderRadius.circular(20),
             color: widget.model.isSelected
                 ? AppColors.primaryYellow
-                : AppColors.primaryWhite,
+                : context.cardBackground,
           ),
           child: CustomText(
             widget.model.label,
@@ -303,7 +304,7 @@ class _SelectableChipState extends State<SelectableChip> {
               fontWeight: FontWeight.bold,
               color: widget.model.isSelected
                   ? AppColors.primaryColor
-                  : AppColors.primaryBlack,
+                  : context.textPrimary,
             ),
           ),
         ),

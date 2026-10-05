@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -47,9 +48,9 @@ class UpcomingGameCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.borderGrey, width: 1),
+          border: Border.all(color: context.borderColor, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,13 +60,13 @@ class UpcomingGameCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
+                  color: context.chipBackground,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   gameTypeLabel,
                   style: TextStyle(
-                    color: AppColors.primaryColor,
+                    color: context.brandOnSurface,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -81,7 +82,7 @@ class UpcomingGameCard extends StatelessWidget {
                 Text(
                   LocaleKeys.vs.tr(),
                   style: TextStyle(
-                    color: AppColors.primaryBlack,
+                    color: context.textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -105,7 +106,7 @@ class UpcomingGameCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: AppColors.secondaryColor,
+                color: context.chipBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -122,7 +123,7 @@ class UpcomingGameCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
+                  color: context.chipBackground,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(

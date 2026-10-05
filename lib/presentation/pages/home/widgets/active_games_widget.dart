@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -137,9 +138,9 @@ class ActiveGamesWidget extends StatelessWidget {
       margin: EdgeInsets.only(left: 12.w),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,10 +159,10 @@ class ActiveGamesWidget extends StatelessWidget {
                           return Container(
                             width: 40.w,
                             height: 40.h,
-                            color: AppColors.primaryLiteGrey,
-                            child: const Icon(
+                            color: context.mutedBackground,
+                            child: Icon(
                               Icons.person,
-                              color: AppColors.primaryColor,
+                              color: context.brandOnSurface,
                             ),
                           );
                         },
@@ -175,10 +176,10 @@ class ActiveGamesWidget extends StatelessWidget {
                           return Container(
                             width: 40.w,
                             height: 40.h,
-                            color: AppColors.primaryLiteGrey,
-                            child: const Icon(
+                            color: context.mutedBackground,
+                            child: Icon(
                               Icons.person,
-                              color: AppColors.primaryColor,
+                              color: context.brandOnSurface,
                             ),
                           );
                         },
@@ -191,8 +192,8 @@ class ActiveGamesWidget extends StatelessWidget {
                   children: [
                     Text(
                       diwaniyaName,
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -229,13 +230,13 @@ class ActiveGamesWidget extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLiteGrey,
+                    color: context.mutedBackground,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '+${joinedPlayers - 6}',
-                    style: const TextStyle(
-                      color: AppColors.primaryColor,
+                    style: TextStyle(
+                      color: context.brandOnSurface,
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
                     ),
@@ -255,13 +256,13 @@ class ActiveGamesWidget extends StatelessWidget {
           12.heightBox(),
           Row(
             children: [
-              _buildInfoRow(icon: AppAssets.ic_calender, text: dateStr),
+              _buildInfoRow(context, icon: AppAssets.ic_calender, text: dateStr),
               8.widthBox(),
-              _buildInfoRow(icon: Icons.access_time, text: timeStr),
+              _buildInfoRow(context, icon: Icons.access_time, text: timeStr),
             ],
           ),
           8.heightBox(),
-          _buildInfoRow(icon: Icons.location_on, text: location),
+          _buildInfoRow(context, icon: Icons.location_on, text: location),
         ],
       ),
     );
@@ -298,7 +299,7 @@ class ActiveGamesWidget extends StatelessWidget {
               height: avatarSize,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2),
+                border: Border.all(color: context.cardBackground, width: 2),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.12),
@@ -308,7 +309,7 @@ class ActiveGamesWidget extends StatelessWidget {
                 ],
               ),
               child: ClipOval(
-                child: _buildPlayerAvatar(
+                child: _buildPlayerAvatar(context,
                   index < players.length ? players[index].image : null,
                 ),
               ),
@@ -319,7 +320,7 @@ class ActiveGamesWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlayerAvatar(String? imageUrl) {
+  Widget _buildPlayerAvatar(BuildContext context, String? imageUrl) {
     if (imageUrl != null && imageUrl.isNotEmpty) {
       return ClipOval(
         child: Image.network(
@@ -328,32 +329,32 @@ class ActiveGamesWidget extends StatelessWidget {
           height: 24,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return const CircleAvatar(
+            return CircleAvatar(
               radius: 12,
-              backgroundColor: AppColors.primaryLiteGrey,
+              backgroundColor: context.mutedBackground,
               child: Icon(
                 Icons.person,
                 size: 14,
-                color: AppColors.primaryColor,
+                color: context.brandOnSurface,
               ),
             );
           },
         ),
       );
     }
-    return const CircleAvatar(
+    return CircleAvatar(
       radius: 12,
-      backgroundColor: AppColors.primaryLiteGrey,
-      child: Icon(Icons.person, size: 14, color: AppColors.primaryColor),
+      backgroundColor: context.mutedBackground,
+      child: Icon(Icons.person, size: 14, color: context.brandOnSurface),
     );
   }
 
-  Widget _buildInfoRow({required dynamic icon, required String text}) {
+  Widget _buildInfoRow(BuildContext context, {required dynamic icon, required String text}) {
     final isSvg = icon is String;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -364,19 +365,19 @@ class ActiveGamesWidget extends StatelessWidget {
               icon,
               width: 14,
               height: 14,
-              colorFilter: const ColorFilter.mode(
-                AppColors.primaryColor,
+              colorFilter: ColorFilter.mode(
+                context.brandOnSurface,
                 BlendMode.srcIn,
               ),
             )
           else
-            Icon(icon as IconData, size: 14, color: AppColors.primaryColor),
+            Icon(icon as IconData, size: 14, color: context.brandOnSurface),
           8.widthBox(),
           Flexible(
             child: Text(
               text,
-              style: const TextStyle(
-                color: AppColors.primaryColor,
+              style: TextStyle(
+                color: context.brandOnSurface,
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),

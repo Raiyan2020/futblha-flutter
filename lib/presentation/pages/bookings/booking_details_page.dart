@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -94,7 +95,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       Container(
                         padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryWhite,
+                          color: context.cardBackground,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -104,15 +105,15 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                               decoration: BoxDecoration(
-                                color: AppColors.secondaryColor,
+                                color: context.chipBackground,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 bookingData?.id != null
                                     ? '#${bookingData!.id}'
                                     : widget.booking.bookingId,
-                                style: const TextStyle(
-                                  color: AppColors.primaryColor,
+                                style: TextStyle(
+                                  color: context.brandOnSurface,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -122,8 +123,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                             // Location Name
                             Text(
                               bookingData?.playground?.name ?? widget.booking.locationName,
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -177,22 +178,22 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                                   decoration: BoxDecoration(
-                                    color: AppColors.secondaryColor,
+                                    color: context.chipBackground,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.calendar_today,
                                         size: 14,
-                                        color: AppColors.primaryColor,
+                                        color: context.brandOnSurface,
                                       ),
                                       6.widthBox(),
                                       Text(
                                         bookingData?.bookingDate ?? widget.booking.date,
-                                        style: const TextStyle(
-                                          color: AppColors.primaryColor,
+                                        style: TextStyle(
+                                          color: context.brandOnSurface,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -205,22 +206,22 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                                     decoration: BoxDecoration(
-                                      color: AppColors.secondaryColor,
+                                      color: context.chipBackground,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(
+                                        Icon(
                                           Icons.access_time,
                                           size: 14,
-                                          color: AppColors.primaryColor,
+                                          color: context.brandOnSurface,
                                         ),
                                         6.widthBox(),
                                         Text(
                                           timeRange,
-                                          style: const TextStyle(
-                                            color: AppColors.primaryColor,
+                                          style: TextStyle(
+                                            color: context.brandOnSurface,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -244,7 +245,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       Container(
                         padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryWhite,
+                          color: context.cardBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -252,8 +253,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                           children: [
                             Text(
                               paymentMethod,
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -262,12 +263,12 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.apple, color: AppColors.primaryBlack, size: 20),
+                                  Icon(Icons.apple, color: context.textPrimary, size: 20),
                                   4.widthBox(),
                                   Text(
                                     LocaleKeys.pay.tr(),
-                                    style: const TextStyle(
-                                      color: AppColors.primaryBlack,
+                                    style: TextStyle(
+                                      color: context.textPrimary,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -287,7 +288,7 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                       Container(
                         padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryWhite,
+                          color: context.cardBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -297,16 +298,16 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               children: [
                                 Text(
                                   LocaleKeys.booking_fees.tr(),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryDark,
+                                  style: TextStyle(
+                                    color: context.textSecondary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
                                 Text(
                                   '$bookingFee ${LocaleKeys.kwd.tr()}',
-                                  style: const TextStyle(
-                                    color: AppColors.primaryDark,
+                                  style: TextStyle(
+                                    color: context.textSecondary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -320,8 +321,8 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                                 children: [
                                   Text(
                                     LocaleKeys.discount.tr(),
-                                    style: const TextStyle(
-                                      color: AppColors.primaryDark,
+                                    style: TextStyle(
+                                      color: context.textSecondary,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -338,23 +339,23 @@ class _BookingDetailsPageState extends State<BookingDetailsPage> {
                               ),
                             ],
                             12.heightBox(),
-                            Divider(color: AppColors.borderGrey),
+                            Divider(color: context.borderColor),
                             12.heightBox(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   LocaleKeys.total.tr(),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryBlack,
+                                  style: TextStyle(
+                                    color: context.textPrimary,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text(
                                   '$total ${LocaleKeys.kwd.tr()}',
-                                  style: const TextStyle(
-                                    color: AppColors.primaryColor,
+                                  style: TextStyle(
+                                    color: context.brandOnSurface,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),

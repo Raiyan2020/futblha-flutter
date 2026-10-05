@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class CustomConfirmationBottomSheet extends StatelessWidget {
   final String? iconPath;
@@ -45,7 +46,7 @@ class CustomConfirmationBottomSheet extends StatelessWidget {
             message,
             textAlign: TextAlign.center, // Center the text
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: AppColors.primaryBlack,
+                  color: context.textPrimary,
                 ),
           ),
           const SizedBox(height: 32),
@@ -59,10 +60,10 @@ class CustomConfirmationBottomSheet extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: onCancel,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
+                        backgroundColor: context.cardBackground,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          side: const BorderSide(color: AppColors.borderGrey),
+                          side: BorderSide(color: context.borderColor),
                         ),
                       ),
                       child: Visibility(
@@ -71,7 +72,7 @@ class CustomConfirmationBottomSheet extends StatelessWidget {
                           cancelButtonText ?? '',
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: AppColors.primaryBlack,
+                                    color: context.textPrimary,
                                   ),
                         ),
                       ),

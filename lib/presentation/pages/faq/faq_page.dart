@@ -9,6 +9,7 @@ import '../../widgets/custom_text.dart';
 import '../../widgets/custom_loading_widget.dart'; // Import for LoadingWidget
 // Import FaqBloc and its related files
 import 'bloc/faq_bloc.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 // Import FaqEntity
 
 @RoutePage()
@@ -63,7 +64,7 @@ class FaqPage extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               margin: const EdgeInsets.all(15.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.cardBackground,
                 borderRadius: BorderRadius.circular(15.0),
                 boxShadow: [
                   BoxShadow(

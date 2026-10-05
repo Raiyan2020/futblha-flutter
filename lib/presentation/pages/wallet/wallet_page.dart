@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -71,7 +72,7 @@ class _WalletPageState extends State<WalletPage> {
                       Container(
                         padding: EdgeInsets.all(20.w),
                         decoration: BoxDecoration(
-                          color: AppColors.secondaryColor,
+                          color: context.chipBackground,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
@@ -79,16 +80,16 @@ class _WalletPageState extends State<WalletPage> {
                           children: [
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.account_balance_wallet,
-                                  color: AppColors.primaryColor,
+                                  color: context.brandOnSurface,
                                   size: 32,
                                 ),
                                 16.widthBox(),
                                 Text(
                                   LocaleKeys.wallet_balance.tr(),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryColor,
+                                  style: TextStyle(
+                                    color: context.brandOnSurface,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -98,8 +99,8 @@ class _WalletPageState extends State<WalletPage> {
                             16.heightBox(),
                             Text(
                               '${bloc.balance ?? '0.000'} ${LocaleKeys.kwd.tr()}',
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -167,7 +168,7 @@ class _WalletPageState extends State<WalletPage> {
 
   Widget _buildTransactionCard(TransactionModel transaction) {
     final isGained = transaction.type == 'gained';
-    final amountColor = isGained ? AppColors.primaryColor : AppColors.primaryRed;
+    final amountColor = isGained ? context.brandOnSurface : AppColors.primaryRed;
     final typeText = isGained ? LocaleKeys.gained.tr() : LocaleKeys.deduct.tr();
     final amountPrefix = isGained ? '+' : '';
     final amount =
@@ -176,7 +177,7 @@ class _WalletPageState extends State<WalletPage> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -218,8 +219,8 @@ class _WalletPageState extends State<WalletPage> {
                 4.heightBox(),
                 Text(
                   transaction.notes ?? '',
-                  style: const TextStyle(
-                    color: AppColors.primaryDark,
+                  style: TextStyle(
+                    color: context.textSecondary,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),

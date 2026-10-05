@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -131,14 +132,14 @@ class _DiwaniyaRankingPageState extends State<DiwaniyaRankingPage> {
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 10.h),
                           decoration: BoxDecoration(
-                            color: isSelected ? AppColors.primaryColor : AppColors.primaryLiteGrey,
+                            color: isSelected ? AppColors.primaryColor : context.mutedBackground,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
                             child: Text(
                               _filters[index],
                               style: TextStyle(
-                                color: isSelected ? AppColors.primaryWhite : AppColors.primaryDark,
+                                color: isSelected ? AppColors.primaryWhite : context.textSecondary,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -193,7 +194,7 @@ class _DiwaniyaRankingPageState extends State<DiwaniyaRankingPage> {
       height: 170.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         image: DecorationImage(image: AssetImage(AppAssets.rank_background), fit: BoxFit.cover),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [

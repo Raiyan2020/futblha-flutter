@@ -19,6 +19,7 @@ import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 
 import '../../../application/core/utils/auto_router_setup/app_router.dart';
 import '../../../data/models/enums/position_enum.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class CompleteProfilePage extends StatefulWidget {
@@ -130,7 +131,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           height: 120.w,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.primaryLiteGrey,
+                            color: context.mutedBackground,
                             border: Border.all(color: AppColors.primaryColor, width: 1.5),
                           ),
                           child: _profileImage != null

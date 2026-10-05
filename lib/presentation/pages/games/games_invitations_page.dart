@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -167,7 +168,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryColor : AppColors.primaryLiteGrey,
+          color: isSelected ? AppColors.primaryColor : context.mutedBackground,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
@@ -199,9 +200,9 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.borderGrey, width: 1),
+          border: Border.all(color: context.borderColor, width: 1),
           boxShadow: [
             BoxShadow(
               color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -224,14 +225,14 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                       backgroundImage: creatorDiwaniya?.image != null
                           ? NetworkImage(creatorDiwaniya!.image!) as ImageProvider
                           : const AssetImage(AppAssets.ic_profile),
-                      backgroundColor: AppColors.primaryLiteGrey,
+                      backgroundColor: context.mutedBackground,
                       onBackgroundImageError: (_, _) {},
                     ),
                     8.heightBox(),
                     Text(
                       creatorDiwaniya?.name ?? '',
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
@@ -241,8 +242,8 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                 16.widthBox(),
                 Text(
                   LocaleKeys.vs.tr(),
-                  style: const TextStyle(
-                    color: AppColors.primaryColor,
+                  style: TextStyle(
+                    color: context.brandOnSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -255,14 +256,14 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                       backgroundImage: opponentDiwaniya?.image != null
                           ? NetworkImage(opponentDiwaniya!.image!) as ImageProvider
                           : const AssetImage(AppAssets.ic_profile),
-                      backgroundColor: AppColors.primaryLiteGrey,
+                      backgroundColor: context.mutedBackground,
                       onBackgroundImageError: (_, _) {},
                     ),
                     8.heightBox(),
                     Text(
                       opponentDiwaniya?.name ?? '',
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
@@ -286,7 +287,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
             Container(
               padding: symmetricPadding(3, 2),
               decoration: BoxDecoration(
-                color: AppColors.secondaryColor,
+                color: context.chipBackground,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -380,12 +381,12 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppColors.primaryColor),
+          Icon(icon, size: 14, color: context.brandOnSurface),
           6.widthBox(),
           Text(
             text,
-            style: const TextStyle(
-              color: AppColors.primaryColor,
+            style: TextStyle(
+              color: context.brandOnSurface,
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
@@ -406,7 +407,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
         break;
       case GameInvitationStatus.accepted:
         statusText = LocaleKeys.accepted.tr();
-        statusColor = AppColors.primaryColor;
+        statusColor = context.brandOnSurface;
         break;
       case GameInvitationStatus.pending:
         statusText = LocaleKeys.pending.tr();
@@ -422,7 +423,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: AppColors.secondaryColor,
+          color: context.chipBackground,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(

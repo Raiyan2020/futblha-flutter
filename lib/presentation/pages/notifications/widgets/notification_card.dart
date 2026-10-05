@@ -8,6 +8,7 @@ import '../../../../application/core/utils/fcm/notification_navigation.dart';
 import '../../../../data/models/response_model/notifications/notifications_response_model.dart';
 import '../../../widgets/custom_text.dart';
 import '../../../widgets/scaffold_pading.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class NotificationCard extends StatelessWidget {
   const NotificationCard({super.key, required this.model});
@@ -22,7 +23,7 @@ class NotificationCard extends StatelessWidget {
       child: Container(
         padding: symmetricPadding(15, 15),
         decoration: BoxDecoration(
-          color: highlight ? AppColors.primaryRed.withValues(alpha: 0.08) : AppColors.textFieldColor,
+          color: highlight ? AppColors.primaryRed.withValues(alpha: 0.08) : context.cardBackground,
           border: highlight ? Border.all(color: AppColors.primaryRed, width: 1.5) : null,
           boxShadow: [
             BoxShadow(

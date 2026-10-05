@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -142,10 +143,10 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                           children: [
                             TextSpan(
                               text: '${playground?.price ?? widget.playground.price ?? '0'} ',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.primaryColor,
+                                color: context.brandOnSurface,
                               ),
                             ),
                             TextSpan(
@@ -198,22 +199,22 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                         child: Container(
                           padding: EdgeInsets.all(12.w),
                           decoration: BoxDecoration(
-                            color: AppColors.secondaryColor,
+                            color: context.chipBackground,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.location_on,
-                                color: AppColors.primaryColor,
+                                color: context.brandOnSurface,
                                 size: 20,
                               ),
                               12.widthBox(),
                               Expanded(
                                 child: Text(
                                   playground?.city ?? widget.playground.city ?? '',
-                                  style: const TextStyle(
-                                    color: AppColors.primaryDark,
+                                  style: TextStyle(
+                                    color: context.textSecondary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -221,16 +222,16 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                               ),
                               Text(
                                 LocaleKeys.get_directions.tr(),
-                                style: const TextStyle(
-                                  color: AppColors.primaryColor,
+                                style: TextStyle(
+                                  color: context.brandOnSurface,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               4.widthBox(),
-                              const Icon(
+                              Icon(
                                 Icons.arrow_forward_ios,
-                                color: AppColors.primaryColor,
+                                color: context.brandOnSurface,
                                 size: 14,
                               ),
                             ],
@@ -242,19 +243,19 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                       Container(
                         padding: EdgeInsets.all(12.w),
                         decoration: BoxDecoration(
-                          color: AppColors.secondaryColor,
+                          color: context.chipBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.grid_view, color: AppColors.primaryColor, size: 20),
+                            Icon(Icons.grid_view, color: context.brandOnSurface, size: 20),
                             12.widthBox(),
                             Text(
                               playground != null
                                   ? '${playground.landType ?? ''} - ${playground.capacity ?? ''}'
                                   : '${widget.playground.landType ?? ''} - ${widget.playground.capacity ?? ''}',
-                              style: const TextStyle(
-                                color: AppColors.primaryDark,
+                              style: TextStyle(
+                                color: context.textSecondary,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -272,7 +273,7 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryWhite,
+                          color: context.cardBackground,
                           border: Border.all(color: AppColors.primaryGrey),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -306,7 +307,7 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                                           errorBuilder: (context, error, stackTrace) {
                                             return Icon(
                                               Icons.check_circle,
-                                              color: AppColors.primaryColor,
+                                              color: context.brandOnSurface,
                                               size: 18,
                                             );
                                           },
@@ -314,15 +315,15 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                                       else
                                         Icon(
                                           Icons.check_circle,
-                                          color: AppColors.primaryColor,
+                                          color: context.brandOnSurface,
                                           size: 18,
                                         ),
                                       8.widthBox(),
                                       Expanded(
                                         child: Text(
                                           facility?.name ?? '',
-                                          style: const TextStyle(
-                                            color: AppColors.primaryDark,
+                                          style: TextStyle(
+                                            color: context.textSecondary,
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -390,7 +391,7 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                         Container(
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryWhite,
+                            color: context.cardBackground,
                             border: Border.all(color: AppColors.primaryGrey),
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -398,8 +399,8 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                             playground?.description ??
                                 widget.playground.description ??
                                 LocaleKeys.no_description_available.tr(),
-                            style: const TextStyle(
-                              color: AppColors.primaryDark,
+                            style: TextStyle(
+                              color: context.textSecondary,
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               height: 1.5,
@@ -482,10 +483,10 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
         height: 200.h,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.primaryLiteGrey,
+          color: context.mutedBackground,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Icon(Icons.image, color: AppColors.primaryColor, size: 60),
+        child: Icon(Icons.image, color: context.brandOnSurface, size: 60),
       );
     }
 
@@ -493,7 +494,7 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
       height: 200.h,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.primaryLiteGrey,
+        color: context.mutedBackground,
         borderRadius: BorderRadius.circular(20),
       ),
       child: ClipRRect(
@@ -504,8 +505,8 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: AppColors.primaryLiteGrey,
-                    child: const Icon(Icons.image, color: AppColors.primaryColor, size: 60),
+                    color: context.mutedBackground,
+                    child: Icon(Icons.image, color: context.brandOnSurface, size: 60),
                   );
                 },
               )
@@ -523,8 +524,8 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: AppColors.primaryLiteGrey,
-                        child: const Icon(Icons.image, color: AppColors.primaryColor, size: 60),
+                        color: context.mutedBackground,
+                        child: Icon(Icons.image, color: context.brandOnSurface, size: 60),
                       );
                     },
                   );
@@ -724,7 +725,7 @@ class _RatingBottomSheetState extends State<_RatingBottomSheet> {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -823,7 +824,7 @@ class _RatingSubmitButton extends StatelessWidget {
               backgroundColor: AppColors.primaryColor,
               padding: EdgeInsets.symmetric(vertical: 16.h),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              disabledBackgroundColor: AppColors.primaryLiteGrey,
+              disabledBackgroundColor: context.mutedBackground,
             ),
             child: isLoading
                 ? const SizedBox(

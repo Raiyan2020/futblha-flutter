@@ -25,6 +25,7 @@ import '../../widgets/scaffold_pading.dart';
 import 'bloc/contact_bloc.dart';
 import '../../pages/settings/bloc/settings_bloc.dart';
 import '../../../domain/entities/settings_entity.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class SupportPage extends StatefulWidget {
@@ -108,7 +109,7 @@ class _SupportPageState extends State<SupportPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.primaryColor,
+                                color: context.brandOnSurface,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -118,7 +119,7 @@ class _SupportPageState extends State<SupportPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.primaryColor,
+                                color: context.brandOnSurface,
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -174,7 +175,7 @@ class _SupportPageState extends State<SupportPage> {
                       // OR Separator
                       Row(
                         children: [
-                          Expanded(child: Divider(color: AppColors.borderGrey, thickness: 1)),
+                          Expanded(child: Divider(color: context.borderColor, thickness: 1)),
                           12.widthBox(),
                           CustomText(
                             LocaleKeys.contact_us_label_2,
@@ -185,7 +186,7 @@ class _SupportPageState extends State<SupportPage> {
                             ),
                           ),
                           12.widthBox(),
-                          Expanded(child: Divider(color: AppColors.borderGrey, thickness: 1)),
+                          Expanded(child: Divider(color: context.borderColor, thickness: 1)),
                         ],
                       ),
                       24.heightBox(),
@@ -266,18 +267,18 @@ class _SupportPageState extends State<SupportPage> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: AppColors.secondaryColor,
+          color: context.chipBackground,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
-            Icon(icon, color: AppColors.primaryColor, size: 24),
+            Icon(icon, color: context.brandOnSurface, size: 24),
             12.widthBox(),
             Expanded(
               child: Text(
                 text,
-                style: const TextStyle(
-                  color: AppColors.primaryColor,
+                style: TextStyle(
+                  color: context.brandOnSurface,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class CustomTabBar extends StatelessWidget {
   final String text;
@@ -26,7 +27,7 @@ class CustomTabBar extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(fontSize: 16.0, color: isSelected ? AppColors.primaryColor : Colors.black),
+            style: TextStyle(fontSize: 16.0, color: isSelected ? context.brandOnSurface : context.textPrimary),
           ),
         ),
       ),

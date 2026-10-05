@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -168,9 +169,9 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,13 +180,13 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: AppColors.secondaryColor,
+              color: context.chipBackground,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               game.type?.toLowerCase().tr() ?? '',
               style: TextStyle(
-                color: AppColors.primaryColor,
+                color: context.brandOnSurface,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -201,7 +202,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
               Text(
                 LocaleKeys.vs.tr(),
                 style: TextStyle(
-                  color: AppColors.primaryBlack,
+                  color: context.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -273,7 +274,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
           height: 50.h,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.primaryLiteGrey,
+            color: context.mutedBackground,
           ),
           child: ClipOval(
             child: imagePath.startsWith('http')
@@ -283,7 +284,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(
                         Icons.person,
-                        color: AppColors.primaryColor,
+                        color: context.brandOnSurface,
                         size: 30,
                       );
                     },
@@ -294,7 +295,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(
                         Icons.person,
-                        color: AppColors.primaryColor,
+                        color: context.brandOnSurface,
                         size: 30,
                       );
                     },
@@ -305,7 +306,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
         Text(
           name,
           style: TextStyle(
-            color: AppColors.primaryBlack,
+            color: context.textPrimary,
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
@@ -320,19 +321,19 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppColors.primaryColor),
+          Icon(icon, size: 14, color: context.brandOnSurface),
           4.widthBox(),
           Flexible(
             child: Text(
               text,
               style: TextStyle(
-                color: AppColors.primaryColor,
+                color: context.brandOnSurface,
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),

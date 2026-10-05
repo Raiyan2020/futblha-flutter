@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/diwaniya/diwaniya_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -73,14 +74,14 @@ class OtherDiwaniyatContent extends StatelessWidget {
                     width: 48.w,
                     height: 48.h,
                     decoration: BoxDecoration(
-                      color: hasActiveFilters ? AppColors.primaryColor : AppColors.secondaryColor,
+                      color: hasActiveFilters ? AppColors.primaryColor : context.chipBackground,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
                       onPressed: onFilterPressed,
                       icon: Icon(
                         Icons.filter_list,
-                        color: hasActiveFilters ? AppColors.primaryWhite : AppColors.primaryColor,
+                        color: hasActiveFilters ? AppColors.primaryWhite : context.brandOnSurface,
                         size: 24,
                       ),
                     ),

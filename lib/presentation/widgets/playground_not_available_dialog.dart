@@ -6,6 +6,7 @@ import '../../application/core/utils/helpers/extension_functions/size_extension.
 import '../../generated/locale_keys.g.dart';
 import 'app_size_boxes.dart';
 import 'custom_elevated_button.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class PlaygroundNotAvailableDialog extends StatelessWidget {
   final String playgroundName;
@@ -41,7 +42,7 @@ class PlaygroundNotAvailableDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -77,10 +78,10 @@ class PlaygroundNotAvailableDialog extends StatelessWidget {
             // Message in dark gray
             Text(
               message,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
-                color: AppColors.primaryDark,
+                color: context.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),

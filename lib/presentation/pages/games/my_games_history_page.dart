@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart' as el;
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -142,9 +143,9 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.secondaryColor, width: 1),
+          border: Border.all(color: context.chipBackground, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +164,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                         context.router.push(ChatRoute());
                       }
                     },
-                    icon: Icon(Icons.chat_outlined, color: AppColors.primaryColor),
+                    icon: Icon(Icons.chat_outlined, color: context.brandOnSurface),
                   ),
               ],
             ),
@@ -179,14 +180,14 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                       backgroundImage: team1Image.startsWith('http')
                           ? NetworkImage(team1Image) as ImageProvider
                           : AssetImage(team1Image),
-                      backgroundColor: AppColors.primaryLiteGrey,
+                      backgroundColor: context.mutedBackground,
                       onBackgroundImageError: (_, _) {},
                     ),
                     8.heightBox(),
                     Text(
                       team1Name,
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
@@ -194,10 +195,10 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                   ],
                 ),
                 16.widthBox(),
-                const Text(
+                Text(
                   'VS',
                   style: TextStyle(
-                    color: AppColors.primaryColor,
+                    color: context.brandOnSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -210,14 +211,14 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                       backgroundImage: team2Image.startsWith('http')
                           ? NetworkImage(team2Image) as ImageProvider
                           : AssetImage(team2Image),
-                      backgroundColor: AppColors.primaryLiteGrey,
+                      backgroundColor: context.mutedBackground,
                       onBackgroundImageError: (_, _) {},
                     ),
                     8.heightBox(),
                     Text(
                       team2Name,
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
@@ -235,8 +236,8 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
             // Creator Information
             Text(
               '${LocaleKeys.creator.tr()} : $creatorName',
-              style: const TextStyle(
-                color: AppColors.primaryDark,
+              style: TextStyle(
+                color: context.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
               ),
@@ -245,7 +246,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
             // Game Details
             Container(
               decoration: BoxDecoration(
-                color: AppColors.secondaryColor.withValues(alpha: .5),
+                color: context.chipBackground.withValues(alpha: .5),
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -254,12 +255,12 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 14, color: AppColors.primaryColor),
+                      Icon(Icons.calendar_today, size: 14, color: context.brandOnSurface),
                       6.widthBox(),
                       Text(
                         dateStr,
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
@@ -268,12 +269,12 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.access_time, size: 14, color: AppColors.primaryColor),
+                      Icon(Icons.access_time, size: 14, color: context.brandOnSurface),
                       6.widthBox(),
                       Text(
                         timeStr,
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
@@ -282,13 +283,13 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.person, size: 14, color: AppColors.primaryColor),
+                      Icon(Icons.person, size: 14, color: context.brandOnSurface),
                       6.widthBox(),
                       Text(
                         playersStr,
                         textDirection: TextDirection.ltr,
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
@@ -302,7 +303,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
             8.heightBox(),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.secondaryColor.withValues(alpha: .5),
+                color: context.chipBackground.withValues(alpha: .5),
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -311,12 +312,12 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 14, color: AppColors.primaryColor),
+                      Icon(Icons.location_on, size: 14, color: context.brandOnSurface),
                       6.widthBox(),
                       Text(
                         location ?? '',
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
@@ -326,7 +327,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                   Text(
                     game.gameStatusText ?? '',
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: context.brandOnSurface,
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
                     ),
@@ -344,13 +345,13 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         visibility?.tr() ?? '',
-        style: const TextStyle(
-          color: AppColors.primaryColor,
+        style: TextStyle(
+          color: context.brandOnSurface,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
@@ -365,7 +366,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
     switch (status) {
       case GameStatus.win:
         statusText = 'Win';
-        statusColor = AppColors.primaryColor;
+        statusColor = context.brandOnSurface;
         break;
       case GameStatus.lose:
         statusText = LocaleKeys.lose.tr();
@@ -384,7 +385,7 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(

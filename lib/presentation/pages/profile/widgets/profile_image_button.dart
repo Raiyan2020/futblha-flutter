@@ -2,11 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../application/config/app_assets.dart';
-import '../../../../application/config/design_system/app_colors.dart';
 import '../../../../application/core/basecomponents/base_view_model_view.dart';
 import '../../../../application/core/di/app_component/app_component.dart';
 import '../../../../application/core/utils/auto_router_setup/app_router.dart';
 import '../../auth/bloc/authentication_bloc.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class ProfileImageButton extends StatefulWidget {
   const ProfileImageButton({super.key, this.size = 100, this.clickable = true});
@@ -35,8 +35,8 @@ class _ProfileImageButtonState extends State<ProfileImageButton> {
             width: widget.size,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              border: Border.all(color: state is AuthLoading ? AppColors.primaryWhite : Colors.green, width: 0),
-              color: AppColors.primaryWhite,
+              border: Border.all(color: state is AuthLoading ? context.cardBackground : Colors.green, width: 0),
+              color: context.cardBackground,
               shape: BoxShape.circle,
             ),
             child: authenticationBloc.user?.image != null

@@ -6,6 +6,7 @@ import '../../application/config/design_system/app_colors.dart';
 import '../../application/core/di/app_component/app_component.dart';
 import '../../application/core/utils/auto_router_setup/app_router.dart';
 import '../pages/notifications/bloc/notifications_bloc.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 /// App-bar bell with a red unread badge, driven by the singleton NotificationsBloc.
 class NotificationBellButton extends StatelessWidget {
@@ -17,7 +18,7 @@ class NotificationBellButton extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(16),
       ),
       child: BlocBuilder<NotificationsBloc, NotificationsState>(
@@ -31,7 +32,7 @@ class NotificationBellButton extends StatelessWidget {
                   await context.router.push(NotificationsRoute());
                   bloc.add(GetUnreadCountEvent());
                 },
-                icon: const Icon(Icons.notifications_none, color: AppColors.primaryColor),
+                icon: Icon(Icons.notifications_none, color: context.brandOnSurface),
               ),
               if (bloc.unreadCount > 0)
                 PositionedDirectional(

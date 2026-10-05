@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart' as el;
 
 import '../../application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 typedef Validator = String? Function(String?);
 typedef OnChanged = void Function(String);
@@ -84,7 +85,7 @@ class CustomFormField extends StatelessWidget {
             InputDecoration(
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
-              fillColor: AppColors.primaryLiteGrey,
+              fillColor: context.mutedBackground,
               filled: true,
               // isDense: true,
               labelText: fieldName?.tr(),
@@ -169,7 +170,7 @@ class FieldName extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       margin: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

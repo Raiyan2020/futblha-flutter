@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_members_response_model.dart';
@@ -76,7 +77,7 @@ class GamePlayersPitchSection extends StatelessWidget {
                   Text(
                     '$joinedPlayers/$totalPlayers',
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: context.brandOnSurface,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -111,7 +112,7 @@ class GamePlayersPitchSection extends StatelessWidget {
           height: 500.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: AppColors.primaryLiteGrey,
+            color: context.mutedBackground,
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),

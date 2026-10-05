@@ -8,6 +8,7 @@ import 'package:futblha/presentation/pages/playgrounds/bloc/playgrounds_bloc.dar
 import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
 import 'package:futblha/data/models/request_model/playgrounds/playground_filter_request_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class PlaygroundFilterBottomSheet {
   static void show(BuildContext context, PlaygroundsBloc playgroundsBloc, GeneralBloc generalBloc) {
@@ -68,7 +69,7 @@ class _PlaygroundFilterBottomSheetContentState extends State<_PlaygroundFilterBo
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.borderGrey),
+        borderSide: BorderSide(color: context.borderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -222,8 +223,8 @@ class _PlaygroundFilterBottomSheetContentState extends State<_PlaygroundFilterBo
                               ),
                               child: Text(
                                 LocaleKeys.clear_all.tr(),
-                                style: const TextStyle(
-                                  color: AppColors.primaryColor,
+                                style: TextStyle(
+                                  color: context.brandOnSurface,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),

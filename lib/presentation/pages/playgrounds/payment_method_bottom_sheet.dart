@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -84,7 +85,7 @@ class _PaymentMethodBottomSheetState extends State<PaymentMethodBottomSheet> {
         return Container(
           margin: EdgeInsets.only(top: 32.h),
           decoration: BoxDecoration(
-            color: AppColors.backgroundColor,
+            color: context.scaffoldBackground,
             borderRadius: BorderRadius.circular(24),
           ),
           child: Padding(
@@ -98,15 +99,15 @@ class _PaymentMethodBottomSheetState extends State<PaymentMethodBottomSheet> {
                   children: [
                     Text(
                       LocaleKeys.payment_method.tr(), 
-                      style: const TextStyle(
-                        color: AppColors.primaryBlack,
+                      style: TextStyle(
+                        color: context.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close, color: AppColors.primaryDark),
+                      icon: Icon(Icons.close, color: context.textSecondary),
                     ),
                   ],
                 ),
@@ -192,7 +193,7 @@ class _PaymentMethodBottomSheetState extends State<PaymentMethodBottomSheet> {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryLiteGrey,
+          color: context.mutedBackground,
           borderRadius: BorderRadius.circular(12),
           border: isSelected ? Border.all(color: AppColors.primaryColor, width: 2) : null,
         ),
@@ -207,19 +208,19 @@ class _PaymentMethodBottomSheetState extends State<PaymentMethodBottomSheet> {
                   color: isSelected ? AppColors.primaryColor : AppColors.primaryGrey,
                   width: 2,
                 ),
-                color: isSelected ? AppColors.primaryColor : AppColors.primaryWhite,
+                color: isSelected ? AppColors.primaryColor : context.cardBackground,
               ),
               child: isSelected
                   ? const Icon(Icons.check, size: 16, color: AppColors.primaryWhite)
                   : null,
             ),
             16.widthBox(),
-            Icon(icon, color: AppColors.primaryDark, size: 24),
+            Icon(icon, color: context.textSecondary, size: 24),
             12.widthBox(),
             Text(
               methodName,
               style: TextStyle(
-                color: AppColors.primaryDark,
+                color: context.textSecondary,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),

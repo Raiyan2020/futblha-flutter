@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -214,7 +215,7 @@ class _DiwaniyatPageState extends State<DiwaniyatPage> {
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                     margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                     decoration: BoxDecoration(
-                      color: AppColors.secondaryColor,
+                      color: context.chipBackground,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(

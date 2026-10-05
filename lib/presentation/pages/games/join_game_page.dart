@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/data/models/enums/position_enum.dart';
@@ -300,9 +301,9 @@ class _JoinGamePageState extends State<JoinGamePage> {
             borderRadius: BorderRadius.circular(12),
             color: isSelected
                 ? AppColors.primaryColor.withValues(alpha: 0.1)
-                : AppColors.primaryLiteGrey,
+                : context.mutedBackground,
             border: Border.all(
-              color: isSelected ? AppColors.primaryColor : AppColors.borderGrey,
+              color: isSelected ? AppColors.primaryColor : context.borderColor,
               width: isSelected ? 2 : 1,
             ),
           ),
@@ -313,8 +314,8 @@ class _JoinGamePageState extends State<JoinGamePage> {
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 color: isSelected
-                    ? AppColors.primaryColor
-                    : (isDisabled ? AppColors.borderGrey : AppColors.primaryBlack),
+                    ? context.brandOnSurface
+                    : (isDisabled ? AppColors.borderGrey : context.textPrimary),
               ),
             ),
           ),
@@ -335,7 +336,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<Position>(
@@ -522,7 +523,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
       height: 420.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: AppColors.primaryLiteGrey,
+        color: context.mutedBackground,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),

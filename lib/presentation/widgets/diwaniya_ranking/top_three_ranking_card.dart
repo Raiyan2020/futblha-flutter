@@ -9,6 +9,7 @@ import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/presentation/widgets/diwaniya_ranking/diwaniya_ranking_item.dart';
 
 import '../../../generated/locale_keys.g.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class TopThreeRankingCard extends StatelessWidget {
   final DiwaniyaRankingItem item;
@@ -72,21 +73,21 @@ class TopThreeRankingCard extends StatelessWidget {
           Container(
             width: 53.w,
             height: 53.w,
-            decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.primaryLiteGrey),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: context.mutedBackground),
             child: ClipOval(
               child: item.imagePath != null && item.imagePath!.startsWith('http')
                   ? Image.network(
                       item.imagePath!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.person, color: AppColors.primaryColor);
+                        return Icon(Icons.person, color: context.brandOnSurface);
                       },
                     )
                   : Image.asset(
                       item.imagePath ?? AppAssets.ic_profile,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.person, color: AppColors.primaryColor);
+                        return Icon(Icons.person, color: context.brandOnSurface);
                       },
                     ),
             ),

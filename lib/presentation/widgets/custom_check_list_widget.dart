@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class CustomCheckListWidget<T> extends StatefulWidget {
   final String sectionTitle;
@@ -74,7 +75,7 @@ class _CustomCheckListWidgetState<T> extends State<CustomCheckListWidget<T>> {
                               color: !widget.isDefaultSelected
                                   ? selectedItems.contains(choice)
                                       ? AppColors.primaryColor
-                                      : AppColors.primaryWhite
+                                      : context.cardBackground
                                   : AppColors.primaryGrey),
                           child: const Center(
                             child: Icon(
@@ -101,8 +102,8 @@ class _CustomCheckListWidgetState<T> extends State<CustomCheckListWidget<T>> {
                     },
                   ),
                   if (index != (widget.choices?.length ?? 0) - 1)
-                    const Divider(
-                      color: Colors.white, // Change to your desired divider color
+                    Divider(
+                      color: context.cardBackground, // Change to your desired divider color
                       thickness: 1.0,
                     ),
                 ],

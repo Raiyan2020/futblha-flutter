@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../application/config/design_system/app_colors.dart';
 import '../../application/config/design_system/decorations.dart';
 import 'custom_text.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -133,8 +134,8 @@ class AppTextField extends StatelessWidget {
                 prefix: prefix,
                 prefixIcon: prefixIcon,
                 suffixIcon: suffixIcon,
-                borderColor: borderColor ?? AppColors.borderGrey,
-                focusedBorderColor: focusedBorderColor ?? AppColors.borderGrey,
+                borderColor: borderColor ?? context.borderColor,
+                focusedBorderColor: focusedBorderColor ?? context.borderColor,
                 hint: hintKey,
                 isDense: isDense,
               ),

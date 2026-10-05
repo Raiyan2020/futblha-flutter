@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/app_images/image_pick_crop_helper.dart';
@@ -117,7 +118,7 @@ class _CreateDiwaniyaPageState extends State<CreateDiwaniyaPage> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(color: AppColors.primaryColor, width: 2),
-                          color: AppColors.primaryLiteGrey,
+                          color: context.mutedBackground,
                         ),
                         child: _diwaniyaImage != null
                             ? ClipOval(child: Image.file(_diwaniyaImage!, fit: BoxFit.cover))
@@ -243,7 +244,7 @@ class _CreateDiwaniyaPageState extends State<CreateDiwaniyaPage> {
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.borderGrey),
+        borderSide: BorderSide(color: context.borderColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

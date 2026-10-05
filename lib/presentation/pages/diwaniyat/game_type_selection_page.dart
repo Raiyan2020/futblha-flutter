@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
@@ -30,8 +30,8 @@ class GameTypeSelectionPage extends StatelessWidget {
           children: [
             Text(
               LocaleKeys.choose_game_type.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryBlack,
+              style: TextStyle(
+                color: context.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -80,7 +80,7 @@ class GameTypeSelectionPage extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.secondaryColor,
+          color: context.chipBackground,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -91,8 +91,8 @@ class GameTypeSelectionPage extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: AppColors.primaryColor,
+                    style: TextStyle(
+                      color: context.brandOnSurface,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -100,8 +100,8 @@ class GameTypeSelectionPage extends StatelessWidget {
                   8.heightBox(),
                   Text(
                     description,
-                    style: const TextStyle(
-                      color: AppColors.primaryColor,
+                    style: TextStyle(
+                      color: context.brandOnSurface,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                     ),
@@ -110,7 +110,7 @@ class GameTypeSelectionPage extends StatelessWidget {
               ),
             ),
             12.widthBox(),
-            const Icon(Icons.arrow_forward_ios, color: AppColors.primaryColor, size: 16),
+            Icon(Icons.arrow_forward_ios, color: context.brandOnSurface, size: 16),
           ],
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import '../../../application/config/app_assets.dart';
 import '../../../application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import '../../../application/core/basecomponents/base_view_model_view.dart';
 import '../../../application/core/utils/helpers/extension_functions/size_extension.dart';
 import '../../../data/models/response_model/diwaniya/diwaniya_member_model.dart';
@@ -92,9 +93,9 @@ class _JoinRequestTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey),
+        border: Border.all(color: context.borderColor),
         boxShadow: [
           BoxShadow(
             color: AppColors.primaryBlack.withValues(alpha: 0.04),
@@ -107,8 +108,8 @@ class _JoinRequestTile extends StatelessWidget {
         children: [
           Text(
             '#$queueNumber',
-            style: const TextStyle(
-              color: AppColors.primaryColor,
+            style: TextStyle(
+              color: context.brandOnSurface,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -121,8 +122,8 @@ class _JoinRequestTile extends StatelessWidget {
               member.name ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: AppColors.primaryBlack,
+              style: TextStyle(
+                color: context.textPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -167,8 +168,8 @@ class _JoinRequestTile extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: AppColors.primaryLiteGrey,
-                    child: const Icon(Icons.person, color: AppColors.primaryColor),
+                    color: context.mutedBackground,
+                    child: Icon(Icons.person, color: context.brandOnSurface),
                   );
                 },
               )
@@ -177,8 +178,8 @@ class _JoinRequestTile extends StatelessWidget {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: AppColors.primaryLiteGrey,
-                    child: const Icon(Icons.person, color: AppColors.primaryColor),
+                    color: context.mutedBackground,
+                    child: Icon(Icons.person, color: context.brandOnSurface),
                   );
                 },
               ),

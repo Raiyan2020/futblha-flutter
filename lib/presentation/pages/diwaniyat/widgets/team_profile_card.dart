@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -335,7 +336,7 @@ class TeamProfileCard extends StatelessWidget {
               height: 78.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.primaryLiteGrey,
+                color: context.mutedBackground,
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.primaryWhite.withValues(alpha: 0.2),

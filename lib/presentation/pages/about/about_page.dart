@@ -15,6 +15,7 @@ import '../../widgets/custom_loading_widget.dart';
 import '../../widgets/custom_text.dart';
 // Import SettingsBloc and its related files
 import '../../pages/settings/bloc/settings_bloc.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 // Import SettingsEntity
 
 /// A page that displays about information with a title and content
@@ -103,7 +104,7 @@ class AboutContent extends StatelessWidget {
       padding: const EdgeInsets.all(15.0),
       margin: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(15.0),
         boxShadow: [
           BoxShadow(
@@ -124,7 +125,7 @@ class AboutContent extends StatelessWidget {
                 "body": Style(
                   textAlign: TextAlign.justify,
                   fontSize: FontSize(Theme.of(context).textTheme.bodyLarge?.fontSize ?? 16),
-                  color: AppColors.primaryBlack,
+                  color: context.textPrimary,
                 ),
               },
             ),
@@ -162,7 +163,7 @@ class AboutFatbelhaContent extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -178,7 +179,7 @@ class AboutFatbelhaContent extends StatelessWidget {
                     data: aboutUs!,
                     style: {
                       "body": Style(
-                        color: AppColors.primaryBlack,
+                        color: context.textPrimary,
                         fontSize: FontSize(14),
                         fontWeight: FontWeight.w400,
                         lineHeight: LineHeight(1.5),

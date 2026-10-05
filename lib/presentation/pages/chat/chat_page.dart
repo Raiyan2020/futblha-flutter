@@ -20,6 +20,7 @@ import '../../../data/models/request_model/diwaniya/send_message_request_model.d
 import '../../../data/models/request_model/diwaniya/poll_vote_request_model.dart';
 import '../../../data/models/response_model/diwaniya/message_model.dart';
 import '../../../data/models/response_model/login_remote_response_model/login_response_model.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class ChatPage extends StatefulWidget {
@@ -553,8 +554,8 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildMessageBubble(ChatMessage message) {
     final bubbleAlignment = message.isMine ? Alignment.centerLeft : Alignment.centerRight;
-    final bubbleColor = message.isMine ? AppColors.primaryColor : AppColors.secondaryColor;
-    final textColor = message.isMine ? AppColors.primaryWhite : AppColors.primaryBlack;
+    final bubbleColor = message.isMine ? AppColors.primaryColor : context.chipBackground;
+    final textColor = message.isMine ? AppColors.primaryWhite : context.textPrimary;
     final metadata = '${_formatDate(message.timestamp)} - ${_formatTime(message.timestamp)}';
 
     return Column(
@@ -810,8 +811,8 @@ class _ChatPageState extends State<ChatPage> {
 
   Widget _buildAvatarPlaceholder(double size) {
     return Container(
-      color: AppColors.primaryLiteGrey,
-      child: Icon(Icons.person, color: AppColors.primaryColor, size: size * 0.65),
+      color: context.mutedBackground,
+      child: Icon(Icons.person, color: context.brandOnSurface, size: size * 0.65),
     );
   }
 
@@ -842,7 +843,7 @@ class _ChatPageState extends State<ChatPage> {
               width: 40.w,
               height: 4.h,
               decoration: BoxDecoration(
-                color: AppColors.primaryLiteGrey,
+                color: context.mutedBackground,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -872,7 +873,7 @@ class _ChatPageState extends State<ChatPage> {
               margin: EdgeInsets.symmetric(horizontal: 20.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.borderGrey),
+                border: Border.all(color: context.borderColor),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -916,7 +917,7 @@ class _ChatPageState extends State<ChatPage> {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                           decoration: BoxDecoration(
-                            color: AppColors.secondaryColor,
+                            color: context.chipBackground,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -927,12 +928,12 @@ class _ChatPageState extends State<ChatPage> {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.black,
+                                  color: context.textPrimary,
                                 ),
                               ),
                               Text(
                                 '${option.votes} ${option.votes == 1 ? LocaleKeys.vote.tr() : LocaleKeys.votes.tr()}',
-                                style: TextStyle(fontSize: 12, color: Colors.black),
+                                style: TextStyle(fontSize: 12, color: context.textPrimary),
                               ),
                             ],
                           ),
@@ -948,9 +949,9 @@ class _ChatPageState extends State<ChatPage> {
                           ...voters.map((voter) {
                             return Container(
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: context.cardBackground,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.borderGrey),
+                                border: Border.all(color: context.borderColor),
                               ),
                               margin: EdgeInsets.only(bottom: 5.h),
                               padding: EdgeInsets.only(
@@ -972,10 +973,10 @@ class _ChatPageState extends State<ChatPage> {
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) {
                                                 return Container(
-                                                  color: AppColors.primaryLiteGrey,
-                                                  child: const Icon(
+                                                  color: context.mutedBackground,
+                                                  child: Icon(
                                                     Icons.person,
-                                                    color: AppColors.primaryColor,
+                                                    color: context.brandOnSurface,
                                                     size: 20,
                                                   ),
                                                 );
@@ -986,10 +987,10 @@ class _ChatPageState extends State<ChatPage> {
                                               fit: BoxFit.cover,
                                               errorBuilder: (context, error, stackTrace) {
                                                 return Container(
-                                                  color: AppColors.primaryLiteGrey,
-                                                  child: const Icon(
+                                                  color: context.mutedBackground,
+                                                  child: Icon(
                                                     Icons.person,
-                                                    color: AppColors.primaryColor,
+                                                    color: context.brandOnSurface,
                                                     size: 20,
                                                   ),
                                                 );
@@ -1004,7 +1005,7 @@ class _ChatPageState extends State<ChatPage> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.black,
+                                        color: context.textPrimary,
                                       ),
                                     ),
                                   ),
@@ -1033,7 +1034,7 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           // Attachment button
           PopupMenuButton<String>(
-            icon: const Icon(Icons.attach_file, color: AppColors.primaryColor),
+            icon: Icon(Icons.attach_file, color: context.brandOnSurface),
             onSelected: (value) {
               if (value == 'image') {
                 _pickAndSendImage();
@@ -1048,7 +1049,7 @@ class _ChatPageState extends State<ChatPage> {
                 value: 'image',
                 child: Row(
                   children: [
-                    const Icon(Icons.image, color: AppColors.primaryColor),
+                    Icon(Icons.image, color: context.brandOnSurface),
                     SizedBox(width: 8.w),
                     Text(LocaleKeys.image.tr()),
                   ],
@@ -1058,7 +1059,7 @@ class _ChatPageState extends State<ChatPage> {
                 value: 'file',
                 child: Row(
                   children: [
-                    const Icon(Icons.insert_drive_file, color: AppColors.primaryColor),
+                    Icon(Icons.insert_drive_file, color: context.brandOnSurface),
                     SizedBox(width: 8.w),
                     Text(LocaleKeys.file.tr()),
                   ],
@@ -1068,7 +1069,7 @@ class _ChatPageState extends State<ChatPage> {
                 value: 'poll',
                 child: Row(
                   children: [
-                    const Icon(Icons.poll, color: AppColors.primaryColor),
+                    Icon(Icons.poll, color: context.brandOnSurface),
                     SizedBox(width: 8.w),
                     Text(LocaleKeys.poll.tr()),
                   ],
@@ -1101,15 +1102,15 @@ class _ChatPageState extends State<ChatPage> {
               height: 50,
               decoration: BoxDecoration(
                 color: isLoading || _messageController.text.trim().isEmpty
-                    ? AppColors.primaryLiteGrey
-                    : AppColors.secondaryColor,
+                    ? context.mutedBackground
+                    : context.chipBackground,
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
                 Icons.send_rounded,
                 color: isLoading || _messageController.text.trim().isEmpty
                     ? AppColors.lightTextColor
-                    : AppColors.primaryColor,
+                    : context.brandOnSurface,
               ),
             ),
           ),
@@ -1130,8 +1131,8 @@ class _ChatPageState extends State<ChatPage> {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: AppColors.primaryLiteGrey,
-                    child: const Icon(Icons.person, color: AppColors.primaryColor),
+                    color: context.mutedBackground,
+                    child: Icon(Icons.person, color: context.brandOnSurface),
                   );
                 },
               )
@@ -1140,8 +1141,8 @@ class _ChatPageState extends State<ChatPage> {
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    color: AppColors.primaryLiteGrey,
-                    child: const Icon(Icons.person, color: AppColors.primaryColor),
+                    color: context.mutedBackground,
+                    child: Icon(Icons.person, color: context.brandOnSurface),
                   );
                 },
               ),

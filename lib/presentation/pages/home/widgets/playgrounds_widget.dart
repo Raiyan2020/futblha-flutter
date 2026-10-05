@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -84,9 +85,9 @@ class PlaygroundsWidget extends StatelessWidget {
         width: 280.w,
         margin: EdgeInsets.only(right: 12.w),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.borderGrey, width: 1),
+          border: Border.all(color: context.borderColor, width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,16 +104,16 @@ class PlaygroundsWidget extends StatelessWidget {
                         return Container(
                           width: double.infinity,
                           height: 110.h,
-                          color: AppColors.primaryLiteGrey,
-                          child: const Icon(Icons.image, color: AppColors.primaryColor),
+                          color: context.mutedBackground,
+                          child: Icon(Icons.image, color: context.brandOnSurface),
                         );
                       },
                     )
                   : Container(
                       width: double.infinity,
                       height: 110.h,
-                      color: AppColors.primaryLiteGrey,
-                      child: const Icon(Icons.image, color: AppColors.primaryColor),
+                      color: context.mutedBackground,
+                      child: Icon(Icons.image, color: context.brandOnSurface),
                     ),
             ),
             Padding(
@@ -123,8 +124,8 @@ class PlaygroundsWidget extends StatelessWidget {
                 children: [
                   Text(
                     playground.name ?? '',
-                    style: const TextStyle(
-                      color: AppColors.primaryColor,
+                    style: TextStyle(
+                      color: context.brandOnSurface,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -182,8 +183,8 @@ class PlaygroundsWidget extends StatelessWidget {
                         playground.price ?? '0',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
+                        style: TextStyle(
+                          color: context.brandOnSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
@@ -193,7 +194,7 @@ class PlaygroundsWidget extends StatelessWidget {
                         LocaleKeys.kwd_hour.tr(),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: AppColors.primaryColor, fontSize: 14),
+                        style: TextStyle(color: context.brandOnSurface, fontSize: 14),
                       ),
                     ],
                   ),

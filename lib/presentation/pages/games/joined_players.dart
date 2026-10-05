@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
@@ -61,7 +62,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
         final isMember = game?.userPermission?.isMember == true;
 
         return Scaffold(
-          backgroundColor: AppColors.backgroundColor,
+          backgroundColor: context.scaffoldBackground,
           appBar: AppBar(title: Text(LocaleKeys.players_joined.tr())),
           body: state is GamesLoading && members == null
               ? const Center(child: CircularProgressIndicator())
@@ -74,7 +75,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                         child: Text(
                           '$joinedPlayers/$totalPlayers',
                           style: TextStyle(
-                            color: AppColors.primaryColor,
+                            color: context.brandOnSurface,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -90,7 +91,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Container(height: 1.5, color: AppColors.primaryBlack),
+                                  child: Container(height: 1.5, color: context.textPrimary),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -100,12 +101,12 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.primaryColor,
+                                      color: context.brandOnSurface,
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(height: 1.5, color: AppColors.primaryBlack),
+                                  child: Container(height: 1.5, color: context.textPrimary),
                                 ),
                               ],
                             ),
@@ -117,7 +118,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.primaryBlack,
+                                color: context.textPrimary,
                               ),
                             ),
                           ),
@@ -125,7 +126,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Container(height: 1.5, color: AppColors.primaryBlack),
+                                  child: Container(height: 1.5, color: context.textPrimary),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -137,12 +138,12 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.primaryColor,
+                                      color: context.brandOnSurface,
                                     ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(height: 1.5, color: AppColors.primaryBlack),
+                                  child: Container(height: 1.5, color: context.textPrimary),
                                 ),
                               ],
                             ),
@@ -214,9 +215,9 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
       padding: EdgeInsets.all(10.w),
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primaryLiteGrey, width: 1),
+        border: Border.all(color: context.mutedBackground, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,7 +248,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                     Text(
                       '#$playerNumber',
                       style: TextStyle(
-                        color: AppColors.primaryColor,
+                        color: context.brandOnSurface,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
@@ -257,7 +258,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                       Text(
                         LocaleKeys.creator.tr(),
                         style: TextStyle(
-                          color: AppColors.primaryColor,
+                          color: context.brandOnSurface,
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
                         ),
@@ -286,7 +287,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                 height: 40.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: AppColors.primaryWhite,
+                  color: context.cardBackground,
                   boxShadow: [
                     BoxShadow(color: AppColors.primaryLiteGrey, spreadRadius: 2, blurRadius: 5),
                   ],
@@ -297,14 +298,14 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                           player.image!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.person, color: AppColors.primaryColor, size: 30);
+                            return Icon(Icons.person, color: context.brandOnSurface, size: 30);
                           },
                         )
                       : Image.asset(
                           AppAssets.ic_profile,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.person, color: AppColors.primaryColor, size: 30);
+                            return Icon(Icons.person, color: context.brandOnSurface, size: 30);
                           },
                         ),
                 ),
@@ -317,7 +318,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
             child: Text(
               player.name ?? '',
               style: TextStyle(
-                color: AppColors.primaryBlack,
+                color: context.textPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -333,7 +334,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
               child: Text(
                 player.positionText!,
                 style: TextStyle(
-                  color: AppColors.primaryColor,
+                  color: context.brandOnSurface,
                   fontSize: 11,
                   fontWeight: FontWeight.w400,
                 ),

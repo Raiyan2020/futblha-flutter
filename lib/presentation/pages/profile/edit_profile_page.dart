@@ -32,6 +32,7 @@ import '../../widgets/custom_text.dart';
 import '../../widgets/custom_toolbar.dart';
 import '../auth/bloc/authentication_bloc.dart';
 import 'widgets/profile_image_button.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class EditProfilePage extends StatefulWidget {
@@ -138,8 +139,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             colorScheme: ColorScheme.light(
               primary: AppColors.primaryColor,
               onPrimary: AppColors.primaryWhite,
-              surface: AppColors.primaryWhite,
-              onSurface: AppColors.primaryBlack,
+              surface: context.cardBackground,
+              onSurface: context.textPrimary,
             ),
           ),
           child: child!,
@@ -244,9 +245,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 }
                               }
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.camera_alt,
-                              color: AppColors.primaryColor,
+                              color: context.brandOnSurface,
                             ),
                           ),
                         ),
@@ -323,9 +324,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       controller: positions,
                       hintKey: LocaleKeys.select_skilled_position,
                       userInput: false,
-                      suffixIcon: const Icon(
+                      suffixIcon: Icon(
                         Icons.edit,
-                        color: AppColors.primaryColor,
+                        color: context.brandOnSurface,
                       ),
                     ),
                   ),
@@ -393,7 +394,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.primaryBlack,
+                                    color: context.textPrimary,
                                   ),
                                 ),
                                 onPressed: () {

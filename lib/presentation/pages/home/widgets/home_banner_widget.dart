@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
@@ -183,9 +184,9 @@ class _HomeBannerWidgetState extends State<HomeBannerWidget> {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: AppColors.secondaryColor,
-                        child: const Center(
-                          child: Icon(Icons.image, color: AppColors.primaryColor),
+                        color: context.chipBackground,
+                        child: Center(
+                          child: Icon(Icons.image, color: context.brandOnSurface),
                         ),
                       );
                     },

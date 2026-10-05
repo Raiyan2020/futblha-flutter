@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class SelectionWidget extends StatelessWidget {
   final String selectedTitle;
@@ -60,12 +61,12 @@ class OptionButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
               // Adjust the border radius as needed
-              side: const BorderSide(
-                  color: AppColors
-                      .borderGrey), // Adjust the border color as needed
+              side: BorderSide(
+                  color: context
+                      .borderColor), // Adjust the border color as needed
             ),
             elevation: 0,
-            backgroundColor: selected ? AppColors.primaryColor : Colors.white,
+            backgroundColor: selected ? AppColors.primaryColor : context.cardBackground,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,7 +76,7 @@ class OptionButton extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: selected
                         ? AppColors.primaryWhite
-                        : AppColors.primaryBlack),
+                        : context.textPrimary),
               ),
               SizedBox(
                   width: 20,
@@ -84,7 +85,7 @@ class OptionButton extends StatelessWidget {
                       colorFilter: ColorFilter.mode(
                           selected
                               ? AppColors.primaryWhite
-                              : AppColors.primaryBlack,
+                              : context.textPrimary,
                           BlendMode.srcIn))),
             ],
           ),

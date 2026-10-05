@@ -7,6 +7,7 @@ import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/presentation/widgets/diwaniya_ranking/diwaniya_ranking_item.dart';
 
 import '../../../generated/locale_keys.g.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class RankingListItem extends StatelessWidget {
   final DiwaniyaRankingItem item;
@@ -19,10 +20,10 @@ class RankingListItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: item.isMine ? AppColors.primaryColor : AppColors.borderGrey,
+          color: item.isMine ? AppColors.primaryColor : context.borderColor,
           width: 1,
         ),
       ),
@@ -32,14 +33,14 @@ class RankingListItem extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
               child: Text(
                 '#${item.rank}',
-                style: const TextStyle(
-                  color: AppColors.primaryColor,
+                style: TextStyle(
+                  color: context.brandOnSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -51,7 +52,7 @@ class RankingListItem extends StatelessWidget {
             backgroundImage: item.imagePath != null && item.imagePath!.startsWith('http')
                 ? NetworkImage(item.imagePath!) as ImageProvider
                 : AssetImage(item.imagePath ?? AppAssets.ic_profile),
-            backgroundColor: AppColors.primaryLiteGrey,
+            backgroundColor: context.mutedBackground,
             onBackgroundImageError: (_, _) {},
           ),
           12.widthBox(),
@@ -60,8 +61,8 @@ class RankingListItem extends StatelessWidget {
               item.name,
               style: TextStyle(
                 color: item.isMine
-                    ? AppColors.primaryColor
-                    : AppColors.primaryDark,
+                    ? context.brandOnSurface
+                    : context.textSecondary,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -70,13 +71,13 @@ class RankingListItem extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
             decoration: BoxDecoration(
-              color: AppColors.secondaryColor,
+              color: context.chipBackground,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
               '${item.points} ${LocaleKeys.points.tr()}',
-              style: const TextStyle(
-                color: AppColors.primaryColor,
+              style: TextStyle(
+                color: context.brandOnSurface,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

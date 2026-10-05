@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -204,7 +205,7 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
                           color: isSelected
                               ? AppColors.primaryColor
                               : isAvailable
-                              ? AppColors.primaryLiteGrey
+                              ? context.mutedBackground
                               : AppColors.primaryGrey.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(8),
                           border: isSelected
@@ -218,7 +219,7 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
                                   style: TextStyle(
                                     color: isSelected
                                         ? AppColors.primaryWhite
-                                        : AppColors.primaryDark,
+                                        : context.textSecondary,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -251,7 +252,7 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
       bottomNavigationBar: Container(
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           boxShadow: [
             BoxShadow(
               color: AppColors.primaryBlack.withValues(alpha: 0.05),

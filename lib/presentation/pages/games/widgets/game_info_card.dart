@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/date_extension_functions.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -34,9 +35,9 @@ class GameInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +45,7 @@ class GameInfoCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (game.type != null) _buildTypeChip(game.type!),
+              if (game.type != null) _buildTypeChip(context, game.type!),
               if (game.userPermission?.isMember == true) _buildChatButton(context),
             ],
           ),
@@ -69,7 +70,7 @@ class GameInfoCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTypeChip(String type) {
+  Widget _buildTypeChip(BuildContext context, String type) {
     final label = type == 'private'
         ? LocaleKeys.private.tr()
         : type == 'public'
@@ -78,13 +79,13 @@ class GameInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: AppColors.primaryColor,
+          color: context.brandOnSurface,
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
@@ -104,7 +105,7 @@ class GameInfoCard extends StatelessWidget {
               context.router.push(ChatRoute());
             }
           },
-          icon: Icon(Icons.chat_outlined, color: AppColors.primaryColor),
+          icon: Icon(Icons.chat_outlined, color: context.brandOnSurface),
         ),
         if (game.unreadMessagesCount != null && game.unreadMessagesCount! > 0)
           Positioned(
@@ -152,7 +153,7 @@ class GameInfoCard extends StatelessWidget {
         Text(
           LocaleKeys.vs.tr(),
           style: TextStyle(
-            color: AppColors.primaryBlack,
+            color: context.textPrimary,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -203,7 +204,7 @@ class GameInfoCard extends StatelessWidget {
           child: Text(
             game.gameStatusText ?? '',
             style: TextStyle(
-              color: AppColors.primaryColor,
+              color: context.brandOnSurface,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
@@ -230,7 +231,7 @@ class _TeamLogo extends StatelessWidget {
           height: 50.h,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.primaryLiteGrey,
+            color: context.mutedBackground,
           ),
           child: ClipOval(
             child: imageUrl != null && imageUrl!.isNotEmpty
@@ -238,13 +239,13 @@ class _TeamLogo extends StatelessWidget {
                     imageUrl!,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) =>
-                        Icon(Icons.person, color: AppColors.primaryColor, size: 30),
+                        Icon(Icons.person, color: context.brandOnSurface, size: 30),
                   )
                 : Image.asset(
                     AppAssets.ic_profile,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) =>
-                        Icon(Icons.person, color: AppColors.primaryColor, size: 30),
+                        Icon(Icons.person, color: context.brandOnSurface, size: 30),
                   ),
           ),
         ),
@@ -252,7 +253,7 @@ class _TeamLogo extends StatelessWidget {
         Text(
           name,
           style: TextStyle(
-            color: AppColors.primaryColor,
+            color: context.brandOnSurface,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -273,19 +274,19 @@ class _InfoChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppColors.primaryColor),
+          Icon(icon, size: 14, color: context.brandOnSurface),
           4.widthBox(),
           Flexible(
             child: Text(
               text,
               style: TextStyle(
-                color: AppColors.primaryColor,
+                color: context.brandOnSurface,
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),

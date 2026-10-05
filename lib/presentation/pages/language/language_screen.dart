@@ -9,6 +9,7 @@ import '../../../application/config/l10n.dart';
 import '../../../application/core/utils/auto_router_setup/app_router.dart';
 import '../../../application/core/utils/helpers/cache/cache_manager.dart';
 import '../../../generated/locale_keys.g.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class LanguageScreen extends StatefulWidget {
@@ -83,7 +84,7 @@ class _LanguageScreenState extends State<LanguageScreen> {
           child: Text(
             'ENGLISH',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: AppColors.primaryColor,
+              color: context.brandOnSurface,
               fontWeight: FontWeight.bold,
             ),
           ),

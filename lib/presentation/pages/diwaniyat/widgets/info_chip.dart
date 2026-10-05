@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 
@@ -14,19 +14,19 @@ class InfoChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: context.chipBackground,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppColors.primaryColor),
+          Icon(icon, size: 14, color: context.brandOnSurface),
           4.widthBox(),
           Flexible(
             child: Text(
               text,
               style: TextStyle(
-                color: AppColors.primaryColor,
+                color: context.brandOnSurface,
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
               ),

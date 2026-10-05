@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
@@ -292,7 +293,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -303,8 +304,8 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     Expanded(
                       child: Text(
                         widget.playground.name ?? '',
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
+                        style: TextStyle(
+                          color: context.brandOnSurface,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -312,8 +313,8 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     ),
                     Text(
                       '${widget.playground.price ?? '0'} ${LocaleKeys.kwd.tr()}',
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -358,18 +359,18 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
+                        color: context.chipBackground,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.calendar_today, size: 14, color: AppColors.primaryColor),
+                          Icon(Icons.calendar_today, size: 14, color: context.brandOnSurface),
                           6.widthBox(),
                           Text(
                             DateFormat('dd MMM yyyy').format(widget.date),
-                            style: const TextStyle(
-                              color: AppColors.primaryColor,
+                            style: TextStyle(
+                              color: context.brandOnSurface,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -380,20 +381,20 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
+                        color: context.chipBackground,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.access_time, size: 14, color: AppColors.primaryColor),
+                          Icon(Icons.access_time, size: 14, color: context.brandOnSurface),
                           6.widthBox(),
                           Flexible(
                             child: Text(
                               widget.timeSlot,
-                              style: const TextStyle(
-                                color: AppColors.primaryColor,
+                              style: TextStyle(
+                                color: context.brandOnSurface,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -419,21 +420,21 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
             child: Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: AppColors.primaryWhite,
+                color: context.cardBackground,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
                   Text(
                     _selectedPaymentMethod?.name ?? _selectedPaymentMethod?.key ?? 'Apple Pay',
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: context.textSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   const Spacer(),
-                  const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.primaryDark),
+                  Icon(Icons.arrow_forward_ios, size: 16, color: context.textSecondary),
                 ],
               ),
             ),
@@ -442,12 +443,12 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(Icons.account_balance_wallet, size: 20, color: AppColors.primaryColor),
+                Icon(Icons.account_balance_wallet, size: 20, color: context.brandOnSurface),
                 12.widthBox(),
                 Expanded(
                   child: Column(
@@ -455,16 +456,16 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     children: [
                       Text(
                         LocaleKeys.use_wallet_balance.tr(),
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       Text(
                         '${_walletBalanceValue.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
+                        style: TextStyle(
+                          color: context.brandOnSurface,
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -547,7 +548,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryWhite,
+              color: context.cardBackground,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -557,16 +558,16 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                   children: [
                     Text(
                       LocaleKeys.booking_fees.tr(),
-                      style: const TextStyle(
-                        color: AppColors.primaryDark,
+                      style: TextStyle(
+                        color: context.textSecondary,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
                       '${_bookingFee.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                      style: const TextStyle(
-                        color: AppColors.primaryDark,
+                      style: TextStyle(
+                        color: context.textSecondary,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -580,8 +581,8 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     children: [
                       Text(
                         LocaleKeys.voucher_discount.tr(),
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -604,8 +605,8 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     children: [
                       Text(
                         LocaleKeys.wallet_discount.tr(),
-                        style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: context.textSecondary,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -622,23 +623,23 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                   ),
                 ],
                 12.heightBox(),
-                Divider(color: AppColors.borderGrey),
+                Divider(color: context.borderColor),
                 12.heightBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       LocaleKeys.total.tr(),
-                      style: const TextStyle(
-                        color: AppColors.primaryBlack,
+                      style: TextStyle(
+                        color: context.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
                       '${_total.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -779,7 +780,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                 return Container(
                   padding: EdgeInsets.all(20.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -826,7 +827,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                 return Container(
                   padding: EdgeInsets.all(20.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryWhite,
+                    color: context.cardBackground,
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -883,7 +884,7 @@ class _BookingSuccessDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -900,8 +901,8 @@ class _BookingSuccessDialog extends StatelessWidget {
               isGameBooking
                   ? LocaleKeys.game_booking_confirmed_successfully.tr()
                   : LocaleKeys.booking_done_successfully.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryDark,
+              style: TextStyle(
+                color: context.textSecondary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),

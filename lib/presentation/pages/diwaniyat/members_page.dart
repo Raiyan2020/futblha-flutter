@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
@@ -86,9 +87,9 @@ class _MembersPageState extends State<MembersPage> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: Row(
         children: [
@@ -113,21 +114,21 @@ class _MembersPageState extends State<MembersPage> {
           Container(
             width: 50.w,
             height: 50.h,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.primaryLiteGrey),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: context.mutedBackground),
             child: ClipOval(
               child: member.image != null
                   ? Image.network(
                       member.image!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Icon(Icons.person, color: AppColors.primaryColor, size: 30);
+                        return Icon(Icons.person, color: context.brandOnSurface, size: 30);
                       },
                     )
                   : Image.asset(
                       AppAssets.ic_profile,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Icon(Icons.person, color: AppColors.primaryColor, size: 30);
+                        return Icon(Icons.person, color: context.brandOnSurface, size: 30);
                       },
                     ),
             ),
@@ -138,7 +139,7 @@ class _MembersPageState extends State<MembersPage> {
             child: Text(
               member.name ?? '',
               style: TextStyle(
-                color: AppColors.primaryBlack,
+                color: context.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -149,13 +150,13 @@ class _MembersPageState extends State<MembersPage> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: AppColors.secondaryColor,
+                color: context.chipBackground,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
                 LocaleKeys.admin.tr(),
                 style: TextStyle(
-                  color: AppColors.primaryColor,
+                  color: context.brandOnSurface,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),

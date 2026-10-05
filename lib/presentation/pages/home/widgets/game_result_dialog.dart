@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/date_extension_functions.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -172,13 +173,13 @@ class _GameResultDialogContentState extends State<_GameResultDialogContent> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.emoji_events, color: AppColors.primaryColor, size: 28.w),
+                      Icon(Icons.emoji_events, color: context.brandOnSurface, size: 28.w),
                       12.widthBox(),
                       Expanded(
                         child: Text(
                           LocaleKeys.game_result.tr(),
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
+                          style: TextStyle(
+                            color: context.textSecondary,
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
@@ -199,8 +200,8 @@ class _GameResultDialogContentState extends State<_GameResultDialogContent> {
                     8.heightBox(),
                     Text(
                       '${game.booking?.bookingDate?.toLocal().formatDateToCustomString()}',
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -215,7 +216,7 @@ class _GameResultDialogContentState extends State<_GameResultDialogContent> {
                         backgroundColor: AppColors.primaryColor,
                         padding: EdgeInsets.symmetric(vertical: 16.h),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        disabledBackgroundColor: AppColors.primaryLiteGrey,
+                        disabledBackgroundColor: context.mutedBackground,
                       ),
                       child: Text(
                         LocaleKeys.detect_game_winner.tr(),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -269,13 +270,13 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       width: double.infinity,
                       padding: EdgeInsets.all(16.w),
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
+                        color: context.chipBackground,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         _getGameTypeText(),
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
+                        style: TextStyle(
+                          color: context.brandOnSurface,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -322,9 +323,9 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryWhite,
+                          color: context.cardBackground,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.borderGrey, width: 1),
+                          border: Border.all(color: context.borderColor, width: 1),
                         ),
                         child: Row(
                           children: [
@@ -333,15 +334,15 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                 _selectedPlayground?.name ?? LocaleKeys.select_playground.tr(),
                                 style: TextStyle(
                                   color: _selectedPlayground != null
-                                      ? AppColors.primaryBlack
+                                      ? context.textPrimary
                                       : AppColors.lightTextColor,
                                   fontSize: 14,
                                 ),
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.arrow_forward_ios,
-                              color: AppColors.primaryColor,
+                              color: context.brandOnSurface,
                               size: 14,
                             ),
                           ],
@@ -377,7 +378,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       Container(
                         padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryLiteGrey,
+                          color: context.mutedBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -399,7 +400,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       Container(
                         padding: EdgeInsets.all(16.w),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryLiteGrey,
+                          color: context.mutedBackground,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -433,7 +434,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? AppColors.primaryColor
-                                    : AppColors.primaryLiteGrey,
+                                    : context.mutedBackground,
                                 borderRadius: BorderRadius.circular(8),
                                 border: isSelected
                                     ? Border.all(color: AppColors.primaryColor, width: 2)
@@ -445,7 +446,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                   style: TextStyle(
                                     color: isSelected
                                         ? AppColors.primaryWhite
-                                        : AppColors.primaryDark,
+                                        : context.textSecondary,
                                     fontSize: 11,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -494,7 +495,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
               bottomNavigationBar: Container(
                 padding: EdgeInsets.all(20.w),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryWhite,
+                  color: context.cardBackground,
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.primaryBlack.withValues(alpha: 0.05),
@@ -559,7 +560,7 @@ class _GameCreatedSuccessDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: AppColors.primaryWhite,
+          color: context.cardBackground,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
@@ -574,8 +575,8 @@ class _GameCreatedSuccessDialog extends StatelessWidget {
             24.heightBox(),
             Text(
               LocaleKeys.game_created_successfully.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryDark,
+              style: TextStyle(
+                color: context.textSecondary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),

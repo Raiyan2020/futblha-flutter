@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/diwaniya/diwaniya_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -30,9 +31,9 @@ class DiwaniyaCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.borderGrey, width: 1),
+        border: Border.all(color: context.borderColor, width: 1),
       ),
       child: Row(
         children: [
@@ -40,7 +41,7 @@ class DiwaniyaCard extends StatelessWidget {
           Container(
             width: 80.w,
             height: 80.h,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.primaryLiteGrey),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: context.mutedBackground),
             child: ClipOval(
               child: Image.network(
                 diwaniya.image ?? '',
@@ -73,7 +74,7 @@ class DiwaniyaCard extends StatelessWidget {
                 Text(
                   diwaniya.name ?? '',
                   style: TextStyle(
-                    color: AppColors.primaryBlack,
+                    color: context.textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

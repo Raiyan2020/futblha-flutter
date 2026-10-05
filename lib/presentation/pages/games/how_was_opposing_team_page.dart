@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
@@ -71,7 +72,7 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                       padding: EdgeInsets.all(24.w),
                       margin: EdgeInsets.only(top: 50.h),
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryColor,
+                        color: context.chipBackground,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
@@ -80,8 +81,8 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                           // Team Name
                           Text(
                             widget.teamName,
-                            style: const TextStyle(
-                              color: AppColors.primaryColor,
+                            style: TextStyle(
+                              color: context.brandOnSurface,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                             ),
@@ -92,7 +93,7 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                           Container(
                             padding: EdgeInsets.all(16.w),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryWhite,
+                              color: context.cardBackground,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Column(
@@ -100,8 +101,8 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                               children: [
                                 Text(
                                   LocaleKeys.level_review.tr(),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryDark,
+                                  style: TextStyle(
+                                    color: context.textSecondary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -123,7 +124,7 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                           Container(
                             padding: EdgeInsets.all(16.w),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryWhite,
+                              color: context.cardBackground,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Column(
@@ -131,8 +132,8 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                               children: [
                                 Text(
                                   LocaleKeys.clean_game.tr(),
-                                  style: const TextStyle(
-                                    color: AppColors.primaryDark,
+                                  style: TextStyle(
+                                    color: context.textSecondary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -159,7 +160,7 @@ class _HowWasOpposingTeamPageState extends State<HowWasOpposingTeamPage> {
                       backgroundImage: widget.teamImage != null
                           ? NetworkImage(widget.teamImage!)
                           : AssetImage(AppAssets.ic_profile),
-                      backgroundColor: AppColors.primaryLiteGrey,
+                      backgroundColor: context.mutedBackground,
                       onBackgroundImageError: (_, _) {},
                     ),
                   ],

@@ -4,6 +4,7 @@ import 'package:futblha/application/config/design_system/app_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class DiwaniyaFilterBottomSheet {
   static Future<DiwaniyaFilterResult?> show(
@@ -68,7 +69,7 @@ class DiwaniyaFilterBottomSheet {
                       6.heightBox(),
                       DropdownButtonFormField<String>(
                         initialValue: selectedType,
-                        decoration: _filterFieldDecoration(LocaleKeys.select_type.tr()),
+                        decoration: _filterFieldDecoration(context, LocaleKeys.select_type.tr()),
                         items: types
                             .map((type) => DropdownMenuItem<String>(value: type, child: Text(type)))
                             .toList(),
@@ -86,7 +87,7 @@ class DiwaniyaFilterBottomSheet {
                       TextField(
                         controller: membersController,
                         keyboardType: TextInputType.number,
-                        decoration: _filterFieldDecoration(LocaleKeys.enter_number.tr()),
+                        decoration: _filterFieldDecoration(context, LocaleKeys.enter_number.tr()),
                       ),
                       12.heightBox(),
                       Text(
@@ -99,7 +100,7 @@ class DiwaniyaFilterBottomSheet {
                       6.heightBox(),
                       DropdownButtonFormField<String>(
                         initialValue: selectedLevel,
-                        decoration: _filterFieldDecoration(LocaleKeys.select_level.tr()),
+                        decoration: _filterFieldDecoration(context, LocaleKeys.select_level.tr()),
                         items: levels
                             .map(
                               (level) => DropdownMenuItem<String>(value: level, child: Text(level)),
@@ -131,7 +132,7 @@ class DiwaniyaFilterBottomSheet {
                                 child: Text(
                                   LocaleKeys.clear_all.tr(),
                                   style: TextStyle(
-                                    color: AppColors.primaryColor,
+                                    color: context.brandOnSurface,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -185,14 +186,14 @@ class DiwaniyaFilterBottomSheet {
     return result;
   }
 
-  static InputDecoration _filterFieldDecoration(String hint) {
+  static InputDecoration _filterFieldDecoration(BuildContext context, String hint) {
     return InputDecoration(
       hintText: hint,
       filled: true,
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.secondaryColor),
+        borderSide: BorderSide(color: context.chipBackground),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/enums/position_enum.dart';
 import 'package:futblha/data/models/response_model/games/game_player_model.dart';
@@ -55,18 +56,18 @@ class PlayerInfoBottomSheet extends StatelessWidget {
               width: 40.w,
               height: 4.h,
               decoration: BoxDecoration(
-                color: AppColors.primaryLiteGrey,
+                color: context.mutedBackground,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             24.heightBox(),
             CircleAvatar(
               radius: 45,
-              backgroundColor: AppColors.primaryLiteGrey,
+              backgroundColor: context.mutedBackground,
               backgroundImage: image != null && image.isNotEmpty ? NetworkImage(image) : null,
               onBackgroundImageError: image != null && image.isNotEmpty ? (_, _) {} : null,
               child: image == null || image.isEmpty
-                  ? Icon(Icons.person, color: AppColors.primaryColor, size: 45)
+                  ? Icon(Icons.person, color: context.brandOnSurface, size: 45)
                   : null,
             ),
             16.heightBox(),
@@ -84,12 +85,12 @@ class PlayerInfoBottomSheet extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: 20.w),
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                 decoration: BoxDecoration(
-                  color: AppColors.secondaryColor,
+                  color: context.chipBackground,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.sports_soccer, color: AppColors.primaryColor, size: 20),
+                    Icon(Icons.sports_soccer, color: context.brandOnSurface, size: 20),
                     8.widthBox(),
                     Text(
                       LocaleKeys.playing_position.tr(),
@@ -98,8 +99,8 @@ class PlayerInfoBottomSheet extends StatelessWidget {
                     const Spacer(),
                     Text(
                       position,
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),

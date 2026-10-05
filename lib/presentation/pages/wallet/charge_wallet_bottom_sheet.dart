@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -44,7 +45,7 @@ class _ChargeWalletBottomSheetState extends State<ChargeWalletBottomSheet> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primaryWhite,
+        color: context.cardBackground,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -71,23 +72,23 @@ class _ChargeWalletBottomSheetState extends State<ChargeWalletBottomSheet> {
                   ),
                   Text(
                     LocaleKeys.charge_wallet.tr(),
-                    style: const TextStyle(
-                      color: AppColors.primaryBlack,
+                    style: TextStyle(
+                      color: context.textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close, color: AppColors.primaryDark),
+                    icon: Icon(Icons.close, color: context.textSecondary),
                   ),
                 ],
               ),
               20.heightBox(),
               Text(
                 LocaleKeys.charge_amount_label.tr(),
-                style: const TextStyle(
-                  color: AppColors.primaryBlack,
+                style: TextStyle(
+                  color: context.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
@@ -95,9 +96,9 @@ class _ChargeWalletBottomSheetState extends State<ChargeWalletBottomSheet> {
               12.heightBox(),
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.primaryWhite,
+                  color: context.cardBackground,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.borderGrey, width: 1),
+                  border: Border.all(color: context.borderColor, width: 1),
                 ),
                 child: Row(
                   children: [
@@ -135,7 +136,7 @@ class _ChargeWalletBottomSheetState extends State<ChargeWalletBottomSheet> {
                       child: Text(
                         LocaleKeys.kwd.tr(),
                         style: TextStyle(
-                          color: AppColors.primaryColor,
+                          color: context.brandOnSurface,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),

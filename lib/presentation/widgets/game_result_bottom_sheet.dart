@@ -6,6 +6,7 @@ import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
 
 import '../../application/config/app_assets.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 enum GameResult { team1Win, tie, team2Win }
 
@@ -29,7 +30,7 @@ class GameResultBottomSheet {
             return Container(
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               decoration: BoxDecoration(
-                color: AppColors.primaryWhite,
+                color: context.cardBackground,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24),
                   topRight: Radius.circular(24),
@@ -53,8 +54,8 @@ class GameResultBottomSheet {
                     // Title
                     Text(
                       LocaleKeys.game_result.tr(),
-                      style: const TextStyle(
-                        color: AppColors.primaryDark,
+                      style: TextStyle(
+                        color: context.textSecondary,
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
@@ -111,7 +112,7 @@ class GameResultBottomSheet {
                           backgroundColor: AppColors.primaryColor,
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          disabledBackgroundColor: AppColors.primaryLiteGrey,
+                          disabledBackgroundColor: context.mutedBackground,
                         ),
                         child: Text(
                           LocaleKeys.continue_key.tr(),
@@ -148,10 +149,10 @@ class GameResultBottomSheet {
         width: 100.w,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.secondaryColor : AppColors.primaryLiteGrey,
+          color: isSelected ? context.chipBackground : context.mutedBackground,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppColors.primaryColor : AppColors.borderGrey,
+            color: isSelected ? AppColors.primaryColor : context.borderColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -166,7 +167,7 @@ class GameResultBottomSheet {
                 height: 20,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected ? AppColors.primaryColor : AppColors.primaryWhite,
+                  color: isSelected ? AppColors.primaryColor : context.cardBackground,
                   border: Border.all(
                     color: isSelected ? AppColors.primaryColor : AppColors.primaryGrey,
                     width: 2,
@@ -180,14 +181,14 @@ class GameResultBottomSheet {
             12.heightBox(),
             // Image or Icon
             if (isTie)
-              const Icon(Icons.handshake, size: 40, color: AppColors.primaryColor)
+              Icon(Icons.handshake, size: 40, color: context.brandOnSurface)
             else
               CircleAvatar(
                 radius: 25,
                 backgroundImage: teamImage != null
                     ? NetworkImage(teamImage)
                     : AssetImage(AppAssets.ic_profile),
-                backgroundColor: AppColors.primaryLiteGrey,
+                backgroundColor: context.mutedBackground,
                 onBackgroundImageError: (_, _) {},
               ),
             12.heightBox(),
@@ -195,7 +196,7 @@ class GameResultBottomSheet {
             Text(
               teamName,
               style: TextStyle(
-                color: AppColors.primaryDark,
+                color: context.textSecondary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

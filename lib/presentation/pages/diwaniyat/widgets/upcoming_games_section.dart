@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -34,7 +34,7 @@ class UpcomingGamesSection extends StatelessWidget {
           child: Text(
             LocaleKeys.upcoming_games.tr(),
             style: TextStyle(
-              color: AppColors.primaryBlack,
+              color: context.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
