@@ -55,13 +55,13 @@ class GameDataHelper {
     return status.contains('cancel') || status == 'rejected';
   }
 
-  /// Upcoming games ordering: confirmed bookings first, then pending ones.
-  /// Cancelled games are hidden (the user is notified via notifications instead).
+  /// Upcoming games ordering: confirmed first, then pending, then cancelled.
+  /// The API's order is kept within each group.
   static List<GameModel> sortUpcomingGames(List<GameModel> games) {
-    final visible = games.where((game) => !isCancelled(game)).toList();
     return [
-      ...visible.where(isConfirmed),
-      ...visible.where((game) => !isConfirmed(game)),
+      ...games.where(isConfirmed),
+      ...games.where((game) => !isConfirmed(game) && !isCancelled(game)),
+      ...games.where(isCancelled),
     ];
   }
 

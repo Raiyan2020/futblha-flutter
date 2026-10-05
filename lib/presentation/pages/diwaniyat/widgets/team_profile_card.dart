@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
@@ -63,7 +63,10 @@ class TeamProfileCard extends StatelessWidget {
           constraints: BoxConstraints(minWidth: 50.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(image: AssetImage(AppAssets.score_background), fit: BoxFit.fill),
+            image: DecorationImage(
+              image: AssetImage(AppAssets.score_background),
+              fit: BoxFit.fill,
+            ),
           ),
           child: Text(
             value,
@@ -121,7 +124,9 @@ class TeamProfileCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.primaryWhite.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryWhite.withValues(alpha: 0.3)),
+          border: Border.all(
+            color: AppColors.primaryWhite.withValues(alpha: 0.3),
+          ),
         ),
         child: Center(
           child: Text(
@@ -168,7 +173,9 @@ class TeamProfileCard extends StatelessWidget {
                             Icons.person_add,
                             hasBadge: true,
                             badgeCount: bloc.myDiwaniya?.joinRequests ?? 0,
-                            onTap: () => context.router.push(JoinRequestsRoute(diwaniyaBloc: bloc)),
+                            onTap: () => context.router.push(
+                              JoinRequestsRoute(diwaniyaBloc: bloc),
+                            ),
                           )
                         else
                           SizedBox(width: 40),
@@ -190,7 +197,9 @@ class TeamProfileCard extends StatelessWidget {
                         ),
                         8.heightBox(),
                         Text(
-                          bloc.myDiwaniya?.rank != null ? '#${bloc.myDiwaniya!.rank}' : '',
+                          bloc.myDiwaniya?.rank != null
+                              ? '#${bloc.myDiwaniya!.rank}'
+                              : '',
                           style: TextStyle(
                             color: AppColors.primaryWhite,
                             fontSize: 16,
@@ -222,8 +231,11 @@ class TeamProfileCard extends StatelessWidget {
                           _buildActionIcon(
                             Icons.chat_outlined,
                             hasBadge: true,
-                            badgeCount: bloc.myDiwaniya?.unreadMessagesCount ?? 0,
-                            onTap: () => context.router.push(ChatRoute(diwaniyaBloc: bloc)),
+                            badgeCount:
+                                bloc.myDiwaniya?.unreadMessagesCount ?? 0,
+                            onTap: () => context.router.push(
+                              ChatRoute(diwaniyaBloc: bloc),
+                            ),
                           )
                         else
                           SizedBox(width: 40),
@@ -235,24 +247,26 @@ class TeamProfileCard extends StatelessWidget {
                 10.heightBox(),
 
                 // Description
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryWhite.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    bloc.myDiwaniya?.description ?? '',
-                    style: TextStyle(
-                      color: AppColors.primaryWhite.withValues(alpha: 0.8),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
+                if (bloc.myDiwaniya?.description != null)
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryWhite.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    textAlign: TextAlign.center,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
+                    child: Text(
+                      bloc.myDiwaniya?.description ?? '',
+                      style: TextStyle(
+                        color: AppColors.primaryWhite.withValues(alpha: 0.8),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
+
                 15.heightBox(),
                 // Statistics
                 Padding(
@@ -260,9 +274,18 @@ class TeamProfileCard extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildStatCard(bloc.myDiwaniya?.wins ?? '0', LocaleKeys.win.tr()),
-                      _buildStatCard(bloc.myDiwaniya?.draws ?? '0', LocaleKeys.draw.tr()),
-                      _buildStatCard(bloc.myDiwaniya?.losses ?? '0', LocaleKeys.lose.tr()),
+                      _buildStatCard(
+                        bloc.myDiwaniya?.wins ?? '0',
+                        LocaleKeys.win.tr(),
+                      ),
+                      _buildStatCard(
+                        bloc.myDiwaniya?.draws ?? '0',
+                        LocaleKeys.draw.tr(),
+                      ),
+                      _buildStatCard(
+                        bloc.myDiwaniya?.losses ?? '0',
+                        LocaleKeys.lose.tr(),
+                      ),
                     ],
                   ),
                 ),
@@ -277,7 +300,9 @@ class TeamProfileCard extends StatelessWidget {
                           onTap: () {
                             if (bloc.myDiwaniya?.id != null) {
                               context.router.push(
-                                GamesHistoryRoute(diwaniyaId: bloc.myDiwaniya!.id!),
+                                GamesHistoryRoute(
+                                  diwaniyaId: bloc.myDiwaniya!.id!,
+                                ),
                               );
                             }
                           },
@@ -327,7 +352,11 @@ class TeamProfileCard extends StatelessWidget {
                   height: 78.w,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Image.asset(AppAssets.ic_profile, width: 78.w, height: 78.w);
+                    return Image.asset(
+                      AppAssets.ic_profile,
+                      width: 78.w,
+                      height: 78.w,
+                    );
                   },
                 ),
               ),

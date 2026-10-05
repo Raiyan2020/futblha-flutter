@@ -6,6 +6,7 @@ import 'package:futblha/data/models/response_model/diwaniya/diwaniya_model.dart'
 import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:futblha/presentation/pages/diwaniyat/widgets/diwaniya_card.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
+import 'package:futblha/presentation/widgets/custom_loading_widget.dart';
 import 'package:futblha/presentation/widgets/pagination_list.dart';
 
 class OtherDiwaniyatContent extends StatelessWidget {
@@ -14,6 +15,7 @@ class OtherDiwaniyatContent extends StatelessWidget {
   final String searchQuery;
   final bool hasActiveFilters;
   final bool hasMorePages;
+  final bool isLoading;
   final VoidCallback onSearchChanged;
   final VoidCallback onFilterPressed;
   final VoidCallback onClearSearch;
@@ -27,6 +29,7 @@ class OtherDiwaniyatContent extends StatelessWidget {
     required this.searchQuery,
     required this.hasActiveFilters,
     required this.hasMorePages,
+    this.isLoading = false,
     required this.onSearchChanged,
     required this.onFilterPressed,
     required this.onClearSearch,
@@ -101,8 +104,11 @@ class OtherDiwaniyatContent extends StatelessWidget {
           ),
         ),
         16.heightBox(),
-        // Diwaniya List with Pagination
-        diwaniyas != null && diwaniyas!.isNotEmpty
+        // Diwaniya List with Pagination. Only the list shows loading, so the
+        // search field stays mounted and keeps focus while a search runs.
+        isLoading
+            ? const Expanded(child: LoadingWidget())
+            : diwaniyas != null && diwaniyas!.isNotEmpty
             ? Expanded(
                 child: PaginationList(
                   itemCount: diwaniyas!.length,
@@ -135,4 +141,3 @@ class OtherDiwaniyatContent extends StatelessWidget {
     );
   }
 }
-

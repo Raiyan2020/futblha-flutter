@@ -326,7 +326,7 @@
   "show_results": "عرض النتائج",
   "game_details": "تفاصيل المباراة",
   "game_not_found": "لم يتم العثور على المباراة",
-  "players_joined": "اللاعبون المنضمون",
+  "players_joined": "عرض اللاعبين",
   "forfeit_match": "الانسحاب من المباراة",
   "forfeit_match_confirmation": "هل أنت متأكد أنك تريد الانسحاب من هذه المباراة؟",
   "forfeit_match_creator_confirmation": "هل أنت متأكد أنك تريد الانسحاب من هذه المباراة؟ كمنشئ، سيتم حذف المباراة من النظام.",

@@ -65,7 +65,7 @@ class _CreateDiwaniyaPageState extends State<CreateDiwaniyaPage> {
   }
 
   void _onCreatePressed() {
-    if (_nameController.text.isEmpty) {
+    if (_nameController.text.trim().isEmpty) {
       context.showMessage(isError: true, LocaleKeys.please_enter_diwaniya_name.tr());
       return;
     }

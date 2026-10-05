@@ -380,32 +380,30 @@ class _DiwaniyatPageState extends State<DiwaniyatPage> {
                       ),
                     ),
                     // Other Diwaniyat Content with Pagination
-                    if (state is! DiwaniyaLoading)
-                      Expanded(
-                        child: RefreshIndicator(
-                          onRefresh: () async {
-                            _currentPage = 1;
-                            _loadData(searchQuery: _searchQuery.isNotEmpty ? _searchQuery : null);
+                    Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          _currentPage = 1;
+                          _loadData(searchQuery: _searchQuery.isNotEmpty ? _searchQuery : null);
+                        },
+                        child: OtherDiwaniyatContent(
+                          diwaniyas: bloc.otherDiwaniyas?.items,
+                          searchController: _searchController,
+                          searchQuery: _searchQuery,
+                          hasActiveFilters: _activeFilters?.hasFilters == true,
+                          hasMorePages: _hasMorePages(),
+                          isLoading: state is DiwaniyaLoading,
+                          onSearchChanged: () => _onSearchChanged(_searchQuery),
+                          onFilterPressed: _showFilterBottomSheet,
+                          onClearSearch: () {
+                            _searchController.clear();
+                            _loadData();
                           },
-                          child: OtherDiwaniyatContent(
-                            diwaniyas: bloc.otherDiwaniyas?.items,
-                            searchController: _searchController,
-                            searchQuery: _searchQuery,
-                            hasActiveFilters: _activeFilters?.hasFilters == true,
-                            hasMorePages: _hasMorePages(),
-                            onSearchChanged: () => _onSearchChanged(_searchQuery),
-                            onFilterPressed: _showFilterBottomSheet,
-                            onClearSearch: () {
-                              _searchController.clear();
-                              _loadData();
-                            },
-                            onLoadMore: _loadMoreData,
-                            onDiwaniyaTap: _onDiwaniyaTap,
-                          ),
+                          onLoadMore: _loadMoreData,
+                          onDiwaniyaTap: _onDiwaniyaTap,
                         ),
                       ),
-                    if (state is DiwaniyaLoading)
-                      const Expanded(child: LoadingWidget()),
+                    ),
                     // Create Diwaniya Button
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
