@@ -3,13 +3,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
+import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
 import 'package:futblha/presentation/widgets/diwaniya_ranking/diwaniya_ranking_item.dart';
 import 'package:futblha/presentation/widgets/diwaniya_ranking/top_three_ranking_card.dart';
-import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart';
-import 'package:futblha/generated/locale_keys.g.dart';
 
 import '../../../widgets/app_size_boxes.dart';
 import '../../../widgets/custom_loading_widget.dart';
@@ -66,11 +67,15 @@ class DiwaniyaRankingWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           margin: EdgeInsets.symmetric(horizontal: 15.w),
           decoration: BoxDecoration(
-            color: AppColors.primaryColor,
+            color: context.isDarkMode
+                ? context.cardBackground
+                : AppColors.primaryColor,
             borderRadius: BorderRadius.circular(16),
-            image: const DecorationImage(
-              image: AssetImage(AppAssets.rank_background),
+            // The texture is light mint, so in dark mode it is only a faint overlay on the card color.
+            image: DecorationImage(
+              image: const AssetImage(AppAssets.rank_background),
               fit: BoxFit.cover,
+              opacity: context.isDarkMode ? 0.06 : 1.0,
             ),
           ),
           child: Column(
@@ -84,13 +89,17 @@ class DiwaniyaRankingWidget extends StatelessWidget {
                   children: [
                     Text(
                       LocaleKeys.diwaniya_ranking.tr(),
-                      style: const TextStyle(
-                        color: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: context.brandOnSurface,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.primaryColor),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: context.brandOnSurface,
+                    ),
                   ],
                 ),
               ),
@@ -110,7 +119,7 @@ class DiwaniyaRankingWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     if (topThree.length >= 3) _buildRankingCard(topThree[2]),
-                    if (topThree.length >= 1) _buildRankingCard(topThree[0]),
+                    if (topThree.isNotEmpty) _buildRankingCard(topThree[0]),
                     if (topThree.length >= 2) _buildRankingCard(topThree[1]),
                   ],
                 ),
@@ -126,6 +135,11 @@ class DiwaniyaRankingWidget extends StatelessWidget {
     final asset = item.backgroundImagePath ?? '';
     final isFirst = item.rank == 1;
 
-    return TopThreeRankingCard(item: item, height: height, asset: asset, isFirst: isFirst);
+    return TopThreeRankingCard(
+      item: item,
+      height: height,
+      asset: asset,
+      isFirst: isFirst,
+    );
   }
 }
