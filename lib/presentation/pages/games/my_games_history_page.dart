@@ -1,19 +1,19 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart' as el;
+import 'package:flutter/material.dart';
 import 'package:futblha/application/config/app_assets.dart';
 import 'package:futblha/application/config/design_system/app_colors.dart';
 import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
-import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
-import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
-import 'package:futblha/presentation/widgets/snackbar_utill.dart';
-import 'package:futblha/presentation/widgets/pagination_list.dart';
-import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
+import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
+import 'package:futblha/presentation/widgets/app_size_boxes.dart';
+import 'package:futblha/presentation/widgets/pagination_list.dart';
+import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../../../application/core/utils/helpers/extension_functions/date_extension_functions.dart';
@@ -53,7 +53,9 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
           body: games.isEmpty
               ? (state is GamesLoading
                     ? const LoadingWidget()
-                    : Center(child: Text(LocaleKeys.no_game_history_available.tr())))
+                    : Center(
+                        child: Text(LocaleKeys.no_game_history_available.tr()),
+                      ))
               : PaginationList(
                   itemCount: games.length,
                   reachedMax: gamesBloc.gameHistoryReachedMax,
@@ -61,10 +63,14 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                     if (gamesBloc.gameHistoryReachedMax) return;
                     if (state is GamesLoading)
                       return; // Prevent duplicate requests while loading next page
-                    final nextPage = (gamesBloc.gameHistoryPagination?.currentPage ?? 1) + 1;
+                    final nextPage =
+                        (gamesBloc.gameHistoryPagination?.currentPage ?? 1) + 1;
                     gamesBloc.add(GetGameHistoryEvent(page: nextPage));
                   },
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 16.h,
+                  ),
                   separator: 16.heightBox(),
                   itemBuilder: (context, index) {
                     return _buildGameCard(games[index], context);
@@ -81,7 +87,9 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
     final isMyDiwanyaGame = game.type == 'my_diwanya';
 
     // Get team names and images
-    final team1Name = isMyDiwanyaGame ? LocaleKeys.team_1.tr() : (game.creatorDiwaniya?.name ?? '');
+    final team1Name = isMyDiwanyaGame
+        ? LocaleKeys.team_1.tr()
+        : (game.creatorDiwaniya?.name ?? '');
     final team1Image = game.creatorDiwaniya?.image ?? AppAssets.ic_profile;
     final team2Name = isMyDiwanyaGame
         ? LocaleKeys.team_2.tr()
@@ -114,7 +122,8 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
     // Get players count
     // final joinedPlayers = game.playersJoines ?? 0;
     final targetPlayers = game.playersTarget ?? 0;
-    final playersStr = '${(targetPlayers / 2).round()} VS ${(targetPlayers / 2).round()}';
+    final playersStr =
+        '${(targetPlayers / 2).round()} VS ${(targetPlayers / 2).round()}';
 
     // Get location
     final location = game.booking?.playground?.name;
@@ -136,7 +145,10 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
       onTap: () {
         if (game.id != null) {
           context.router.push(
-            GameDetailsRoute(bloc: gamesBloc..gameDetails = game, isFromHistory: true),
+            GameDetailsRoute(
+              bloc: gamesBloc..gameDetails = game,
+              isFromHistory: true,
+            ),
           );
         }
       },
@@ -164,7 +176,10 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                         context.router.push(ChatRoute());
                       }
                     },
-                    icon: Icon(Icons.chat_outlined, color: context.brandOnSurface),
+                    icon: Icon(
+                      Icons.chat_outlined,
+                      color: context.brandOnSurface,
+                    ),
                   ),
               ],
             ),
@@ -255,7 +270,11 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.calendar_today, size: 14, color: context.brandOnSurface),
+                      Icon(
+                        Icons.calendar_today,
+                        size: 14,
+                        color: context.brandOnSurface,
+                      ),
                       6.widthBox(),
                       Text(
                         dateStr,
@@ -269,7 +288,11 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.access_time, size: 14, color: context.brandOnSurface),
+                      Icon(
+                        Icons.access_time,
+                        size: 14,
+                        color: context.brandOnSurface,
+                      ),
                       6.widthBox(),
                       Text(
                         timeStr,
@@ -283,7 +306,11 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.person, size: 14, color: context.brandOnSurface),
+                      Icon(
+                        Icons.person,
+                        size: 14,
+                        color: context.brandOnSurface,
+                      ),
                       6.widthBox(),
                       Text(
                         playersStr,
@@ -312,7 +339,11 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 14, color: context.brandOnSurface),
+                      Icon(
+                        Icons.location_on,
+                        size: 14,
+                        color: context.brandOnSurface,
+                      ),
                       6.widthBox(),
                       Text(
                         location ?? '',
@@ -390,7 +421,11 @@ class _MyGamesHistoryPageState extends State<MyGamesHistoryPage> {
       ),
       child: Text(
         statusText,
-        style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          color: statusColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

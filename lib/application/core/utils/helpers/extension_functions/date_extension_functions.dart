@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../cache/cache_manager.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 extension ExtensionsOnNullableInt on DateTime? {
   String? fromTimestampToDate({String dateFormat = 'yyyy-MM-dd'}) {
@@ -14,7 +15,10 @@ extension ExtensionsOnNullableInt on DateTime? {
 }
 
 extension ExtensionsOnNullableString on String? {
-  String? fromDateTimeToDate({String dateFormat = 'dd-MM-yyyy', String language = 'en'}) {
+  String? fromDateTimeToDate({
+    String dateFormat = 'dd-MM-yyyy',
+    String language = 'en',
+  }) {
     if (this != null) {
       DateTime dateTime = DateTime.parse(this!);
       return DateFormat(dateFormat, language).format(dateTime);
@@ -29,19 +33,31 @@ extension ExtensionsOnNullableString on String? {
 
 extension DateTimeFormatting on DateTime {
   String formatToCustomString() {
-    return DateFormat('MM/dd/yyyy - hh:mm a', CacheManager.instance.getLanguage()).format(this);
+    return DateFormat(
+      'MM/dd/yyyy - hh:mm a',
+      CacheManager.instance.getLanguage(),
+    ).format(this);
   }
 
   String formatTimeToCustomString() {
-    return DateFormat('hh:mm a', CacheManager.instance.getLanguage()).format(this);
+    return DateFormat(
+      'hh:mm a',
+      CacheManager.instance.getLanguage(),
+    ).format(this);
   }
 
   String formatDateToCustomString() {
-    return DateFormat('d MMMM yyyy', CacheManager.instance.getLanguage()).format(this);
+    return DateFormat(
+      'd MMMM yyyy',
+      CacheManager.instance.getLanguage(),
+    ).format(this);
   }
 
   String formatDayMonthToCustomString() {
-    return DateFormat('d MMMM', CacheManager.instance.getLanguage()).format(this);
+    return DateFormat(
+      'd MMMM',
+      CacheManager.instance.getLanguage(),
+    ).format(this);
   }
 }
 
@@ -109,22 +125,24 @@ class LocalizedDateConverter implements JsonConverter<DateTime?, String?> {
   DateTime? fromJson(String? json) {
     if (json == null) return null;
 
-    String lang = CacheManager.instance.getLanguage() ?? 'en';
+    final String lang = CacheManager.instance.getLanguage() ?? 'en';
 
-    // --- THE FIX START ---
-    // If the language is Arabic, the library expects Arabic digits (٠-٩).
-    // But your API sends English digits (0-9). We must swap them.
-    if (lang == 'ar') {
-      json = _toEasternArabicDigits(json);
+    // The API localizes month names by Accept-Language ("8 أكتوبر 2026") but sends
+    // Western digits; depending on the intl version the 'ar' locale expects
+    // Western or Eastern Arabic digits, so try both, then English and ISO.
+    final candidates = <(String, String)>[
+      (lang, json),
+      if (lang == 'ar') (lang, _toEasternArabicDigits(json)),
+      if (lang != 'en') ('en', json),
+    ];
+    for (final (locale, value) in candidates) {
+      try {
+        return DateFormat("d MMMM yyyy", locale).parse(value);
+      } catch (_) {}
     }
-    // --- THE FIX END ---
-
-    try {
-      return DateFormat("d MMMM yyyy", lang).parse(json);
-    } catch (e) {
-      print("Error parsing '$json': $e");
-      return null;
-    }
+    final DateTime? iso = DateTime.tryParse(json);
+    if (iso == null) debugPrint("Error parsing date '$json'");
+    return iso;
   }
 
   @override
