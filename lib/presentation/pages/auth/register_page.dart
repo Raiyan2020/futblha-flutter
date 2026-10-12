@@ -291,9 +291,9 @@ class _RegisterPageState extends State<RegisterPage> {
     FocusScope.of(context).requestFocus(FocusNode());
     final DateTime? picked = await showAppDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: latestBirthDate(),
       firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      lastDate: latestBirthDate(),
     );
     if (picked != null) {
       setState(() {

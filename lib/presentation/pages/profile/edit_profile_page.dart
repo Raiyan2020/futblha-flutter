@@ -130,9 +130,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     FocusScope.of(context).requestFocus(FocusNode());
     final DateTime? picked = await showAppDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: latestBirthDate(),
       firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
+      lastDate: latestBirthDate(),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

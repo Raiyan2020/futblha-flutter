@@ -3,6 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
 
+/// Minimum age a player can register with.
+const int minPlayerAge = 10;
+
+/// Latest selectable birth date: today, [minPlayerAge] years ago.
+DateTime latestBirthDate() {
+  final now = DateTime.now();
+  return DateTime(now.year - minPlayerAge, now.month, now.day);
+}
+
 /// Shows the Material calendar on Android and a year / month / day wheel picker on iOS.
 Future<DateTime?> showAppDatePicker({
   required BuildContext context,
