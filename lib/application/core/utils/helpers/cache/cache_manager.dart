@@ -38,7 +38,8 @@ class CacheManager {
   Future<void> logout() async {
     await _prefs.remove(keyToken);
     await _prefs.remove(keyUserId);
-    await _prefs.remove(keyLanguage);
+    // Keep keyLanguage: easy_localization keeps its own saved locale after logout,
+    // so removing it would make Accept-Language fall back to 'en' under an Arabic UI.
     await _prefs.remove(keyUserName);
     await _prefs.remove(keyUserMobile);
     await _prefs.remove(keyFCMDeviceToken);
