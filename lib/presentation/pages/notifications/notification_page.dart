@@ -47,16 +47,12 @@ class NotificationsPage extends StatelessWidget {
               : PaginationList(
                   itemCount: bloc.notifications.length,
                   animateItems: true,
-                  padding: symmetricPadding(10, 10),
+                  padding: symmetricPadding(12, 16),
+                  separator: const SizedBox(height: 12),
                   reachedMax: bloc.reachMaX,
                   onReachBottom: () => bloc.add(const GetNotificationsEvent(more: true)),
                   itemBuilder: (BuildContext context, int index) {
-                    final notification = bloc.notifications[index];
-                    return Align(
-                      alignment: Alignment.topCenter,
-                      heightFactor: 0.9,
-                      child: NotificationCard(model: notification),
-                    );
+                    return NotificationCard(model: bloc.notifications[index]);
                   },
                 );
         },

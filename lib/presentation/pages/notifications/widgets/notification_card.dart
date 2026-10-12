@@ -7,7 +7,6 @@ import '../../../../application/core/utils/constants/app_constants.dart';
 import '../../../../application/core/utils/fcm/notification_navigation.dart';
 import '../../../../data/models/response_model/notifications/notifications_response_model.dart';
 import '../../../widgets/custom_text.dart';
-import '../../../widgets/scaffold_pading.dart';
 import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -18,58 +17,114 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Unread challenges are highlighted in red until tapped.
     final highlight = model.type == gameInvitationNotificationType && model.isUnread;
-    return GestureDetector(
-      onTap: () => NotificationNavigation.open(type: model.type, notificationId: model.id),
-      child: Container(
-        padding: symmetricPadding(15, 15),
-        decoration: BoxDecoration(
-          color: highlight ? AppColors.primaryRed.withValues(alpha: 0.08) : context.cardBackground,
-          border: highlight ? Border.all(color: AppColors.primaryRed, width: 1.5) : null,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              spreadRadius: 3,
-              blurRadius: 10,
-              offset: const Offset(0, 10), // changes position of shadow
+    final accent = highlight ? AppColors.primaryRed : context.brandOnSurface;
+    // Tint is blended into an opaque color so the shadow can't show through it.
+    final background = highlight
+        ? Color.alphaBlend(AppColors.primaryRed.withValues(alpha: 0.06), context.cardBackground)
+        : context.cardBackground;
+
+    return Material(
+      color: background,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => NotificationNavigation.open(type: model.type, notificationId: model.id),
+        child: Ink(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: highlight ? AppColors.primaryRed.withValues(alpha: 0.6) : context.borderColor,
             ),
-          ],
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: CustomText(
-            model.title ?? '',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: highlight ? AppColors.primaryRed : null,
-            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
-          subtitle: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (model.body?.isNotEmpty ?? false)
-                CustomText(
-                  model.body!,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: highlight ? AppColors.primaryRed : null,
-                  ),
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
                 ),
-              CustomText(
-                model.createdAt ?? '',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFFB5B5B5),
+                child: highlight
+                    ? Icon(Icons.sports_soccer, color: accent, size: 24)
+                    : SvgPicture.asset(
+                        AppAssets.ic_notification,
+                        width: 22,
+                        height: 22,
+                        colorFilter: ColorFilter.mode(accent, BlendMode.srcIn),
+                      ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomText(
+                            model.title ?? '',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: highlight ? AppColors.primaryRed : context.textPrimary,
+                            ),
+                          ),
+                        ),
+                        if (model.isUnread) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
+                          ),
+                        ],
+                      ],
+                    ),
+                    if (model.body?.isNotEmpty ?? false) ...[
+                      const SizedBox(height: 4),
+                      CustomText(
+                        model.body!,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          height: 1.4,
+                          color: context.textPrimary.withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ],
+                    if (model.createdAt?.isNotEmpty ?? false) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time, size: 14, color: context.textSecondary),
+                          const SizedBox(width: 4),
+                          CustomText(
+                            model.createdAt!,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: context.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
           ),
-          trailing: highlight
-              ? const Icon(Icons.sports_soccer, color: AppColors.primaryRed)
-              : SvgPicture.asset(AppAssets.ic_notification),
         ),
       ),
     );
