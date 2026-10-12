@@ -1,12 +1,12 @@
+import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:futblha/application/config/design_system/decorations.dart';
+import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/phone_number.dart';
-import 'package:futblha/application/config/design_system/decorations.dart';
-import 'package:easy_localization/easy_localization.dart' as easy;
-import 'package:futblha/generated/locale_keys.g.dart';
-import 'package:intl_phone_field/countries.dart';
 
 class CustomPhoneField extends StatelessWidget {
   const CustomPhoneField({
@@ -34,6 +34,8 @@ class CustomPhoneField extends StatelessWidget {
       textDirection: TextDirection.ltr,
       child: IntlPhoneField(
         controller: controller,
+        languageCode:
+            easy.EasyLocalization.of(context)?.locale.languageCode ?? 'en',
         dropdownIconPosition: IconPosition.trailing,
         dropdownIcon: const Icon(Icons.keyboard_arrow_down),
         invalidNumberMessage: LocaleKeys.invalid_phone_number.tr(),
