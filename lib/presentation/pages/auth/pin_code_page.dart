@@ -390,6 +390,27 @@ class _PinCodeVerificationPageState extends State<PinCodeVerificationPage> {
                                     ),
                                   ],
                                 ),
+                                // Change phone number link
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CustomText(
+                                      LocaleKeys.wrong_number_text,
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => context.router.replace(const LoginRoute()),
+                                      child: CustomText(
+                                        LocaleKeys.change_phone_button,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(height: 16.h),
                               ],
                             ),

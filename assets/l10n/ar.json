@@ -57,6 +57,8 @@
   "sent_otp_message": " لقد أرسلنا رسالة نصية تحتوي على كود التحقق الخاص بك إلى ",
   "resend_otp_button": " إعادة إرسال",
   "resend_otp_text": "لم يصلني الرمز ؟",
+  "wrong_number_text": "الرقم غير صحيح؟",
+  "change_phone_button": "تغيير الرقم",
   "phone_number_verification": "تحقق من رقم الهاتف",
   "get_code_text": "لم تحصل على الكود؟",
   "page_title_system_selection": "إختيار الانظمة",

@@ -61,6 +61,8 @@ abstract class LocaleKeys {
   static const sent_otp_message = 'sent_otp_message';
   static const resend_otp_button = 'resend_otp_button';
   static const resend_otp_text = 'resend_otp_text';
+  static const wrong_number_text = 'wrong_number_text';
+  static const change_phone_button = 'change_phone_button';
   static const otp_resend_success = 'otp_resend_success';
   static const phone_number_verification = 'phone_number_verification';
   static const phone_number_verification_label = 'phone_number_verification_label';
