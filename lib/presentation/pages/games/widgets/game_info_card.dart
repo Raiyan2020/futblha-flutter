@@ -8,15 +8,12 @@ import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart
 import 'package:futblha/application/core/utils/helpers/extension_functions/date_extension_functions.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
-import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/diwaniyat/utils/game_data_helper.dart';
+import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 
 class GameInfoCard extends StatelessWidget {
-  const GameInfoCard({
-    super.key,
-    required this.game,
-    this.onChatPressed,
-  });
+  const GameInfoCard({super.key, required this.game, this.onChatPressed});
 
   final GameModel game;
   final VoidCallback? onChatPressed;
@@ -46,7 +43,8 @@ class GameInfoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               if (game.type != null) _buildTypeChip(context, game.type!),
-              if (game.userPermission?.isMember == true) _buildChatButton(context),
+              if (game.userPermission?.isMember == true)
+                _buildChatButton(context),
             ],
           ),
           _buildTeamsRow(context),
@@ -74,8 +72,8 @@ class GameInfoCard extends StatelessWidget {
     final label = type == 'private'
         ? LocaleKeys.private.tr()
         : type == 'public'
-            ? LocaleKeys.public.tr()
-            : LocaleKeys.my_diwaniya_game_type.tr();
+        ? LocaleKeys.public.tr()
+        : LocaleKeys.my_diwaniya_game_type.tr();
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
@@ -168,43 +166,54 @@ class GameInfoCard extends StatelessWidget {
     final chips = <Widget>[];
 
     if (game.booking?.bookingDate != null) {
-      chips.add(_InfoChip(
-        icon: Icons.calendar_today,
-        text: game.booking!.bookingDate!.toLocal().formatDateToCustomString(),
-      ));
+      chips.add(
+        _InfoChip(
+          icon: Icons.calendar_today,
+          text: game.booking!.bookingDate!.toLocal().formatDateToCustomString(),
+        ),
+      );
     }
     if (game.booking?.periods != null && game.booking!.periods!.isNotEmpty) {
-      chips.add(_InfoChip(
-        icon: Icons.access_time,
-        text: _formatTimePeriods(game.booking!.periods!),
-      ));
+      chips.add(
+        _InfoChip(
+          icon: Icons.access_time,
+          text: _formatTimePeriods(game.booking!.periods!),
+        ),
+      );
     }
     if (game.playersTarget != null) {
-      final totalPlayers = int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
+      final totalPlayers =
+          int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
       final perTeam = totalPlayers ~/ 2;
-      chips.add(_InfoChip(
-        icon: Icons.people,
-        text: '$perTeam  ${LocaleKeys.vs.tr()} $perTeam',
-      ));
+      chips.add(
+        _InfoChip(
+          icon: Icons.people,
+          text: '$perTeam  ${LocaleKeys.vs.tr()} $perTeam',
+        ),
+      );
     }
     if (game.booking?.playground?.name != null) {
-      chips.add(_InfoChip(
-        icon: Icons.location_on,
-        text: game.booking!.playground!.name ?? '',
-      ));
+      chips.add(
+        _InfoChip(
+          icon: Icons.location_on,
+          text: game.booking!.playground!.name ?? '',
+        ),
+      );
     }
-    if (game.gameStatusText != null) {
+    final statusText = GameDataHelper.getGameStatusText(game);
+    if (statusText.isNotEmpty) {
+      final statusColor = GameDataHelper.getGameStatusColor(context, game);
       chips.add(
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: AppColors.primaryYellow.withValues(alpha: 0.3),
+            color: statusColor.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
-            game.gameStatusText ?? '',
+            statusText,
             style: TextStyle(
-              color: context.brandOnSurface,
+              color: statusColor,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
@@ -238,14 +247,20 @@ class _TeamLogo extends StatelessWidget {
                 ? Image.network(
                     imageUrl!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        Icon(Icons.person, color: context.brandOnSurface, size: 30),
+                    errorBuilder: (_, _, _) => Icon(
+                      Icons.person,
+                      color: context.brandOnSurface,
+                      size: 30,
+                    ),
                   )
                 : Image.asset(
                     AppAssets.ic_profile,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        Icon(Icons.person, color: context.brandOnSurface, size: 30),
+                    errorBuilder: (_, _, _) => Icon(
+                      Icons.person,
+                      color: context.brandOnSurface,
+                      size: 30,
+                    ),
                   ),
           ),
         ),

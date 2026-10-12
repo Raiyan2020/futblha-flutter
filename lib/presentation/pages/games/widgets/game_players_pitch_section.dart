@@ -7,7 +7,6 @@ import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/response_model/games/game_members_response_model.dart';
-import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/data/models/response_model/games/game_model.dart';
 import 'package:futblha/data/models/response_model/games/game_player_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -15,6 +14,7 @@ import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
 import 'package:futblha/presentation/pages/games/utils/game_formation_utils.dart';
 import 'package:futblha/presentation/pages/games/widgets/player_info_bottom_sheet.dart';
 import 'package:futblha/presentation/pages/games/widgets/soccer_field_painter.dart';
+import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 
 class GamePlayersPitchSection extends StatelessWidget {
   const GamePlayersPitchSection({
@@ -39,7 +39,9 @@ class GamePlayersPitchSection extends StatelessWidget {
   /// When set, user can only join slots on this team (0 = top, 1 = bottom). Null = both teams.
   final int? userTeamIndex;
   final VoidCallback onForfeitTap;
-  final void Function(Map<String, double> coords, int teamIndex, int slotIndex) onJoinFromPosition;
+  final void Function(Map<String, double> coords, int teamIndex, int slotIndex)
+  onJoinFromPosition;
+
   /// When true, empty slots on [changePositionTeamIndex] are tappable to change position.
   final bool isChangingPosition;
   final int? changePositionTeamIndex;
@@ -47,12 +49,15 @@ class GamePlayersPitchSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalPlayers = int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
+    final totalPlayers =
+        int.tryParse(game.playersTarget?.toString() ?? '0') ?? 0;
     final playersPerTeam = totalPlayers ~/ 2;
     final joinedPlayers = game.playersJoines ?? 0;
 
     final myTeamPlayers = sortPlayersByPosition(members?.myTeamPlayers ?? []);
-    final opposingTeamPlayers = sortPlayersByPosition(members?.opposingTeamPlayers ?? []);
+    final opposingTeamPlayers = sortPlayersByPosition(
+      members?.opposingTeamPlayers ?? [],
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,14 +69,19 @@ class GamePlayersPitchSection extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 if (game.id != null) {
-                  context.router.push(JoinedPlayersRoute(gameId: game.id!, bloc: bloc));
+                  context.router.push(
+                    JoinedPlayersRoute(gameId: game.id!, bloc: bloc),
+                  );
                 }
               },
               child: Row(
                 children: [
                   Text(
                     LocaleKeys.players_joined.tr(),
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   8.widthBox(),
                   Text(
@@ -92,7 +102,11 @@ class GamePlayersPitchSection extends StatelessWidget {
                 onTap: onForfeitTap,
                 child: Row(
                   children: [
-                    Icon(Icons.arrow_forward, color: AppColors.primaryRed, size: 16),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: AppColors.primaryRed,
+                      size: 16,
+                    ),
                     4.widthBox(),
                     Text(
                       LocaleKeys.forfeit_match.tr(),
@@ -118,13 +132,19 @@ class GamePlayersPitchSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             child: Stack(
               children: [
-                Image.asset(AppAssets.grass_profile, height: 500.h, fit: BoxFit.cover),
+                Image.asset(
+                  AppAssets.grass_profile,
+                  height: 500.h,
+                  fit: BoxFit.cover,
+                ),
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final playerWidgets = <Widget>[];
                     final emptySlotWidgets = <Widget>[];
 
-                    // Use slotIndex (when present) so a player occupies that slot and we don't show empty there
+                    // Use slotIndex (when present) so a player occupies that slot and we don't show empty there.
+                    // The half comes from the list the player is in (my_team = top), not from the
+                    // backend's absolute team_index, so players, empty slots and taps always agree.
                     final myTeamUsedIndices = <int>{};
                     for (final entry in myTeamPlayers.asMap().entries) {
                       final player = entry.value;
@@ -132,11 +152,18 @@ class GamePlayersPitchSection extends StatelessWidget {
                       final slotIdx = player.slotIndex ?? entry.key.toString();
                       myTeamUsedIndices.add(int.parse(slotIdx));
                       final coords = getPositionCoordinates(
-                        player.teamIndex ?? teamIdx,
+                        teamIdx,
                         int.parse(slotIdx),
                         playersPerTeam,
                       );
-                      playerWidgets.add(_buildPlayerWidget(context, player, coords, constraints));
+                      playerWidgets.add(
+                        _buildPlayerWidget(
+                          context,
+                          player,
+                          coords,
+                          constraints,
+                        ),
+                      );
                     }
 
                     final opposingTeamUsedIndices = <int>{};
@@ -146,31 +173,55 @@ class GamePlayersPitchSection extends StatelessWidget {
                       final slotIdx = player.slotIndex ?? entry.key.toString();
                       opposingTeamUsedIndices.add(int.parse(slotIdx));
                       final coords = getPositionCoordinates(
-                        player.teamIndex ?? teamIdx,
+                        teamIdx,
                         int.parse(slotIdx),
                         playersPerTeam,
                       );
-                      playerWidgets.add(_buildPlayerWidget(context, player, coords, constraints));
+                      playerWidgets.add(
+                        _buildPlayerWidget(
+                          context,
+                          player,
+                          coords,
+                          constraints,
+                        ),
+                      );
                     }
 
                     for (int i = 0; i < playersPerTeam; i++) {
                       if (!myTeamUsedIndices.contains(i)) {
-                        final coords = getPositionCoordinates(0, i, playersPerTeam);
-                        emptySlotWidgets.add(_buildEmptySlot(context, coords, constraints, 0, i));
+                        final coords = getPositionCoordinates(
+                          0,
+                          i,
+                          playersPerTeam,
+                        );
+                        emptySlotWidgets.add(
+                          _buildEmptySlot(context, coords, constraints, 0, i),
+                        );
                       }
                     }
 
                     for (int i = 0; i < playersPerTeam; i++) {
                       if (!opposingTeamUsedIndices.contains(i)) {
-                        final coords = getPositionCoordinates(1, i, playersPerTeam);
-                        emptySlotWidgets.add(_buildEmptySlot(context, coords, constraints, 1, i));
+                        final coords = getPositionCoordinates(
+                          1,
+                          i,
+                          playersPerTeam,
+                        );
+                        emptySlotWidgets.add(
+                          _buildEmptySlot(context, coords, constraints, 1, i),
+                        );
                       }
                     }
 
                     return Stack(
                       children: [
-                        CustomPaint(painter: SoccerFieldPainter(), child: Container()),
-                        Stack(children: [...playerWidgets, ...emptySlotWidgets]),
+                        CustomPaint(
+                          painter: SoccerFieldPainter(),
+                          child: Container(),
+                        ),
+                        Stack(
+                          children: [...playerWidgets, ...emptySlotWidgets],
+                        ),
                       ],
                     );
                   },
@@ -222,14 +273,22 @@ class GamePlayersPitchSection extends StatelessWidget {
                     ? Image.network(
                         player.image!,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (_, _, _) => Container(
                           color: AppColors.primaryLiteGrey,
-                          child: Icon(Icons.person, color: AppColors.primaryColor, size: 30),
+                          child: Icon(
+                            Icons.person,
+                            color: AppColors.primaryColor,
+                            size: 30,
+                          ),
                         ),
                       )
                     : Container(
                         color: AppColors.primaryLiteGrey,
-                        child: Icon(Icons.person, color: AppColors.primaryColor, size: 30),
+                        child: Icon(
+                          Icons.person,
+                          color: AppColors.primaryColor,
+                          size: 30,
+                        ),
                       ),
               ),
             ),
@@ -245,7 +304,10 @@ class GamePlayersPitchSection extends StatelessWidget {
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                   shadows: [
-                    Shadow(color: AppColors.primaryBlack.withValues(alpha: 0.6), blurRadius: 3),
+                    Shadow(
+                      color: AppColors.primaryBlack.withValues(alpha: 0.6),
+                      blurRadius: 3,
+                    ),
                   ],
                 ),
               ),
@@ -267,7 +329,8 @@ class GamePlayersPitchSection extends StatelessWidget {
     final y = coords['y'] ?? 0.5;
 
     final baseCanJoin =
-        game.userPermission?.canJoin == true && game.userPermission?.isMember != true;
+        game.userPermission?.canJoin == true &&
+        game.userPermission?.isMember != true;
     final isGoalkeeperSlot = slotIndex == 0;
     final goalkeeperClosedForTeam =
         isGoalkeeperSlot &&
@@ -276,7 +339,8 @@ class GamePlayersPitchSection extends StatelessWidget {
     final onAllowedTeam = userTeamIndex == null || teamIndex == userTeamIndex;
     final canJoin = baseCanJoin && !goalkeeperClosedForTeam && onAllowedTeam;
 
-    final canChangePosition = isChangingPosition &&
+    final canChangePosition =
+        isChangingPosition &&
         changePositionTeamIndex != null &&
         teamIndex == changePositionTeamIndex &&
         onChangePositionSlot != null &&

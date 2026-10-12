@@ -102,7 +102,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                             members: members,
                             bloc: bloc,
                             isFromHistory: widget.isFromHistory,
-                            userTeamIndex: _getUserTeamIndex(game),
+                            userTeamIndex: _getUserTeamIndex(game, members),
                             onForfeitTap: () =>
                                 _handleForfeitGame(context, game),
                             onJoinFromPosition:
@@ -418,9 +418,14 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   /// Returns 0 if user must join creator team, 1 if opponent/other team, null if no restriction.
   /// my_diwanya: no restriction (same diwaniya, can join team 1 or 2).
   /// Public: if not creator's diwaniya, user can only join the other team (1).
-  int? _getUserTeamIndex(GameModel game) {
+  /// The pitch half (0 = top, 1 = bottom) the user may join, or null for either.
+  int? _getUserTeamIndex(GameModel game, GameMembersResponseModel? members) {
     // my_diwanya games are between same diwaniya members – user can join either team
     if (game.type == 'my_diwanya') return null;
+
+    // When the API answers relative to the user (my_team / opposing_team), the pitch
+    // draws my_team on top, so the user's side is always the top half.
+    if (members?.myTeam != null) return 0;
 
     final myId = locator<AuthenticationBloc>().myDiwaniya?.id;
     // Public: creator = team 0, other = team 1. Non-creator users only join team 1.
