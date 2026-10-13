@@ -31,21 +31,21 @@ class _JoinGamePageState extends State<JoinGamePage> {
   Position? _selectedPosition;
   String? _selectedTeam; // 'team_1' or 'team_2'
 
-  bool get _isMyDiwanyaGame => bloc.gameDetails?.type == 'my_diwanya';
+  /// my_diwanya and public games: the user picks team_1 or team_2.
+  /// Private games: the team is fixed by the user's diwaniya.
+  bool get _canChooseTeam {
+    final type = bloc.gameDetails?.type;
+    return type == 'my_diwanya' || type == 'public';
+  }
 
-  /// When user must join a specific team. Null = can choose (e.g. my_diwanya: either team).
-  /// Public: if not creator's diwaniya, user can only join team_2.
+  /// When user must join a specific team. Null = can choose (my_diwanya / public: either team).
   String? get _userTeamValue {
     final game = bloc.gameDetails;
     if (game == null) return null;
-    // my_diwanya: between same diwaniya members – no pre-select, user picks team_1 or team_2
-    if (game.type == 'my_diwanya') return null;
+    if (_canChooseTeam) return null;
 
+    // Private: the user plays with their own diwaniya.
     final myId = locator<AuthenticationBloc>().myDiwaniya?.id;
-    if (game.type == 'public') {
-      if (game.creatorDiwaniya?.id == myId) return 'team_1';
-      return 'team_2';
-    }
     if (myId == null) return null;
     if (game.creatorDiwaniya?.id == myId) return 'team_1';
     if (game.opponentDiwaniya?.id == myId) return 'team_2';
@@ -58,7 +58,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final game = bloc.gameDetails;
-      if (game != null && _selectedTeam == null && _isMyDiwanyaGame) {
+      if (game != null && _selectedTeam == null && _canChooseTeam) {
         final team = _userTeamValue;
         if (team != null) setState(() => _selectedTeam = team);
       }
@@ -69,7 +69,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
   List<GamePlayerModel> _getTeamListForJoin() {
     final members = bloc.gameMembers;
     if (members == null) return [];
-    final team = _isMyDiwanyaGame ? _selectedTeam : _userTeamValue;
+    final team = _canChooseTeam ? _selectedTeam : _userTeamValue;
     if (team == 'team_1') return members.myTeamPlayers;
     if (team == 'team_2') return members.opposingTeamPlayers;
     return [];
@@ -83,7 +83,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
     if (game == null) return positions;
     final gk1Closed = game.goalkeeperTeam1Close == true;
     final gk2Closed = game.goalkeeperTeam2Close == true;
-    if (_isMyDiwanyaGame) {
+    if (_canChooseTeam) {
       if (_selectedTeam == 'team_1' && gk1Closed) {
         positions = positions.where((p) => p != Position.goalKeeper).toList();
       } else if (_selectedTeam == 'team_2' && gk2Closed) {
@@ -95,7 +95,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
       }
     }
 
-    final team = _isMyDiwanyaGame ? _selectedTeam : _userTeamValue;
+    final team = _canChooseTeam ? _selectedTeam : _userTeamValue;
     if (team == null) return positions;
 
     final playersPerTeam =
@@ -124,8 +124,8 @@ class _JoinGamePageState extends State<JoinGamePage> {
       return;
     }
 
-    // For My Diwanya games, team selection is required
-    if (_isMyDiwanyaGame && _selectedTeam == null) {
+    // For My Diwanya and public games, team selection is required
+    if (_canChooseTeam && _selectedTeam == null) {
       context.showMessage(isError: true, LocaleKeys.please_select_team.tr());
       return;
     }
@@ -145,7 +145,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
     // Block joining as goalkeeper when that team's slot is closed
     if (_selectedPosition == Position.goalKeeper) {
       final game = bloc.gameDetails;
-      if (_isMyDiwanyaGame && _selectedTeam != null) {
+      if (_canChooseTeam && _selectedTeam != null) {
         final gkClosed = _selectedTeam == 'team_1'
             ? game?.goalkeeperTeam1Close == true
             : game?.goalkeeperTeam2Close == true;
@@ -178,7 +178,7 @@ class _JoinGamePageState extends State<JoinGamePage> {
 
     final request = JoinGameRequestModel(
       position: positionKey,
-      my_diwanya_team: _isMyDiwanyaGame ? _selectedTeam : null,
+      my_diwanya_team: _canChooseTeam ? _selectedTeam : null,
       slot_index: slotIndex,
     );
     bloc.add(JoinGameEvent(gameId: gameId, request: request));
@@ -209,8 +209,8 @@ class _JoinGamePageState extends State<JoinGamePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Team Selection (only for My Diwanya games)
-                  if (_isMyDiwanyaGame) ...[
+                  // Team Selection (My Diwanya and public games)
+                  if (_canChooseTeam) ...[
                     Text(
                       LocaleKeys.select_joining_team.tr(),
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

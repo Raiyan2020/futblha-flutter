@@ -417,22 +417,18 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
 
   /// Returns 0 if user must join creator team, 1 if opponent/other team, null if no restriction.
   /// my_diwanya: no restriction (same diwaniya, can join team 1 or 2).
-  /// Public: if not creator's diwaniya, user can only join the other team (1).
+  /// Public: anyone picks either team. Private: the user's own diwaniya team only.
   /// The pitch half (0 = top, 1 = bottom) the user may join, or null for either.
   int? _getUserTeamIndex(GameModel game, GameMembersResponseModel? members) {
-    // my_diwanya games are between same diwaniya members – user can join either team
-    if (game.type == 'my_diwanya') return null;
+    // my_diwanya and public games: the user can join either team.
+    if (game.type == 'my_diwanya' || game.type == 'public') return null;
 
     // When the API answers relative to the user (my_team / opposing_team), the pitch
     // draws my_team on top, so the user's side is always the top half.
     if (members?.myTeam != null) return 0;
 
+    // Private: the user plays with their own diwaniya.
     final myId = locator<AuthenticationBloc>().myDiwaniya?.id;
-    // Public: creator = team 0, other = team 1. Non-creator users only join team 1.
-    if (game.type == 'public') {
-      if (game.creatorDiwaniya?.id == myId) return 0;
-      return 1;
-    }
     if (myId == null) return null;
     if (game.creatorDiwaniya?.id == myId) return 0;
     if (game.opponentDiwaniya?.id == myId) return 1;
@@ -488,9 +484,10 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       }
     }
 
-    final isMyDiwanyaGame = game.type == 'my_diwanya';
+    // Non-members see /players (team_1 on top), so the tapped half is the absolute team.
+    // my_diwanya and public games let the player choose; private games are fixed by diwaniya.
     String? selectedTeam;
-    if (isMyDiwanyaGame) {
+    if (game.type == 'my_diwanya' || game.type == 'public') {
       selectedTeam = teamIndex == 0 ? 'team_1' : 'team_2';
     }
 
