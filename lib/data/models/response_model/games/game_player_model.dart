@@ -15,6 +15,8 @@ class GamePlayerModel {
   final String? slotIndex;
   @JsonKey(name: 'team_index')
   final int? teamIndex;
+  /// Absolute team: 'team_1' (host) or 'team_2' (opponent).
+  final String? team;
 
   GamePlayerModel({
     this.id,
@@ -24,6 +26,7 @@ class GamePlayerModel {
     this.positionText,
     this.slotIndex,
     this.teamIndex,
+    this.team,
   });
 
   factory GamePlayerModel.fromJson(Map<String, dynamic> json) => _$GamePlayerModelFromJson(json);
@@ -39,6 +42,7 @@ class GamePlayerModel {
       positionText: positionText,
       slotIndex: (slotIndex ?? this.slotIndex).toString(),
       teamIndex: teamIndex ?? this.teamIndex,
+      team: team,
     );
   }
 }

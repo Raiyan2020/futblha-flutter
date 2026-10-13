@@ -15,6 +15,7 @@ GamePlayerModel _$GamePlayerModelFromJson(Map<String, dynamic> json) =>
       positionText: json['position_text'] as String?,
       slotIndex: _stringOrNull(json['slot_index']),
       teamIndex: (json['team_index'] as num?)?.toInt(),
+      team: json['team'] as String?,
     );
 
 Map<String, dynamic> _$GamePlayerModelToJson(GamePlayerModel instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$GamePlayerModelToJson(GamePlayerModel instance) =>
       'position_text': instance.positionText,
       'slot_index': instance.slotIndex,
       'team_index': instance.teamIndex,
+      'team': instance.team,
     };

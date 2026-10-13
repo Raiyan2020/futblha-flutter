@@ -30,5 +30,18 @@ class GameMembersResponseModel {
 
   // Getter to get opposingTeam or team2 (for members vs non-members)
   List<GamePlayerModel> get opposingTeamPlayers => opposingTeam ?? team2 ?? [];
+
+  // /members is relative to the viewer and /players is absolute, so the pitch splits
+  // players by their own `team` field to keep team_1 on top for everyone. A player
+  // without `team` stays on the side of the list it came from.
+  List<GamePlayerModel> get topTeamPlayers => [
+    ...myTeamPlayers.where((p) => p.team != 'team_2'),
+    ...opposingTeamPlayers.where((p) => p.team == 'team_1'),
+  ];
+
+  List<GamePlayerModel> get bottomTeamPlayers => [
+    ...opposingTeamPlayers.where((p) => p.team != 'team_1'),
+    ...myTeamPlayers.where((p) => p.team == 'team_2'),
+  ];
 }
 

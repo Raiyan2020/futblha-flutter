@@ -70,8 +70,8 @@ class _JoinGamePageState extends State<JoinGamePage> {
     final members = bloc.gameMembers;
     if (members == null) return [];
     final team = _canChooseTeam ? _selectedTeam : _userTeamValue;
-    if (team == 'team_1') return members.myTeamPlayers;
-    if (team == 'team_2') return members.opposingTeamPlayers;
+    if (team == 'team_1') return members.topTeamPlayers;
+    if (team == 'team_2') return members.bottomTeamPlayers;
     return [];
   }
 

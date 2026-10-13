@@ -54,9 +54,10 @@ class GamePlayersPitchSection extends StatelessWidget {
     final playersPerTeam = totalPlayers ~/ 2;
     final joinedPlayers = game.playersJoines ?? 0;
 
-    final myTeamPlayers = sortPlayersByPosition(members?.myTeamPlayers ?? []);
+    // team_1 (host) is always the top half and team_2 the bottom half, for every viewer.
+    final myTeamPlayers = sortPlayersByPosition(members?.topTeamPlayers ?? []);
     final opposingTeamPlayers = sortPlayersByPosition(
-      members?.opposingTeamPlayers ?? [],
+      members?.bottomTeamPlayers ?? [],
     );
 
     return Column(
@@ -143,8 +144,8 @@ class GamePlayersPitchSection extends StatelessWidget {
                     final emptySlotWidgets = <Widget>[];
 
                     // Use slotIndex (when present) so a player occupies that slot and we don't show empty there.
-                    // The half comes from the list the player is in (my_team = top), not from the
-                    // backend's absolute team_index, so players, empty slots and taps always agree.
+                    // The half comes from the player's team (team_1 = top), not from the backend's
+                    // team_index, so players, empty slots and taps always agree.
                     final myTeamUsedIndices = <int>{};
                     for (final entry in myTeamPlayers.asMap().entries) {
                       final player = entry.value;

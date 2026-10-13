@@ -102,7 +102,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                             members: members,
                             bloc: bloc,
                             isFromHistory: widget.isFromHistory,
-                            userTeamIndex: _getUserTeamIndex(game, members),
+                            userTeamIndex: _getUserTeamIndex(game),
                             onForfeitTap: () =>
                                 _handleForfeitGame(context, game),
                             onJoinFromPosition:
@@ -332,8 +332,8 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
     if (members == null) return null;
     final currentUserId = int.tryParse(CacheManager.instance.getUserId());
     if (currentUserId == null) return null;
-    if (members.myTeamPlayers.any((p) => p.id == currentUserId)) return 0;
-    if (members.opposingTeamPlayers.any((p) => p.id == currentUserId)) return 1;
+    if (members.topTeamPlayers.any((p) => p.id == currentUserId)) return 0;
+    if (members.bottomTeamPlayers.any((p) => p.id == currentUserId)) return 1;
     return null;
   }
 
@@ -419,13 +419,9 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   /// my_diwanya: no restriction (same diwaniya, can join team 1 or 2).
   /// Public: anyone picks either team. Private: the user's own diwaniya team only.
   /// The pitch half (0 = top, 1 = bottom) the user may join, or null for either.
-  int? _getUserTeamIndex(GameModel game, GameMembersResponseModel? members) {
+  int? _getUserTeamIndex(GameModel game) {
     // my_diwanya and public games: the user can join either team.
     if (game.type == 'my_diwanya' || game.type == 'public') return null;
-
-    // When the API answers relative to the user (my_team / opposing_team), the pitch
-    // draws my_team on top, so the user's side is always the top half.
-    if (members?.myTeam != null) return 0;
 
     // Private: the user plays with their own diwaniya.
     final myId = locator<AuthenticationBloc>().myDiwaniya?.id;
