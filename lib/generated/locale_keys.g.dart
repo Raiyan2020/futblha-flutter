@@ -555,4 +555,10 @@ abstract class LocaleKeys {
   static const selected_slots_no_longer_available = 'selected_slots_no_longer_available';
   static const selected_time_has_passed = 'selected_time_has_passed';
   static const slot_just_booked = 'slot_just_booked';
+  static const pay_immediately = 'pay_immediately';
+  static const pay_after_players_complete = 'pay_after_players_complete';
+  static const pay_immediately_description = 'pay_immediately_description';
+  static const pay_after_players_complete_description = 'pay_after_players_complete_description';
+  static const game_created_payment_pending = 'game_created_payment_pending';
+  static const complete_booking_process = 'complete_booking_process';
 }

@@ -550,5 +550,11 @@
   "failed_to_load_time_slots": "تعذر تحميل الفترات المتاحة",
   "selected_slots_no_longer_available": "بعض الفترات التي اخترتها لم تعد متاحة وتمت إزالتها",
   "selected_time_has_passed": "الوقت المختار قد مضى، الرجاء اختيار وقت آخر",
-  "slot_just_booked": "تم حجز هذا الوقت للتو من قبل شخص آخر، الرجاء اختيار وقت آخر"
+  "slot_just_booked": "تم حجز هذا الوقت للتو من قبل شخص آخر، الرجاء اختيار وقت آخر",
+  "pay_immediately": "الفوري",
+  "pay_after_players_complete": "بعد اكتمال العدد",
+  "pay_immediately_description": "ستدفع قيمة الملعب الآن، ولن يتم حجز الملعب إلا بعد نجاح الدفع.",
+  "pay_after_players_complete_description": "ستدفع من صفحة المباراة بعد اكتمال عدد اللاعبين، ولن يتم حجز الملعب قبل الدفع.",
+  "game_created_payment_pending": "تم إنشاء المباراة ولكن لم يكتمل الدفع، ولم يتم حجز الملعب بعد.",
+  "complete_booking_process": "استكمال عملية الحجز"
 }

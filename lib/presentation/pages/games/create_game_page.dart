@@ -22,6 +22,16 @@ import 'package:futblha/presentation/pages/playgrounds/utils/booking_slot_utils.
 
 enum GameType { myDiwaniyaOnly, privateGame, publicGame }
 
+/// When the creator pays for the playground.
+enum GamePaymentTiming {
+  /// Pay right after creating the game, on the existing payment screen.
+  immediate,
+
+  /// Pay later from the game page, once all players have joined (the
+  /// existing flow).
+  afterPlayersComplete,
+}
+
 @RoutePage()
 class CreateGamePage extends StatefulWidget {
   final GameType gameType;
@@ -42,6 +52,15 @@ class _CreateGamePageState extends State<CreateGamePage> {
   int? _opponentDiwaniyaId; // For private games
   int? _selectedPlayers; // Number of players
   Position? _selectedPosition; // Playing position
+  GamePaymentTiming? _paymentTiming;
+  // Set when the create request is sent, so a double tap can't create two games.
+  bool _isSubmitting = false;
+
+  // Game types that offer a payment timing choice. Private games keep their
+  // existing flow (the opponent Diwaniya must accept first).
+  static const _paymentTimingGameTypes = {GameType.publicGame, GameType.myDiwaniyaOnly};
+
+  bool get _supportsPaymentTiming => _paymentTimingGameTypes.contains(widget.gameType);
 
   int? _findPlaygroundId() {
     // Use playground ID directly from the model
@@ -125,12 +144,17 @@ class _CreateGamePageState extends State<CreateGamePage> {
   }
 
   Future<void> _createGame() async {
+    if (_isSubmitting) return;
     if (_selectedPlayground == null ||
         _selectedDate == null ||
         _selectedTimeSlot == null ||
         _selectedPlayers == null ||
         _selectedPosition == null) {
       context.showMessage(isError: true, LocaleKeys.please_fill_all_required_fields.tr());
+      return;
+    }
+    if (_supportsPaymentTiming && _paymentTiming == null) {
+      context.showMessage(isError: true, LocaleKeys.please_select_payment_method.tr());
       return;
     }
 
@@ -210,7 +234,34 @@ class _CreateGamePageState extends State<CreateGamePage> {
       slotIndex: predictedSlot,
     );
 
+    setState(() => _isSubmitting = true);
     bloc.add(CreateGameEvent(request: request));
+  }
+
+  /// "Pay now": the game exists, so open the existing game payment screen
+  /// (confirm-booking). The playground is only booked once the backend
+  /// confirms the payment; this page never assumes it.
+  Future<void> _openPaymentForCreatedGame() async {
+    final gameId = bloc.createdGame?.id;
+    if (gameId == null) {
+      _showSuccessDialog();
+      return;
+    }
+    await context.router.push(
+      ConfirmBookingRoute(
+        playground: _selectedPlayground!,
+        date: _selectedDate!,
+        timeSlot: _selectedTimeSlot!,
+        gameId: gameId,
+        skipUpdate: true,
+      ),
+    );
+    // A successful payment clears the whole stack, so getting here means the
+    // user left the payment without finishing it. The game stays created;
+    // close this form so it can't be submitted again.
+    if (!mounted) return;
+    context.showMessage(isError: true, LocaleKeys.game_created_payment_pending.tr());
+    context.router.pop(true);
   }
 
   List<GamePeriod> _parseTimeSlotToPeriods(String timeSlot) {
@@ -250,9 +301,14 @@ class _CreateGamePageState extends State<CreateGamePage> {
       bloc: bloc,
       listener: (context, state) {
         if (state is GamesError) {
+          setState(() => _isSubmitting = false);
           context.showMessage(isError: true, state.message);
         } else if (state is GamesSuccess && bloc.createdGame != null) {
-          _showSuccessDialog();
+          if (_supportsPaymentTiming && _paymentTiming == GamePaymentTiming.immediate) {
+            _openPaymentForCreatedGame();
+          } else {
+            _showSuccessDialog();
+          }
         }
       },
       builder: (context, state) {
@@ -499,6 +555,48 @@ class _CreateGamePageState extends State<CreateGamePage> {
                         },
                       ),
                     ),
+                    if (_supportsPaymentTiming) ...[
+                      24.heightBox(),
+                      Text(
+                        LocaleKeys.payment_method.tr(),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      8.heightBox(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _PaymentTimingOption(
+                              icon: Icons.bolt,
+                              label: LocaleKeys.pay_immediately.tr(),
+                              isSelected: _paymentTiming == GamePaymentTiming.immediate,
+                              onTap: () =>
+                                  setState(() => _paymentTiming = GamePaymentTiming.immediate),
+                            ),
+                          ),
+                          8.widthBox(),
+                          Expanded(
+                            child: _PaymentTimingOption(
+                              icon: Icons.groups,
+                              label: LocaleKeys.pay_after_players_complete.tr(),
+                              isSelected:
+                                  _paymentTiming == GamePaymentTiming.afterPlayersComplete,
+                              onTap: () => setState(
+                                () => _paymentTiming = GamePaymentTiming.afterPlayersComplete,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_paymentTiming != null) ...[
+                        8.heightBox(),
+                        Text(
+                          _paymentTiming == GamePaymentTiming.immediate
+                              ? LocaleKeys.pay_immediately_description.tr()
+                              : LocaleKeys.pay_after_players_complete_description.tr(),
+                          style: const TextStyle(color: AppColors.lightTextColor, fontSize: 12),
+                        ),
+                      ],
+                    ],
                   ],
                 ),
               ),
@@ -517,7 +615,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: state is GamesLoading ? null : _createGame,
+                    onPressed: state is GamesLoading || _isSubmitting ? null : _createGame,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -622,6 +720,50 @@ class _GameCreatedSuccessDialog extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PaymentTimingOption extends StatelessWidget {
+  const _PaymentTimingOption({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isSelected ? AppColors.primaryWhite : context.textSecondary;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryColor : context.mutedBackground,
+          borderRadius: BorderRadius.circular(12),
+          border: isSelected ? Border.all(color: AppColors.primaryColor, width: 2) : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 18, color: color),
+            6.widthBox(),
+            Flexible(
+              child: Text(
+                label,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.w600),
               ),
             ),
           ],

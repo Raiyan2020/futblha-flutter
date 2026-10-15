@@ -309,19 +309,28 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
           }
           bloc.add(CheckBookingAvailableEvent(gameId: game.id!));
         },
+        // Orange + card icon so the payment step stands apart from the green
+        // join / change-position buttons.
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: AppColors.primaryOrange,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(
-          LocaleKeys.book_playground.tr(),
-          style: const TextStyle(
-            color: AppColors.primaryWhite,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.payment, color: AppColors.primaryWhite, size: 20),
+            8.widthBox(),
+            Text(
+              LocaleKeys.complete_booking_process.tr(),
+              style: const TextStyle(
+                color: AppColors.primaryWhite,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );
