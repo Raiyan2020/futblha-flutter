@@ -541,5 +541,6 @@
   "change_photo": "Change photo",
   "remove_photo": "Remove photo",
   "photo_will_be_removed": "Photo will be removed when you save",
-  "undo": "Undo"
+  "undo": "Undo",
+  "profile_photo": "Profile photo"
 }

@@ -46,15 +46,17 @@ class UpdateProfileEvent extends AuthenticationEvent {
   const UpdateProfileEvent({
     required this.requestModel,
     this.image,
+    this.removeImage = false,
     this.positions,
     this.birthdate,
   });
   final LoginRequestModel? requestModel;
   final File? image;
+  final bool removeImage;
   final List<String>? positions;
   final String? birthdate;
   @override
-  List<Object?> get props => [requestModel, image, positions, birthdate];
+  List<Object?> get props => [requestModel, image, removeImage, positions, birthdate];
 }
 
 class UpdateUserSettingsEvent extends AuthenticationEvent {

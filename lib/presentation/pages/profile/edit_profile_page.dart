@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart' as easy;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/presentation/widgets/app_date_picker.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
@@ -30,9 +31,9 @@ import '../../widgets/custom_loading_widget.dart';
 import '../../widgets/custom_scaffold.dart';
 import '../../widgets/custom_text.dart';
 import '../../widgets/custom_toolbar.dart';
+import '../../widgets/photo_options_bottom_sheet.dart';
 import '../auth/bloc/authentication_bloc.dart';
 import 'widgets/profile_image_button.dart';
-import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 @RoutePage()
 class EditProfilePage extends StatefulWidget {
@@ -55,6 +56,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String countryISOCode = 'KW';
   String countryCode = '965';
   File? _image;
+  // Set when the user removes the current photo; applied on save.
+  bool _removeImage = false;
   List<String> _selectedPositions = [];
   bool _isJocker = false;
 
@@ -182,6 +185,52 @@ class _EditProfilePageState extends State<EditProfilePage> {
     ).map((po) => po.displayName).join(', ');
   }
 
+  bool get _hasSavedImage => bloc.user?.image?.isNotEmpty == true;
+
+  bool get _hasImage => _image != null || (!_removeImage && _hasSavedImage);
+
+  Future<void> _pickImage() async {
+    try {
+      final file = await ImagePickCropHelper.pickAndCropImage(
+        context,
+        shape: ImageCropShape.circle,
+        lockSquareAspectRatio: true,
+        maxWidth: 1080,
+        maxHeight: 1080,
+        toolbarTitle: 'Crop',
+      );
+      if (file != null) {
+        setState(() {
+          _image = file;
+          _removeImage = false;
+        });
+      }
+    } catch (e) {
+      // Handle error if needed
+      if (kDebugMode) {
+        debugPrint('Error picking photo: $e');
+      }
+    }
+  }
+
+  void _onPhotoTap() {
+    if (!_hasImage) {
+      _pickImage();
+      return;
+    }
+    showPhotoOptionsBottomSheet(
+      context,
+      title: LocaleKeys.profile_photo.tr(),
+      onChange: _pickImage,
+      onRemove: () => setState(() {
+        _image = null;
+        // A photo picked but not yet saved is just discarded; only ask the
+        // backend to delete when there is a saved photo.
+        _removeImage = _hasSavedImage;
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -211,49 +260,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Center(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        _image != null
-                            ? CircleAvatar(
-                                radius: 50,
-                                backgroundImage: FileImage(_image!),
-                              )
-                            : const ProfileImageButton(clickable: false),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: IconButton(
-                            onPressed: () async {
-                              try {
-                                final file =
-                                    await ImagePickCropHelper.pickAndCropImage(
-                                      context,
-                                      shape: ImageCropShape.circle,
-                                      lockSquareAspectRatio: true,
-                                      maxWidth: 1080,
-                                      maxHeight: 1080,
-                                      toolbarTitle: 'Crop',
-                                    );
-                                if (file != null) {
-                                  setState(() => _image = file);
-                                }
-                              } catch (e) {
-                                // Handle error if needed
-                                if (kDebugMode) {
-                                  debugPrint('Error picking photo: $e');
-                                }
-                              }
-                            },
-                            icon: Icon(
-                              Icons.camera_alt,
-                              color: context.brandOnSurface,
+                    child: GestureDetector(
+                      onTap: _onPhotoTap,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          _image != null
+                              ? CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: FileImage(_image!),
+                                )
+                              : _removeImage
+                              ? CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: context.cardBackground,
+                                  backgroundImage: const AssetImage(
+                                    AppAssets.ic_profile,
+                                  ),
+                                )
+                              : const ProfileImageButton(clickable: false),
+                          PositionedDirectional(
+                            bottom: 0,
+                            top: 60,
+                            end: -2,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: context.cardBackground,
+                              ),
+                              child: IconButton(
+                                onPressed: _onPhotoTap,
+                                icon: Icon(
+                                  _hasImage ? Icons.edit : Icons.camera_alt,
+                                  color: context.brandOnSurface,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
+                  if (_removeImage) ...[
+                    8.heightBox(),
+                    PhotoRemovalHint(
+                      onUndo: () => setState(() => _removeImage = false),
+                    ),
+                  ],
                   30.heightBox(),
                   AppTextField(
                     controller: name,
@@ -367,6 +420,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                         : email.text.trim(),
                                   ),
                                   image: _image,
+                                  removeImage: _removeImage,
                                   positions: _selectedPositions.isNotEmpty
                                       ? _selectedPositions
                                       : null,

@@ -164,6 +164,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     final ApiResultModel<UserModel?> apiResult = await _remoteDataSource.updateProfile(
       requestModel: event.requestModel,
       image: event.image,
+      removeImage: event.removeImage,
       positions: event.positions,
       birthdate: event.birthdate,
     );

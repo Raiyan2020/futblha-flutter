@@ -217,6 +217,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<ApiResultModel<UserModel?>> updateProfile({
     LoginRequestModel? requestModel,
     File? image,
+    bool removeImage = false,
     List<String>? positions,
     String? birthdate,
   }) async {
@@ -244,6 +245,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           image.path,
           filename: image.path.split('/').last,
         );
+      } else if (removeImage) {
+        formDataMap['remove_image'] = 1;
       }
       
       // Use FormData if we have any fields, otherwise use JSON

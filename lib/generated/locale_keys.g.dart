@@ -548,4 +548,5 @@ abstract class LocaleKeys {
   static const remove_photo = 'remove_photo';
   static const photo_will_be_removed = 'photo_will_be_removed';
   static const undo = 'undo';
+  static const profile_photo = 'profile_photo';
 }

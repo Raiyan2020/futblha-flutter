@@ -543,5 +543,6 @@
   "change_photo": "تغيير الصورة",
   "remove_photo": "حذف الصورة",
   "photo_will_be_removed": "سيتم حذف الصورة عند الحفظ",
-  "undo": "تراجع"
+  "undo": "تراجع",
+  "profile_photo": "الصورة الشخصية"
 }

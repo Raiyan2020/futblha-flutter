@@ -27,7 +27,7 @@ class _ProfileImageButtonState extends State<ProfileImageButton> {
       listener: (context, state) {},
       builder: (context, state) {
         return GestureDetector(
-          onTap: () => widget.clickable ? context.router.push(const ProfileRoute()) : null,
+          onTap: widget.clickable ? () => context.router.push(const ProfileRoute()) : null,
           child: Container(
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(1),

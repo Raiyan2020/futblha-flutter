@@ -21,6 +21,7 @@ abstract class AuthRemoteDataSource {
   Future<ApiResultModel<UserModel?>> updateProfile({
     LoginRequestModel? requestModel,
     File? image,
+    bool removeImage = false,
     List<String>? positions,
     String? birthdate,
   });
