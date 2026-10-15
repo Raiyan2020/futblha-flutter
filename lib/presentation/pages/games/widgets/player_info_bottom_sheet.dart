@@ -5,7 +5,9 @@ import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/enums/position_enum.dart';
 import 'package:futblha/data/models/response_model/games/game_player_model.dart';
+import 'package:futblha/application/core/utils/constants/app_constants.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/friends/widgets/friendship_action_button.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 
 /// Shows a user's profile card (photo, name and, when known, position).
@@ -72,6 +74,11 @@ class PlayerInfoBottomSheet extends StatelessWidget {
     );
   }
 
+  bool get _showFriendAction =>
+      friendsFeatureEnabled &&
+      userId != null &&
+      !FriendshipActionButton.isCurrentUser(userId!);
+
   String get _positionLabel {
     if (positionText != null && positionText!.isNotEmpty) {
       return positionText!;
@@ -97,83 +104,101 @@ class PlayerInfoBottomSheet extends StatelessWidget {
       ),
       child: SafeArea(
         top: false,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            // Handle bar
-            Container(
-              margin: EdgeInsets.only(top: 12.h),
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: context.mutedBackground,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            24.heightBox(),
-            CircleAvatar(
-              radius: 45,
-              backgroundColor: context.mutedBackground,
-              backgroundImage: image != null && image.isNotEmpty
-                  ? NetworkImage(image)
-                  : null,
-              onBackgroundImageError: image != null && image.isNotEmpty
-                  ? (_, _) {}
-                  : null,
-              child: image == null || image.isEmpty
-                  ? Icon(Icons.person, color: context.brandOnSurface, size: 45)
-                  : null,
-            ),
-            16.heightBox(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Text(
-                name ?? '',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  margin: EdgeInsets.only(top: 12.h),
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: context.mutedBackground,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ),
+                24.heightBox(),
+                CircleAvatar(
+                  radius: 45,
+                  backgroundColor: context.mutedBackground,
+                  backgroundImage: image != null && image.isNotEmpty
+                      ? NetworkImage(image)
+                      : null,
+                  onBackgroundImageError: image != null && image.isNotEmpty
+                      ? (_, _) {}
+                      : null,
+                  child: image == null || image.isEmpty
+                      ? Icon(
+                          Icons.person,
+                          color: context.brandOnSurface,
+                          size: 45,
+                        )
+                      : null,
+                ),
+                16.heightBox(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    name ?? '',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                if (position.isNotEmpty) ...[
+                  16.heightBox(),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.w),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.chipBackground,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.sports_soccer,
+                          color: context.brandOnSurface,
+                          size: 20,
+                        ),
+                        8.widthBox(),
+                        Text(
+                          LocaleKeys.playing_position.tr(),
+                          style: const TextStyle(
+                            color: AppColors.lightTextColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          position,
+                          style: TextStyle(
+                            color: context.brandOnSurface,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                24.heightBox(),
+              ],
             ),
-            if (position.isNotEmpty) ...[
-              16.heightBox(),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                decoration: BoxDecoration(
-                  color: context.chipBackground,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.sports_soccer,
-                      color: context.brandOnSurface,
-                      size: 20,
-                    ),
-                    8.widthBox(),
-                    Text(
-                      LocaleKeys.playing_position.tr(),
-                      style: const TextStyle(
-                        color: AppColors.lightTextColor,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      position,
-                      style: TextStyle(
-                        color: context.brandOnSurface,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+            // Add friend / request sent / accept-reject / friends.
+            if (_showFriendAction)
+              PositionedDirectional(
+                top: 16,
+                start: 16,
+                child: FriendshipActionButton(userId: userId!),
               ),
-            ],
-            24.heightBox(),
           ],
         ),
       ),

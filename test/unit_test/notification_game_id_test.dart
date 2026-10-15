@@ -23,13 +23,23 @@ void main() {
     });
   });
 
-  test('all four payment notification types open the game page', () {
+  test('payment and friend-invitation notifications open the game page', () {
     expect(gameNotificationTypes, {
       'game_payment_required',
       'game_team_payment_received',
       'game_confirmed',
       'game_refund_pending',
+      'game_player_invitation',
     });
     expect(gameNotificationTypes.contains(gameInvitationNotificationType), isFalse);
+  });
+
+  test('intFrom reads friend request ids from notification data', () {
+    expect(
+      NotificationNavigation.intFrom('{"friend_request_id":15,"user_id":"7"}', 'friend_request_id'),
+      15,
+    );
+    expect(NotificationNavigation.intFrom('{"friend_request_id":15,"user_id":"7"}', 'user_id'), 7);
+    expect(NotificationNavigation.intFrom('{"user_id":7}', 'friend_request_id'), isNull);
   });
 }

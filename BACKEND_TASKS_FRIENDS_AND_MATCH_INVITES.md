@@ -9,6 +9,8 @@ The app needs two connected features:
 
 **The app has no API for either feature.** There is no friendship endpoint, no friends list, and no way to invite a single player to a match. `/games-invitation` is only for Diwaniya-vs-Diwaniya challenges. We won't build the screens until the API exists, so we don't ship a fake flow.
 
+> **App status:** the app is already built against the endpoints, fields and notification types in this document (F1b, F2–F4, M1, M2, N1–N3). It's switched off in release builds until you confirm. **Please keep the names exactly as written.** If you change any, send us the list and we'll update the app.
+
 The endpoints and fields below are a **proposal**. Use them, or send us yours and we'll match them.
 
 ## What the app has today

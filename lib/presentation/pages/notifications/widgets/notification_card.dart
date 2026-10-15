@@ -7,11 +7,17 @@ import '../../../../application/core/utils/constants/app_constants.dart';
 import '../../../../application/core/utils/fcm/notification_navigation.dart';
 import '../../../../data/models/response_model/notifications/notifications_response_model.dart';
 import '../../../widgets/custom_text.dart';
+import '../../friends/widgets/friend_request_actions.dart';
 import 'package:futblha/application/config/design_system/app_theme_colors.dart';
 
 class NotificationCard extends StatelessWidget {
   const NotificationCard({super.key, required this.model});
   final NotificationModel model;
+
+  /// `friend_request` notifications carry the request to accept / reject.
+  int? get _friendRequestId => friendsFeatureEnabled && model.type == friendRequestNotificationType
+      ? NotificationNavigation.intFrom(model.data, 'friend_request_id')
+      : null;
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +111,13 @@ class NotificationCard extends StatelessWidget {
                           height: 1.4,
                           color: context.textPrimary.withValues(alpha: 0.85),
                         ),
+                      ),
+                    ],
+                    if (_friendRequestId != null) ...[
+                      const SizedBox(height: 10),
+                      FriendRequestActions(
+                        requestId: _friendRequestId!,
+                        senderId: NotificationNavigation.intFrom(model.data, 'user_id'),
                       ),
                     ],
                     if (model.createdAt?.isNotEmpty ?? false) ...[

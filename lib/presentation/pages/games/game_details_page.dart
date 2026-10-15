@@ -6,6 +6,9 @@ import 'package:futblha/application/core/basecomponents/base_view_model_view.dar
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/data/models/response_model/games/team_payment_model.dart';
+import 'package:futblha/application/config/design_system/app_theme_colors.dart';
+import 'package:futblha/application/core/utils/constants/app_constants.dart';
+import 'package:futblha/presentation/pages/friends/widgets/invite_friends_bottom_sheet.dart';
 import 'package:futblha/presentation/pages/games/utils/game_payment_utils.dart';
 import 'package:futblha/presentation/pages/games/widgets/game_booking_status_card.dart';
 import 'package:futblha/application/core/utils/helpers/cache/cache_manager.dart';
@@ -149,6 +152,19 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                               vertical: 5.h,
                             ),
                             child: _buildChangePositionButton(context, game),
+                          ),
+                        // دعوة الأصدقاء: the backend decides who can be invited
+                        // (permission, capacity, game state).
+                        if (friendsFeatureEnabled &&
+                            game.userPermission?.isMember == true &&
+                            !widget.isFromHistory &&
+                            game.id != null)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 5.h,
+                            ),
+                            child: _buildInviteFriendsButton(context, game.id!),
                           ),
                         20.heightBox(),
                       ],
@@ -305,6 +321,31 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             color: AppColors.primaryWhite,
             fontSize: 16,
             fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInviteFriendsButton(BuildContext context, int gameId) {
+    return SizedBox(
+      width: double.infinity,
+      height: 45.h,
+      child: OutlinedButton.icon(
+        onPressed: () => InviteFriendsBottomSheet.show(context, gameId),
+        icon: Icon(Icons.group_add, color: context.brandOnSurface),
+        label: Text(
+          LocaleKeys.invite_friends.tr(),
+          style: TextStyle(
+            color: context.brandOnSurface,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: context.brandOnSurface),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),

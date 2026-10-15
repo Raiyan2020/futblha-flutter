@@ -39,12 +39,16 @@ class NotificationNavigation {
       type: data['type']?.toString(),
       notificationId: data['notification_id']?.toString(),
       gameId: gameIdFrom(data),
+      fromPush: true,
     );
   }
 
   /// Reads `game_id` from a push payload or from an in-app notification's
   /// `data` (a JSON string), at the top level or inside `extra`.
-  static int? gameIdFrom(Object? data) {
+  static int? gameIdFrom(Object? data) => intFrom(data, 'game_id');
+
+  /// Reads the int [key] the same way as [gameIdFrom] (e.g. `friend_request_id`).
+  static int? intFrom(Object? data, String key) {
     Object? source = data;
     if (source is String) {
       if (source.isEmpty) return null;
@@ -55,13 +59,14 @@ class NotificationNavigation {
       }
     }
     if (source is! Map) return null;
-    final direct = source['game_id'];
+    final direct = source[key];
     final extra = source['extra'];
-    final value = direct ?? (extra is Map ? extra['game_id'] : null);
+    final value = direct ?? (extra is Map ? extra[key] : null);
     return value is int ? value : int.tryParse(value?.toString() ?? '');
   }
 
-  static void open({String? type, String? notificationId, int? gameId}) {
+  /// [fromPush] is true for taps on a push; false when tapped in the list.
+  static void open({String? type, String? notificationId, int? gameId, bool fromPush = false}) {
     if (CacheManager.instance.isGuestMode() || CacheManager.instance.getAuthToken().isEmpty) return;
 
     final notificationsBloc = locator<NotificationsBloc>();
@@ -79,6 +84,18 @@ class NotificationNavigation {
         );
       } catch (e) {
         debugPrint('Error navigating to game details: $e');
+      }
+      return;
+    }
+
+    // Friend requests are accepted / rejected from the notifications list.
+    if (fromPush &&
+        friendsFeatureEnabled &&
+        (type == friendRequestNotificationType || type == friendRequestAcceptedNotificationType)) {
+      try {
+        locator<AppRouter>().push(NotificationsRoute());
+      } catch (e) {
+        debugPrint('Error navigating to notifications: $e');
       }
       return;
     }

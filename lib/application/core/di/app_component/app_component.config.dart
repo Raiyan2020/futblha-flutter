@@ -38,6 +38,10 @@ import 'package:futblha/data/datasources/faq_remote_datasource/faq_remote_dataso
     as _i1022;
 import 'package:futblha/data/datasources/faq_remote_datasource/faq_remote_datasource_impl.dart'
     as _i968;
+import 'package:futblha/data/datasources/friends_remote_datasource/friends_remote_datasource.dart'
+    as _i325;
+import 'package:futblha/data/datasources/friends_remote_datasource/friends_remote_datasource_impl.dart'
+    as _i708;
 import 'package:futblha/data/datasources/games_remote_datasource/games_remote_datasource.dart'
     as _i1062;
 import 'package:futblha/data/datasources/games_remote_datasource/games_remote_datasource_impl.dart'
@@ -87,6 +91,10 @@ import 'package:futblha/presentation/pages/bookings/bloc/bookings_bloc.dart'
 import 'package:futblha/presentation/pages/diwaniyat/bloc/diwaniya_bloc.dart'
     as _i372;
 import 'package:futblha/presentation/pages/faq/bloc/faq_bloc.dart' as _i1030;
+import 'package:futblha/presentation/pages/friends/bloc/friendship_bloc.dart'
+    as _i376;
+import 'package:futblha/presentation/pages/friends/bloc/invite_friends_bloc.dart'
+    as _i117;
 import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart' as _i468;
 import 'package:futblha/presentation/pages/general/bloc/general_bloc.dart'
     as _i1024;
@@ -185,8 +193,17 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i609.PlaygroundsRemoteDataSourceImpl(gh<_i791.DioRequestContext>()),
     );
+    gh.factory<_i325.FriendsRemoteDataSource>(
+      () => _i708.FriendsRemoteDataSourceImpl(gh<_i791.DioRequestContext>()),
+    );
     gh.factory<_i468.GamesBloc>(
       () => _i468.GamesBloc(gh<_i1062.GamesRemoteDataSource>()),
+    );
+    gh.factory<_i372.DiwaniyaBloc>(
+      () => _i372.DiwaniyaBloc(
+        gh<_i480.DiwaniyaRemoteDataSource>(),
+        gh<_i30.AuthenticationBloc>(),
+      ),
     );
     gh.factory<_i1016.WalletBloc>(
       () => _i1016.WalletBloc(gh<_i41.WalletRemoteDataSource>()),
@@ -212,14 +229,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i595.PaymentMethodBloc>(
       () => _i595.PaymentMethodBloc(gh<_i803.PaymentMethodRemoteDataSource>()),
     );
-    gh.factory<_i372.DiwaniyaBloc>(
-      () => _i372.DiwaniyaBloc(
-        gh<_i480.DiwaniyaRemoteDataSource>(),
-        gh<_i30.AuthenticationBloc>(),
-      ),
-    );
     gh.factory<_i1024.GeneralBloc>(
       () => _i1024.GeneralBloc(gh<_i389.GeneralRemoteDataSource>()),
+    );
+    gh.factory<_i376.FriendshipBloc>(
+      () => _i376.FriendshipBloc(gh<_i325.FriendsRemoteDataSource>()),
+    );
+    gh.factory<_i117.InviteFriendsBloc>(
+      () => _i117.InviteFriendsBloc(gh<_i325.FriendsRemoteDataSource>()),
     );
     return this;
   }

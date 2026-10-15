@@ -582,4 +582,22 @@ abstract class LocaleKeys {
   static const pay_team_share = 'pay_team_share';
   static const private_game_playground_unavailable = 'private_game_playground_unavailable';
   static const your_team_share = 'your_team_share';
+  static const friend_request_sent = 'friend_request_sent';
+  static const friend_request_sent_success = 'friend_request_sent_success';
+  static const friend_request_accepted_success = 'friend_request_accepted_success';
+  static const friend_request_rejected_success = 'friend_request_rejected_success';
+  static const friend_request_already_handled = 'friend_request_already_handled';
+  static const friend_request_accepted_label = 'friend_request_accepted_label';
+  static const friend_request_rejected_label = 'friend_request_rejected_label';
+  static const friendship_load_failed = 'friendship_load_failed';
+  static const invite_friends = 'invite_friends';
+  static const no_friends_to_invite = 'no_friends_to_invite';
+  static const failed_to_load_friends = 'failed_to_load_friends';
+  static const invite_status_already_member = 'invite_status_already_member';
+  static const invite_status_already_invited = 'invite_status_already_invited';
+  static const invite_status_not_eligible = 'invite_status_not_eligible';
+  static const invite_status_invited = 'invite_status_invited';
+  static const send_invitations = 'send_invitations';
+  static const invitations_sent = 'invitations_sent';
+  static const accept_friend_request = 'accept_friend_request';
 }

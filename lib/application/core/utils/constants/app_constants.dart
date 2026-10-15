@@ -1,6 +1,8 @@
 // timeout request constants
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:flutter/foundation.dart';
+
 const String commonErrorUnexpectedMessage = 'Something went wrong please try again';
 const int timeoutRequestStatusCode = 1000;
 const int unAuthorizedStatusCode = 401;
@@ -108,6 +110,17 @@ const String NotificationsUnreadCount = '/notifications/unread-count';
 const String NotificationsReadAll = '/notifications/read-all';
 String notificationRead(String id) => '/notifications/$id/read';
 const String gameInvitationNotificationType = 'game_invitation';
+// Friends & match invitations. Built against the proposed contract in
+// BACKEND_TASKS_FRIENDS_AND_MATCH_INVITES.md, which isn't live yet: shown in
+// debug builds only. Set to `true` once the backend ships it.
+const bool friendsFeatureEnabled = kDebugMode;
+const String FriendRequests = '/friend-requests';
+const String Friends = '/friends';
+const String Users = '/users';
+const String friendRequestNotificationType = 'friend_request';
+const String friendRequestAcceptedNotificationType = 'friend_request_accepted';
+const String gamePlayerInvitationNotificationType = 'game_player_invitation';
+
 // Payment notifications; each carries `game_id` and opens the game page.
 const String gamePaymentRequiredNotificationType = 'game_payment_required';
 const String gameTeamPaymentReceivedNotificationType = 'game_team_payment_received';
@@ -118,6 +131,8 @@ const Set<String> gameNotificationTypes = {
   gameTeamPaymentReceivedNotificationType,
   gameConfirmedNotificationType,
   gameRefundPendingNotificationType,
+  // A friend invited you to a game: open it so you can join.
+  gamePlayerInvitationNotificationType,
 };
 // const String MarkAllRead = '/mobile/api/DriverTaskNotification/MarkAsRead';
 // const String GetUnReadCount = '/mobile/api/DriverTaskNotification/GetUnReadCount';
