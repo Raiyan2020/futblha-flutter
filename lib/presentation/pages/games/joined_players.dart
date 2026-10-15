@@ -12,6 +12,7 @@ import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:futblha/presentation/pages/games/bloc/games_bloc.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/presentation/widgets/snackbar_utill.dart';
+import 'package:futblha/presentation/pages/games/widgets/player_info_bottom_sheet.dart';
 
 @RoutePage()
 class JoinedPlayersPage extends StatefulWidget {
@@ -90,9 +91,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                           Expanded(
                             child: Row(
                               children: [
-                                Expanded(
-                                  child: Container(height: 1.5, color: context.textPrimary),
-                                ),
+                                Expanded(child: Container(height: 1.5, color: context.textPrimary)),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
                                   child: Text(
@@ -105,9 +104,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  child: Container(height: 1.5, color: context.textPrimary),
-                                ),
+                                Expanded(child: Container(height: 1.5, color: context.textPrimary)),
                               ],
                             ),
                           ),
@@ -125,9 +122,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                           Expanded(
                             child: Row(
                               children: [
-                                Expanded(
-                                  child: Container(height: 1.5, color: context.textPrimary),
-                                ),
+                                Expanded(child: Container(height: 1.5, color: context.textPrimary)),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
                                   child: Text(
@@ -142,9 +137,7 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  child: Container(height: 1.5, color: context.textPrimary),
-                                ),
+                                Expanded(child: Container(height: 1.5, color: context.textPrimary)),
                               ],
                             ),
                           ),
@@ -282,32 +275,35 @@ class _JoinedPlayersPageState extends State<JoinedPlayersPage> {
                   ],
                 ),
               ),
-              Container(
-                width: 40.w,
-                height: 40.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: context.cardBackground,
-                  boxShadow: [
-                    BoxShadow(color: AppColors.primaryLiteGrey, spreadRadius: 2, blurRadius: 5),
-                  ],
-                ),
-                child: ClipOval(
-                  child: player.image != null
-                      ? Image.network(
-                          player.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.person, color: context.brandOnSurface, size: 30);
-                          },
-                        )
-                      : Image.asset(
-                          AppAssets.ic_profile,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.person, color: context.brandOnSurface, size: 30);
-                          },
-                        ),
+              GestureDetector(
+                onTap: () => PlayerInfoBottomSheet.show(context, player),
+                child: Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: context.cardBackground,
+                    boxShadow: [
+                      BoxShadow(color: AppColors.primaryLiteGrey, spreadRadius: 2, blurRadius: 5),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: player.image != null
+                        ? Image.network(
+                            player.image!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(Icons.person, color: context.brandOnSurface, size: 30);
+                            },
+                          )
+                        : Image.asset(
+                            AppAssets.ic_profile,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(Icons.person, color: context.brandOnSurface, size: 30);
+                            },
+                          ),
+                  ),
                 ),
               ),
             ],

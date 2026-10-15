@@ -13,7 +13,7 @@ The endpoints and fields below are a **proposal**. Use them, or send us yours an
 
 ## What the app has today
 
-- **Player card:** opened by tapping a player on the match pitch. It shows the photo, name and position from `GET /games/{id}/members`. Each player has `id`, `name`, `image`, `position`, `position_text`, `slot_index`, `team_index`, `team`. **No friendship data.**
+- **Player card:** opened by tapping a user's avatar on the match pitch, the joined-players list, Diwaniya members, join requests, chat messages and poll voters. It shows the photo, name and position from `GET /games/{id}/members`. Each player has `id`, `name`, `image`, `position`, `position_text`, `slot_index`, `team_index`, `team`. **No friendship data.**
 - **The current user's id** is known (stored at login), so the app can hide "إضافة صديق" on the user's own card.
 - **Push notifications:** the app reads `type` and `notification_id` from the push `data`. The in-app list has `type`, `title`, `body`, `data` (JSON string), `is_read`. Only `type = "game_invitation"` opens a screen today.
 - **Joining a match:** `POST /games/{id}/join` with `position`, `slot_index` (and `my_diwanya_team` for my_diwanya games).
@@ -37,6 +37,7 @@ The endpoints and fields below are a **proposal**. Use them, or send us yours an
 | # | Method + endpoint | Request | Success | Errors |
 |---|---|---|---|---|
 | F1 | `GET /games/{id}/members` (existing) | — | Add to **each player**: `friendship_status`: `self` \| `none` \| `request_sent` \| `request_received` \| `friends`, and `friend_request_id` when there is a pending request. One call gives the card everything it needs | — |
+| F1b | `GET /users/{id}/friendship` | — | `{ "data": { "friendship_status": "self" \| "none" \| "request_sent" \| "request_received" \| "friends", "friend_request_id": 15 \| null } }`. **Needed because the player card now also opens outside a match**: Diwaniya members, join requests, chat senders and poll voters. Those lists don't carry friendship data | `404` user not found |
 | F2 | `POST /friend-requests` | `user_id` | `201 { "data": { "id": 15, "status": "request_sent" } }`. If the other user already sent a request (Q3): `200 { "status": "friends" }` | `422` user_id missing or is yourself · `404` user not found · `409` already sent / already friends (with the current `friendship_status`) |
 | F3 | `POST /friend-requests/{id}/accept` | — | `200 { "data": { "status": "friends" } }` | `403` you aren't the receiver · `404` · `409` already accepted / rejected / cancelled |
 | F4 | `POST /friend-requests/{id}/reject` | — | `200 { "data": { "status": "none" } }` | `403` · `404` · `409` already handled |

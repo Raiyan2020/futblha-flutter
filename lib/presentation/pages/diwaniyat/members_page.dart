@@ -10,6 +10,7 @@ import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 import 'package:futblha/presentation/pages/diwaniyat/bloc/diwaniya_bloc.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
+import 'package:futblha/presentation/pages/games/widgets/player_info_bottom_sheet.dart';
 
 @RoutePage()
 class MembersPage extends StatefulWidget {
@@ -110,27 +111,35 @@ class _MembersPageState extends State<MembersPage> {
             ),
           ),
           12.widthBox(),
-          // Profile picture
-          Container(
-            width: 50.w,
-            height: 50.h,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: context.mutedBackground),
-            child: ClipOval(
-              child: member.image != null
-                  ? Image.network(
-                      member.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Icon(Icons.person, color: context.brandOnSurface, size: 30);
-                      },
-                    )
-                  : Image.asset(
-                      AppAssets.ic_profile,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Icon(Icons.person, color: context.brandOnSurface, size: 30);
-                      },
-                    ),
+          // Profile picture (opens the member's profile card)
+          GestureDetector(
+            onTap: () => PlayerInfoBottomSheet.showUser(
+              context,
+              userId: member.id,
+              name: member.name,
+              image: member.image,
+            ),
+            child: Container(
+              width: 50.w,
+              height: 50.h,
+              decoration: BoxDecoration(shape: BoxShape.circle, color: context.mutedBackground),
+              child: ClipOval(
+                child: member.image != null
+                    ? Image.network(
+                        member.image!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.person, color: context.brandOnSurface, size: 30);
+                        },
+                      )
+                    : Image.asset(
+                        AppAssets.ic_profile,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(Icons.person, color: context.brandOnSurface, size: 30);
+                        },
+                      ),
+              ),
             ),
           ),
           12.widthBox(),

@@ -12,6 +12,7 @@ import '../../../generated/locale_keys.g.dart';
 import '../../widgets/app_size_boxes.dart';
 import '../../widgets/snackbar_utill.dart';
 import 'bloc/diwaniya_bloc.dart';
+import 'package:futblha/presentation/pages/games/widgets/player_info_bottom_sheet.dart';
 
 @RoutePage()
 class JoinRequestsPage extends StatefulWidget {
@@ -115,7 +116,15 @@ class _JoinRequestTile extends StatelessWidget {
             ),
           ),
           12.widthBox(),
-          _buildAvatar(),
+          GestureDetector(
+            onTap: () => PlayerInfoBottomSheet.showUser(
+              context,
+              userId: member.id,
+              name: member.name,
+              image: member.image,
+            ),
+            child: _buildAvatar(),
+          ),
           12.widthBox(),
           Expanded(
             child: Text(

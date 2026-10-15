@@ -21,6 +21,7 @@ import '../../../data/models/request_model/diwaniya/poll_vote_request_model.dart
 import '../../../data/models/response_model/diwaniya/message_model.dart';
 import '../../../data/models/response_model/login_remote_response_model/login_response_model.dart';
 import 'package:futblha/application/config/design_system/app_theme_colors.dart';
+import 'package:futblha/presentation/pages/games/widgets/player_info_bottom_sheet.dart';
 
 @RoutePage()
 class ChatPage extends StatefulWidget {
@@ -153,6 +154,7 @@ class _ChatPageState extends State<ChatPage> {
 
       return ChatMessage(
         senderName: msg.user?.name ?? LocaleKeys.unknown.tr(),
+        senderId: msg.user?.id,
         message: msg.content ?? '',
         timestamp: timestamp,
         isMine: msg.sentByMe,
@@ -584,7 +586,15 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
               8.widthBox(),
-              _buildAvatar(message.avatarPath!),
+              GestureDetector(
+                onTap: () => PlayerInfoBottomSheet.showUser(
+                  context,
+                  userId: message.senderId,
+                  name: message.senderName,
+                  image: message.avatarPath,
+                ),
+                child: _buildAvatar(message.avatarPath!),
+              ),
             ] else
               Text(
                 'You\n$metadata',
@@ -947,69 +957,79 @@ class _ChatPageState extends State<ChatPage> {
                           )
                         else
                           ...voters.map((voter) {
-                            return Container(
-                              decoration: BoxDecoration(
-                                color: context.cardBackground,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: context.borderColor),
+                            return GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => PlayerInfoBottomSheet.showUser(
+                                context,
+                                userId: voter.id?.toInt(),
+                                name: voter.name,
+                                image: voter.image,
                               ),
-                              margin: EdgeInsets.only(bottom: 5.h),
-                              padding: EdgeInsets.only(
-                                top: 8.h,
-                                bottom: 8.h,
-                                left: 12.w,
-                                right: 12.w,
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 32,
-                                    height: 32,
-                                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                                    child: ClipOval(
-                                      child: voter.image != null && voter.image!.startsWith('http')
-                                          ? Image.network(
-                                              voter.image!,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Container(
-                                                  color: context.mutedBackground,
-                                                  child: Icon(
-                                                    Icons.person,
-                                                    color: context.brandOnSurface,
-                                                    size: 20,
-                                                  ),
-                                                );
-                                              },
-                                            )
-                                          : Image.asset(
-                                              AppAssets.ic_profile,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Container(
-                                                  color: context.mutedBackground,
-                                                  child: Icon(
-                                                    Icons.person,
-                                                    color: context.brandOnSurface,
-                                                    size: 20,
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                    ),
-                                  ),
-                                  12.widthBox(),
-                                  Expanded(
-                                    child: Text(
-                                      voter.name ?? LocaleKeys.unknown.tr(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: context.textPrimary,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: context.cardBackground,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: context.borderColor),
+                                ),
+                                margin: EdgeInsets.only(bottom: 5.h),
+                                padding: EdgeInsets.only(
+                                  top: 8.h,
+                                  bottom: 8.h,
+                                  left: 12.w,
+                                  right: 12.w,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: const BoxDecoration(shape: BoxShape.circle),
+                                      child: ClipOval(
+                                        child:
+                                            voter.image != null && voter.image!.startsWith('http')
+                                            ? Image.network(
+                                                voter.image!,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: context.mutedBackground,
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      color: context.brandOnSurface,
+                                                      size: 20,
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            : Image.asset(
+                                                AppAssets.ic_profile,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return Container(
+                                                    color: context.mutedBackground,
+                                                    child: Icon(
+                                                      Icons.person,
+                                                      color: context.brandOnSurface,
+                                                      size: 20,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    12.widthBox(),
+                                    Expanded(
+                                      child: Text(
+                                        voter.name ?? LocaleKeys.unknown.tr(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: context.textPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             );
                           }),
@@ -1181,6 +1201,7 @@ enum MessageType { text, poll, image, file }
 class ChatMessage {
   ChatMessage({
     required this.senderName,
+    this.senderId,
     required this.message,
     required this.timestamp,
     required this.isMine,
@@ -1190,6 +1211,7 @@ class ChatMessage {
   });
 
   final String senderName;
+  final int? senderId;
   final String message;
   final DateTime timestamp;
   final bool isMine;

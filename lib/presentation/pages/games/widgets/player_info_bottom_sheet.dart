@@ -8,32 +8,82 @@ import 'package:futblha/data/models/response_model/games/game_player_model.dart'
 import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
 
-/// Shows the details the game already has for a player (photo, name, position).
+/// Shows a user's profile card (photo, name and, when known, position).
+/// Opened from every place that shows another user's avatar: the game pitch,
+/// Diwaniya members, join requests, chat and poll voters.
+///
+/// [userId] is kept for the upcoming friend actions (and to hide them on the
+/// user's own card) once the backend friends API exists.
 class PlayerInfoBottomSheet extends StatelessWidget {
-  const PlayerInfoBottomSheet({super.key, required this.player});
+  const PlayerInfoBottomSheet({
+    super.key,
+    this.userId,
+    this.name,
+    this.image,
+    this.position,
+    this.positionText,
+  });
 
-  final GamePlayerModel player;
+  PlayerInfoBottomSheet.fromGamePlayer(GamePlayerModel player, {super.key})
+    : userId = player.id,
+      name = player.name,
+      image = player.image,
+      position = player.position,
+      positionText = player.positionText;
 
-  static Future<void> show(BuildContext context, GamePlayerModel player) {
+  final int? userId;
+  final String? name;
+  final String? image;
+  // Position key (e.g. "attacker") and/or its translated text from the API.
+  final String? position;
+  final String? positionText;
+
+  /// Opens the card for a player of a game.
+  static Future<void> show(BuildContext context, GamePlayerModel player) =>
+      _present(context, PlayerInfoBottomSheet.fromGamePlayer(player));
+
+  /// Opens the card for any user (members, chat, voters...).
+  static Future<void> showUser(
+    BuildContext context, {
+    required int? userId,
+    String? name,
+    String? image,
+    String? position,
+    String? positionText,
+  }) => _present(
+    context,
+    PlayerInfoBottomSheet(
+      userId: userId,
+      name: name,
+      image: image,
+      position: position,
+      positionText: positionText,
+    ),
+  );
+
+  static Future<void> _present(
+    BuildContext context,
+    PlayerInfoBottomSheet sheet,
+  ) {
     return showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (_) => PlayerInfoBottomSheet(player: player),
+      builder: (_) => sheet,
     );
   }
 
   String get _positionLabel {
-    if (player.positionText != null && player.positionText!.isNotEmpty) {
-      return player.positionText!;
+    if (positionText != null && positionText!.isNotEmpty) {
+      return positionText!;
     }
-    final key = player.position;
+    final key = position;
     if (key == null || key.isEmpty) return '';
     return Position.fromKey(key)?.displayName ?? key;
   }
 
   @override
   Widget build(BuildContext context) {
-    final image = player.image;
+    final image = this.image;
     final position = _positionLabel;
 
     return Container(
@@ -78,7 +128,7 @@ class PlayerInfoBottomSheet extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Text(
-                player.name ?? '',
+                name ?? '',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,
