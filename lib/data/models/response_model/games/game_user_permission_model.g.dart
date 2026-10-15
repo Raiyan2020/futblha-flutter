@@ -14,6 +14,8 @@ GameUserPermissionModel _$GameUserPermissionModelFromJson(
   canBook: json['can_book'] as bool?,
   isMember: json['is_member'] as bool?,
   isCreator: json['is_creator'] as bool?,
+  canPayTeamShare: json['can_pay_team_share'] as bool?,
+  payerTeam: json['payer_team'] as String?,
 );
 
 Map<String, dynamic> _$GameUserPermissionModelToJson(
@@ -24,4 +26,6 @@ Map<String, dynamic> _$GameUserPermissionModelToJson(
   'can_book': instance.canBook,
   'is_member': instance.isMember,
   'is_creator': instance.isCreator,
+  'can_pay_team_share': instance.canPayTeamShare,
+  'payer_team': instance.payerTeam,
 };

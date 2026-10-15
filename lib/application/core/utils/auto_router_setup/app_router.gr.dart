@@ -322,6 +322,7 @@ class ConfirmBookingRoute extends PageRouteInfo<ConfirmBookingRouteArgs> {
     required String timeSlot,
     int? gameId,
     bool skipUpdate = false,
+    String? teamShareAmount,
     List<PageRouteInfo>? children,
   }) : super(
          ConfirmBookingRoute.name,
@@ -332,6 +333,7 @@ class ConfirmBookingRoute extends PageRouteInfo<ConfirmBookingRouteArgs> {
            timeSlot: timeSlot,
            gameId: gameId,
            skipUpdate: skipUpdate,
+           teamShareAmount: teamShareAmount,
          ),
          initialChildren: children,
        );
@@ -349,6 +351,7 @@ class ConfirmBookingRoute extends PageRouteInfo<ConfirmBookingRouteArgs> {
         timeSlot: args.timeSlot,
         gameId: args.gameId,
         skipUpdate: args.skipUpdate,
+        teamShareAmount: args.teamShareAmount,
       );
     },
   );
@@ -362,6 +365,7 @@ class ConfirmBookingRouteArgs {
     required this.timeSlot,
     this.gameId,
     this.skipUpdate = false,
+    this.teamShareAmount,
   });
 
   final Key? key;
@@ -376,9 +380,11 @@ class ConfirmBookingRouteArgs {
 
   final bool skipUpdate;
 
+  final String? teamShareAmount;
+
   @override
   String toString() {
-    return 'ConfirmBookingRouteArgs{key: $key, playground: $playground, date: $date, timeSlot: $timeSlot, gameId: $gameId, skipUpdate: $skipUpdate}';
+    return 'ConfirmBookingRouteArgs{key: $key, playground: $playground, date: $date, timeSlot: $timeSlot, gameId: $gameId, skipUpdate: $skipUpdate, teamShareAmount: $teamShareAmount}';
   }
 
   @override
@@ -390,7 +396,8 @@ class ConfirmBookingRouteArgs {
         date == other.date &&
         timeSlot == other.timeSlot &&
         gameId == other.gameId &&
-        skipUpdate == other.skipUpdate;
+        skipUpdate == other.skipUpdate &&
+        teamShareAmount == other.teamShareAmount;
   }
 
   @override
@@ -400,7 +407,8 @@ class ConfirmBookingRouteArgs {
       date.hashCode ^
       timeSlot.hashCode ^
       gameId.hashCode ^
-      skipUpdate.hashCode;
+      skipUpdate.hashCode ^
+      teamShareAmount.hashCode;
 }
 
 /// generated route for

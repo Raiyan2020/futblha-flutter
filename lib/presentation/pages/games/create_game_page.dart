@@ -25,11 +25,16 @@ enum GameType { myDiwaniyaOnly, privateGame, publicGame }
 /// When the creator pays for the playground.
 enum GamePaymentTiming {
   /// Pay right after creating the game, on the existing payment screen.
-  immediate,
+  immediate('immediate'),
 
   /// Pay later from the game page, once all players have joined (the
   /// existing flow).
-  afterPlayersComplete,
+  afterPlayersComplete('after_players_complete');
+
+  const GamePaymentTiming(this.apiValue);
+
+  /// Value of `payment_timing` in `POST /games`.
+  final String apiValue;
 }
 
 @RoutePage()
@@ -232,6 +237,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
       position: _selectedPosition!.key,
       opponentDiwaniyaId: widget.gameType == GameType.privateGame ? _opponentDiwaniyaId : null,
       slotIndex: predictedSlot,
+      paymentTiming: _supportsPaymentTiming ? _paymentTiming?.apiValue : null,
     );
 
     setState(() => _isSubmitting = true);
@@ -256,13 +262,20 @@ class _CreateGamePageState extends State<CreateGamePage> {
         skipUpdate: true,
       ),
     );
-    // A successful payment clears the whole stack, so getting here means the
-    // user left the payment without finishing it. The game stays created;
-    // close this form so it can't be submitted again.
-    if (!mounted) return;
+    // A successful payment replaces the whole stack with the success screen,
+    // which also completes this push while the page is still mounted. Only
+    // when this route is current again did the user leave the payment
+    // unfinished; popping in the other case throws "Bad state: No element".
+    if (!mounted || !_isCurrentRoute) return;
     context.showMessage(isError: true, LocaleKeys.game_created_payment_pending.tr());
-    context.router.pop(true);
+    // Close this form (the game stays created) so it can't be submitted again.
+    // Wait for the payment page's own pop to finish first.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_isCurrentRoute) context.router.maybePop(true);
+    });
   }
+
+  bool get _isCurrentRoute => mounted && (ModalRoute.of(context)?.isCurrent ?? false);
 
   List<GamePeriod> _parseTimeSlotToPeriods(String timeSlot) {
     // Format: "10:00 - 11:00" or "10:00-11:00"

@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../../../application/core/utils/helpers/extension_functions/date_extension_functions.dart';
 import '../playgrounds/playground_model.dart';
 import '../playgrounds/booking_period_model.dart';
+import 'team_payment_model.dart';
 
 part 'game_booking_model.g.dart';
 
@@ -31,6 +32,11 @@ class GameBookingModel {
   final DateTime? bookingDate;
   final List<BookingPeriodModel>? periods;
   final PlaygroundModel? playground;
+  // unpaid | pending_payment | awaiting_payment | paid | failed | expired
+  final String? status;
+  // Only for private games with an opponent: each Diwaniya's 50% share.
+  @JsonKey(name: 'team_payments')
+  final List<TeamPaymentModel>? teamPayments;
 
   GameBookingModel({
     this.id,
@@ -47,6 +53,8 @@ class GameBookingModel {
     this.bookingDate,
     this.periods,
     this.playground,
+    this.status,
+    this.teamPayments,
   });
 
   factory GameBookingModel.fromJson(Map<String, dynamic> json) => _$GameBookingModelFromJson(json);

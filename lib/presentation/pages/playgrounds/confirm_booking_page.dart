@@ -35,6 +35,9 @@ class ConfirmBookingPage extends StatefulWidget {
   final int? gameId; // Optional: if provided, use game booking flow
   final bool
   skipUpdate; // If true, directly call confirm-booking API (when booking is already available)
+  // Private games: this Diwaniya's share from `booking.team_payments`. When
+  // set, it is shown as the amount to pay instead of the local calculation.
+  final String? teamShareAmount;
 
   const ConfirmBookingPage({
     super.key,
@@ -43,6 +46,7 @@ class ConfirmBookingPage extends StatefulWidget {
     required this.timeSlot,
     this.gameId,
     this.skipUpdate = false,
+    this.teamShareAmount,
   });
 
   @override
@@ -69,6 +73,8 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
   bool _isSubmitting = false;
   final String? _walletUsagePercentage =
       locator<SettingsBloc>().settingsResponseMod?.walletUsagePercentage;
+
+  bool get _isTeamShare => widget.teamShareAmount != null;
 
   double get _bookingFee {
     final priceStr = (widget.playground.price ?? '0').replaceAll(RegExp(r'[^\d.]'), '');
@@ -197,6 +203,15 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     context.router.maybePop();
   }
 
+  /// Opens the payment page. A successful payment clears the whole stack, so
+  /// returning here means it failed or the user left it: unlock the button so
+  /// they can try again (the backend reuses a pending payment).
+  Future<void> _openPaymentWebView(String paymentUrl) async {
+    await context.router.push(PaymentWebViewRoute(paymentUrl: paymentUrl));
+    if (!mounted) return;
+    setState(() => _isSubmitting = false);
+  }
+
   void _onSubmitFailed(String message, int? statusCode) {
     setState(() {
       _isSubmitting = false;
@@ -309,8 +324,10 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     setState(() => _isSubmitting = true);
     final confirmRequest = ConfirmGameBookingRequestModel(
       paymentMethod: _selectedPaymentMethod?.key ?? 'kent',
-      useWallet: _useWalletBalance,
-      code: _voucherCode,
+      // Wallet and vouchers aren't split per team, so a team share pays the
+      // exact amount from the backend.
+      useWallet: _isTeamShare ? false : _useWalletBalance,
+      code: _isTeamShare ? null : _voucherCode,
     );
 
     gamesBloc.add(ConfirmGameBookingEvent(gameId: widget.gameId!, request: confirmRequest));
@@ -488,105 +505,107 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
               ),
             ),
           ),
-          12.heightBox(),
-          Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: context.cardBackground,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.account_balance_wallet, size: 20, color: context.brandOnSurface),
-                12.widthBox(),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        LocaleKeys.use_wallet_balance.tr(),
-                        style: TextStyle(
-                          color: context.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        '${_walletBalanceValue.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                        style: TextStyle(
-                          color: context.brandOnSurface,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Switch(
-                  value: _useWalletBalance,
-                  onChanged: (value) {
-                    setState(() {
-                      _useWalletBalance = value;
-                    });
-                  },
-                  activeThumbColor: AppColors.primaryColor,
-                ),
-              ],
-            ),
-          ),
-          24.heightBox(),
-          // Voucher Discount Section
-          Text(
-            LocaleKeys.voucher_discount.tr(),
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          12.heightBox(),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _voucherController,
-                  decoration: InputDecoration(
-                    hintText: LocaleKeys.enter_voucher_code.tr(),
-                    hintStyle: TextStyle(color: AppColors.lightTextColor, fontSize: 14),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
-                  ),
-                ),
+          if (!_isTeamShare) ...[
+            12.heightBox(),
+            Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: context.cardBackground,
+                borderRadius: BorderRadius.circular(12),
               ),
-              12.widthBox(),
-              if (_voucherDiscount > 0) ...[
-                TextButton(
-                  onPressed: _clearVoucher,
+              child: Row(
+                children: [
+                  Icon(Icons.account_balance_wallet, size: 20, color: context.brandOnSurface),
+                  12.widthBox(),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          LocaleKeys.use_wallet_balance.tr(),
+                          style: TextStyle(
+                            color: context.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          '${_walletBalanceValue.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
+                          style: TextStyle(
+                            color: context.brandOnSurface,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(
+                    value: _useWalletBalance,
+                    onChanged: (value) {
+                      setState(() {
+                        _useWalletBalance = value;
+                      });
+                    },
+                    activeThumbColor: AppColors.primaryColor,
+                  ),
+                ],
+              ),
+            ),
+            24.heightBox(),
+            // Voucher Discount Section
+            Text(
+              LocaleKeys.voucher_discount.tr(),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            12.heightBox(),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _voucherController,
+                    decoration: InputDecoration(
+                      hintText: LocaleKeys.enter_voucher_code.tr(),
+                      hintStyle: TextStyle(color: AppColors.lightTextColor, fontSize: 14),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+                    ),
+                  ),
+                ),
+                12.widthBox(),
+                if (_voucherDiscount > 0) ...[
+                  TextButton(
+                    onPressed: _clearVoucher,
+                    child: Text(
+                      LocaleKeys.clear_all.tr(),
+                      style: TextStyle(
+                        color: AppColors.primaryRed,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  12.widthBox(),
+                ],
+                ElevatedButton(
+                  onPressed: _applyVoucher,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
                   child: Text(
-                    LocaleKeys.clear_all.tr(),
-                    style: TextStyle(
-                      color: AppColors.primaryRed,
+                    LocaleKeys.apply.tr(),
+                    style: const TextStyle(
+                      color: AppColors.primaryWhite,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
-                12.widthBox(),
               ],
-              ElevatedButton(
-                onPressed: _applyVoucher,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Text(
-                  LocaleKeys.apply.tr(),
-                  style: const TextStyle(
-                    color: AppColors.primaryWhite,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
           24.heightBox(),
           // Price Summary Section
           Text(
@@ -594,111 +613,141 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           12.heightBox(),
-          Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: context.cardBackground,
-              borderRadius: BorderRadius.circular(16),
+          if (_isTeamShare)
+            _buildTeamShareSummary()
+          else
+            Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: context.cardBackground,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        LocaleKeys.booking_fees.tr(),
+                        style: TextStyle(
+                          color: context.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Text(
+                        '${_bookingFee.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
+                        style: TextStyle(
+                          color: context.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (_voucherDiscount > 0) ...[
+                    8.heightBox(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          LocaleKeys.voucher_discount.tr(),
+                          style: TextStyle(
+                            color: context.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text(
+                          '($_voucherDiscountPercentage%) - ${_voucherDiscount.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
+                          style: const TextStyle(
+                            color: AppColors.primaryRed,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (_walletDiscount > 0) ...[
+                    8.heightBox(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          LocaleKeys.wallet_discount.tr(),
+                          style: TextStyle(
+                            color: context.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        Text(
+                          '- ${_walletDiscount.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
+                          style: const TextStyle(
+                            color: AppColors.primaryRed,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  12.heightBox(),
+                  Divider(color: context.borderColor),
+                  12.heightBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        LocaleKeys.total.tr(),
+                        style: TextStyle(
+                          color: context.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        '${_total.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
+                        style: TextStyle(
+                          color: context.brandOnSurface,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      LocaleKeys.booking_fees.tr(),
-                      style: TextStyle(
-                        color: context.textSecondary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      '${_bookingFee.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                      style: TextStyle(
-                        color: context.textSecondary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                if (_voucherDiscount > 0) ...[
-                  8.heightBox(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        LocaleKeys.voucher_discount.tr(),
-                        style: TextStyle(
-                          color: context.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Text(
-                        '($_voucherDiscountPercentage%) - ${_voucherDiscount.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                        style: const TextStyle(
-                          color: AppColors.primaryRed,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-                if (_walletDiscount > 0) ...[
-                  8.heightBox(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        LocaleKeys.wallet_discount.tr(),
-                        style: TextStyle(
-                          color: context.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Text(
-                        '- ${_walletDiscount.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                        style: const TextStyle(
-                          color: AppColors.primaryRed,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-                12.heightBox(),
-                Divider(color: context.borderColor),
-                12.heightBox(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      LocaleKeys.total.tr(),
-                      style: TextStyle(
-                        color: context.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      '${_total.toStringAsFixed(2)} ${LocaleKeys.kwd.tr()}',
-                      style: TextStyle(
-                        color: context.brandOnSurface,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          32.heightBox(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTeamShareSummary() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: context.cardBackground,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            LocaleKeys.your_team_share.tr(),
+            style: TextStyle(color: context.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            '${widget.teamShareAmount} ${LocaleKeys.kwd.tr()}',
+            style: TextStyle(
+              color: context.brandOnSurface,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          32.heightBox(),
         ],
       ),
     );
@@ -760,7 +809,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                       } else {
                         final paymentUrl = gamesBloc.gameDetails?.booking?.paymentUrl;
                         if (paymentUrl != null && paymentUrl.isNotEmpty) {
-                          context.router.push(PaymentWebViewRoute(paymentUrl: paymentUrl));
+                          _openPaymentWebView(paymentUrl);
                         } else {
                           showDialog(
                             context: context,
@@ -809,14 +858,17 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     );
                   }
                   if (bookingsBloc.bookingDetails != null) {
-                    showDialog(
+                    final paymentUrl = bookingsBloc.bookingDetails?.paymentUrl;
+                    showDialog<bool>(
                       context: context,
                       barrierColor: Colors.black.withValues(alpha: 0.7),
-                      builder: (context) => _BookingSuccessDialog(
-                        paymentUrl: bookingsBloc.bookingDetails?.paymentUrl,
-                        isGameBooking: false,
-                      ),
-                    );
+                      builder: (context) =>
+                          _BookingSuccessDialog(paymentUrl: paymentUrl, isGameBooking: false),
+                    ).then((proceedToPayment) {
+                      if (proceedToPayment == true && paymentUrl != null) {
+                        _openPaymentWebView(paymentUrl);
+                      }
+                    });
                   }
                 }
               },
@@ -983,10 +1035,9 @@ class _BookingSuccessDialog extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    context.router.push(PaymentWebViewRoute(paymentUrl: paymentUrl!));
-                  },
+                  // The page opens the payment, so it can unlock its button if
+                  // the payment fails.
+                  onPressed: () => Navigator.of(context).pop(true),
                   icon: const Icon(Icons.payment, color: AppColors.primaryWhite, size: 20),
                   label: Text(
                     LocaleKeys.proceed_to_payment.tr(),

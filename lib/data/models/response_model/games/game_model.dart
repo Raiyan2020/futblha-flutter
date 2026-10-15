@@ -12,6 +12,9 @@ class GameModel {
   @JsonKey(name: 'creator_name')
   final String? creatorName;
   final String? type; // private, public, my_diwanya
+  // public / my_diwanya only: immediate | after_players_complete
+  @JsonKey(name: 'payment_timing')
+  final String? paymentTiming;
   @JsonKey(name: 'game_status')
   final String? gameStatus;
   @JsonKey(name: 'game_status_text')
@@ -45,6 +48,7 @@ class GameModel {
     this.id,
     this.creatorName,
     this.type,
+    this.paymentTiming,
     this.gameStatus,
     this.gameStatusText,
     this.invitationStatus,

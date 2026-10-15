@@ -562,4 +562,24 @@ abstract class LocaleKeys {
   static const game_created_payment_pending = 'game_created_payment_pending';
   static const complete_booking_process = 'complete_booking_process';
   static const booking_data_incomplete = 'booking_data_incomplete';
+  static const payment_failed_declined = 'payment_failed_declined';
+  static const payment_failed_expired = 'payment_failed_expired';
+  static const payment_failed_cancelled = 'payment_failed_cancelled';
+  static const payment_failed_unknown = 'payment_failed_unknown';
+  static const booking_status_title = 'booking_status_title';
+  static const booking_status_unpaid = 'booking_status_unpaid';
+  static const booking_status_pending_payment = 'booking_status_pending_payment';
+  static const booking_status_awaiting_payment = 'booking_status_awaiting_payment';
+  static const booking_status_paid = 'booking_status_paid';
+  static const booking_status_failed = 'booking_status_failed';
+  static const booking_status_expired = 'booking_status_expired';
+  static const team_payment_unpaid = 'team_payment_unpaid';
+  static const team_payment_pending = 'team_payment_pending';
+  static const team_payment_paid = 'team_payment_paid';
+  static const team_payment_failed = 'team_payment_failed';
+  static const team_payment_refunded = 'team_payment_refunded';
+  static const continue_to_payment = 'continue_to_payment';
+  static const pay_team_share = 'pay_team_share';
+  static const private_game_playground_unavailable = 'private_game_playground_unavailable';
+  static const your_team_share = 'your_team_share';
 }

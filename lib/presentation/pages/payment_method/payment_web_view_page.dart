@@ -4,12 +4,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:futblha/presentation/widgets/custom_text.dart';
+import 'package:futblha/presentation/widgets/snackbar_utill.dart';
 
 import '../../../application/config/app_assets.dart';
 import '../../../application/core/di/app_component/app_component.dart';
 import '../../../application/core/utils/auto_router_setup/app_router.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../auth/bloc/authentication_bloc.dart';
+
+/// Message key for the `reason` the server puts on `/payment/failed`.
+String paymentFailureMessageKey(String? reason) => switch (reason) {
+  'declined' => LocaleKeys.payment_failed_declined,
+  'expired' => LocaleKeys.payment_failed_expired,
+  'cancelled' => LocaleKeys.payment_failed_cancelled,
+  _ => LocaleKeys.payment_failed_unknown,
+};
 
 @RoutePage()
 class PaymentWebViewPage extends StatefulWidget {
@@ -46,6 +55,8 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
               if (kDebugMode) debugPrint("✅ PageFinished: $url");
               if (url != null && url.path.contains("/success")) {
                 _handlePaymentSuccess(url);
+              } else if (url != null && url.path.contains("/payment/failed")) {
+                _handlePaymentFailed(url);
               }
             },
             shouldOverrideUrlLoading: (controller, navigationAction) async {
@@ -65,6 +76,22 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
         ],
       ),
     );
+  }
+
+  /// The server redirects declined / expired / cancelled payments to
+  /// `/payment/failed?paymentId=..&reason=..` and marks the payment failed
+  /// itself. Close the web view with `false` so the caller can let the user
+  /// try again, and refresh the profile (wallet balance).
+  void _handlePaymentFailed(Uri uri) {
+    if (handledPayment) return;
+    handledPayment = true;
+
+    locator<AuthenticationBloc>().add(GetProfileEvent());
+    context.showMessage(
+      isError: true,
+      paymentFailureMessageKey(uri.queryParameters['reason']).tr(),
+    );
+    context.router.maybePop(false);
   }
 
   void _handlePaymentSuccess(Uri uri) {

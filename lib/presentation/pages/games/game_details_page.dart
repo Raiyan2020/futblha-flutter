@@ -5,6 +5,9 @@ import 'package:futblha/application/config/design_system/app_colors.dart';
 import 'package:futblha/application/core/basecomponents/base_view_model_view.dart';
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
+import 'package:futblha/data/models/response_model/games/team_payment_model.dart';
+import 'package:futblha/presentation/pages/games/utils/game_payment_utils.dart';
+import 'package:futblha/presentation/pages/games/widgets/game_booking_status_card.dart';
 import 'package:futblha/application/core/utils/helpers/cache/cache_manager.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/data/models/request_model/games/join_game_request_model.dart';
@@ -85,9 +88,14 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
                                 setState(() => game.unreadMessagesCount = 0),
                           ),
                         ),
-                        if (game.gameStatus == 'players_completed' &&
-                            game.booking?.paymentMethod == null &&
-                            game.userPermission?.canBook == true)
+                        if (GameBookingStatusCard.hasContent(game))
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 5.h),
+                            child: GameBookingStatusCard(game: game),
+                          ),
+                        // The backend decides who can pay and when (roster rule,
+                        // payment_timing, already paid, team admin...).
+                        if (_canPay(game))
                           Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.w,
@@ -219,6 +227,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               timeSlot: timeSlots,
               gameId: game.id!,
               skipUpdate: true,
+              teamShareAmount: _isTeamSharePayment(game) ? _myTeamShare(game)?.amount : null,
             ),
             game.id!,
           );
@@ -230,11 +239,15 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       } else {
         context.showMessage(isError: true, LocaleKeys.booking_data_incomplete.tr());
       }
+    } else if (_isTeamSharePayment(game!)) {
+      // update-booking is blocked for private games, so there is no
+      // "choose another playground" path.
+      context.showMessage(isError: true, LocaleKeys.private_game_playground_unavailable.tr());
     } else {
       PlaygroundNotAvailableDialog.show(
         context,
         playgroundName:
-            game!.booking?.playground?.name ?? LocaleKeys.playground.tr(),
+            game.booking?.playground?.name ?? LocaleKeys.playground.tr(),
         onContinue: () => _navigateToChoosePlayground(context, game),
       );
     }
@@ -324,7 +337,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             const Icon(Icons.payment, color: AppColors.primaryWhite, size: 20),
             8.widthBox(),
             Text(
-              LocaleKeys.complete_booking_process.tr(),
+              _payButtonLabel(game),
               style: const TextStyle(
                 color: AppColors.primaryWhite,
                 fontSize: 16,
@@ -335,6 +348,25 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
         ),
       ),
     );
+  }
+
+  bool _isTeamSharePayment(GameModel game) => GamePaymentUtils.isTeamSharePayment(game);
+
+  bool _canPay(GameModel game) => GamePaymentUtils.canPay(game);
+
+  TeamPaymentModel? _myTeamShare(GameModel game) => GamePaymentUtils.myTeamShare(game);
+
+  String _payButtonLabel(GameModel game) {
+    if (_isTeamSharePayment(game)) {
+      final amount = _myTeamShare(game)?.amount;
+      if (amount != null) {
+        return LocaleKeys.pay_team_share.tr(namedArgs: {'amount': amount});
+      }
+    }
+    if (game.booking?.status == 'pending_payment') {
+      return LocaleKeys.continue_to_payment.tr();
+    }
+    return LocaleKeys.complete_booking_process.tr();
   }
 
   /// Current user's team index (0 or 1) when they are a member, or null.

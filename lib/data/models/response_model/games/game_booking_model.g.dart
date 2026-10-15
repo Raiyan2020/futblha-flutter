@@ -30,6 +30,10 @@ GameBookingModel _$GameBookingModelFromJson(Map<String, dynamic> json) =>
           : PlaygroundModel.fromJson(
               json['playground'] as Map<String, dynamic>,
             ),
+      status: json['status'] as String?,
+      teamPayments: (json['team_payments'] as List<dynamic>?)
+          ?.map((e) => TeamPaymentModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$GameBookingModelToJson(
@@ -49,4 +53,6 @@ Map<String, dynamic> _$GameBookingModelToJson(
   'booking_date': const LocalizedDateConverter().toJson(instance.bookingDate),
   'periods': instance.periods,
   'playground': instance.playground,
+  'status': instance.status,
+  'team_payments': instance.teamPayments,
 };

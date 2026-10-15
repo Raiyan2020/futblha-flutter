@@ -108,6 +108,17 @@ const String NotificationsUnreadCount = '/notifications/unread-count';
 const String NotificationsReadAll = '/notifications/read-all';
 String notificationRead(String id) => '/notifications/$id/read';
 const String gameInvitationNotificationType = 'game_invitation';
+// Payment notifications; each carries `game_id` and opens the game page.
+const String gamePaymentRequiredNotificationType = 'game_payment_required';
+const String gameTeamPaymentReceivedNotificationType = 'game_team_payment_received';
+const String gameConfirmedNotificationType = 'game_confirmed';
+const String gameRefundPendingNotificationType = 'game_refund_pending';
+const Set<String> gameNotificationTypes = {
+  gamePaymentRequiredNotificationType,
+  gameTeamPaymentReceivedNotificationType,
+  gameConfirmedNotificationType,
+  gameRefundPendingNotificationType,
+};
 // const String MarkAllRead = '/mobile/api/DriverTaskNotification/MarkAsRead';
 // const String GetUnReadCount = '/mobile/api/DriverTaskNotification/GetUnReadCount';
 // const String ClearNotification = '/mobile/api/DriverTaskNotification/Clear';

@@ -7,6 +7,7 @@ class CreateGameRequestModel {
   final String position; // Player position (e.g., "goal_keeper", "attacker", "defender", "center")
   final int? opponentDiwaniyaId; // Required if type is private
   final int? slotIndex; // Predicted slot index for creator (GK=0, defender=1, etc.)
+  final String? paymentTiming; // immediate | after_players_complete; public & my_diwanya only
 
   CreateGameRequestModel({
     required this.playgroundId,
@@ -17,6 +18,7 @@ class CreateGameRequestModel {
     required this.position,
     this.opponentDiwaniyaId,
     this.slotIndex,
+    this.paymentTiming,
   });
 
   Map<String, dynamic> toFormData() {
@@ -33,6 +35,10 @@ class CreateGameRequestModel {
     }
     if (slotIndex != null) {
       formData['slot_index'] = slotIndex.toString();
+    }
+    // Must be omitted for private games (the backend rejects it there).
+    if (paymentTiming != null) {
+      formData['payment_timing'] = paymentTiming;
     }
 
     // Add periods

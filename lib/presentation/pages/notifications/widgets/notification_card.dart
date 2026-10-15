@@ -28,7 +28,11 @@ class NotificationCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => NotificationNavigation.open(type: model.type, notificationId: model.id),
+        onTap: () => NotificationNavigation.open(
+          type: model.type,
+          notificationId: model.id,
+          gameId: NotificationNavigation.gameIdFrom(model.data),
+        ),
         child: Ink(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(

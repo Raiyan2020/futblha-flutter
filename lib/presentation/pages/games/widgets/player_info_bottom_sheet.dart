@@ -64,8 +64,12 @@ class PlayerInfoBottomSheet extends StatelessWidget {
             CircleAvatar(
               radius: 45,
               backgroundColor: context.mutedBackground,
-              backgroundImage: image != null && image.isNotEmpty ? NetworkImage(image) : null,
-              onBackgroundImageError: image != null && image.isNotEmpty ? (_, _) {} : null,
+              backgroundImage: image != null && image.isNotEmpty
+                  ? NetworkImage(image)
+                  : null,
+              onBackgroundImageError: image != null && image.isNotEmpty
+                  ? (_, _) {}
+                  : null,
               child: image == null || image.isEmpty
                   ? Icon(Icons.person, color: context.brandOnSurface, size: 45)
                   : null,
@@ -76,7 +80,10 @@ class PlayerInfoBottomSheet extends StatelessWidget {
               child: Text(
                 player.name ?? '',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             if (position.isNotEmpty) ...[
@@ -90,11 +97,18 @@ class PlayerInfoBottomSheet extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.sports_soccer, color: context.brandOnSurface, size: 20),
+                    Icon(
+                      Icons.sports_soccer,
+                      color: context.brandOnSurface,
+                      size: 20,
+                    ),
                     8.widthBox(),
                     Text(
                       LocaleKeys.playing_position.tr(),
-                      style: const TextStyle(color: AppColors.lightTextColor, fontSize: 14),
+                      style: const TextStyle(
+                        color: AppColors.lightTextColor,
+                        fontSize: 14,
+                      ),
                     ),
                     const Spacer(),
                     Text(
