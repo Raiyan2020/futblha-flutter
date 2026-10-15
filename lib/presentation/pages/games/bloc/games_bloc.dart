@@ -302,7 +302,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         emit(GamesSuccess());
       },
       failure: (error) {
-        emit(GamesError(message: error.message ?? errorMessage));
+        emit(GamesError(message: error.message ?? errorMessage, statusCode: error.statusCode));
       },
     );
   }
@@ -325,7 +325,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         emit(GamesSuccess());
       },
       failure: (error) {
-        emit(GamesError(message: error.message ?? errorMessage));
+        emit(GamesError(message: error.message ?? errorMessage, statusCode: error.statusCode));
       },
     );
   }

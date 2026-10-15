@@ -7,12 +7,15 @@ import 'package:futblha/application/core/basecomponents/base_view_model_view.dar
 import 'package:futblha/application/core/di/app_component/app_component.dart';
 import 'package:futblha/application/core/utils/helpers/extension_functions/size_extension.dart';
 import 'package:futblha/presentation/widgets/app_size_boxes.dart';
+import 'package:futblha/data/models/response_model/playgrounds/available_slot_model.dart';
 import 'package:futblha/data/models/response_model/playgrounds/playground_model.dart';
 import 'package:futblha/presentation/pages/playgrounds/bloc/playgrounds_bloc.dart';
 import 'package:futblha/application/core/utils/auto_router_setup/app_router.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
-import 'package:intl/intl.dart';
 import 'package:futblha/presentation/widgets/app_date_picker.dart';
+import 'package:futblha/presentation/widgets/snackbar_utill.dart';
+
+import 'utils/booking_slot_utils.dart';
 
 @RoutePage()
 class BookPlaygroundPage extends StatefulWidget {
@@ -27,32 +30,39 @@ class BookPlaygroundPage extends StatefulWidget {
 
 class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
   final playgroundsBloc = locator<PlaygroundsBloc>();
-  DateTime? _selectedDate;
-  List<String> _selectedTimeSlots = [];
+  late DateTime _selectedDate;
+  final List<AvailableSlotModel> _selectedSlots = [];
   final TextEditingController _dateController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
-    _dateController.text = DateFormat('dd MMM yyyy').format(_selectedDate!);
-    // Find playground ID from the list or use a default
-    final playgroundId = _findPlaygroundId();
-    if (playgroundId != null) {
-      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-      playgroundsBloc.add(GetPlaygroundDetailsEvent(playgroundId: playgroundId, date: dateStr));
-    }
+    final now = DateTime.now();
+    _selectedDate = DateTime(now.year, now.month, now.day);
+    _dateController.text = DateFormat('dd MMM yyyy').format(_selectedDate);
+    _loadSlots();
   }
 
-  int? _findPlaygroundId() {
-    // Use playground ID directly from the model
-    return widget.playground.id;
+  String get _selectedDateStr => DateFormat('yyyy-MM-dd', 'en').format(_selectedDate);
+
+  /// True when the bloc holds slots for the selected date and isn't reloading.
+  bool _hasSlotsFor(PlaygroundsState state) =>
+      state is! PlaygroundsLoading && playgroundsBloc.playgroundDetailsDate == _selectedDateStr;
+
+  List<AvailableSlotModel> get _slots => playgroundsBloc.playgroundDetails?.availableSlots ?? [];
+
+  void _loadSlots() {
+    final playgroundId = widget.playground.id;
+    if (playgroundId == null) return;
+    playgroundsBloc.add(
+      GetPlaygroundDetailsEvent(playgroundId: playgroundId, date: _selectedDateStr),
+    );
   }
 
   Future<void> _selectDate() async {
     final DateTime? picked = await showAppDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: _selectedDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
       builder: (context, child) {
@@ -69,34 +79,80 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
         );
       },
     );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _selectedTimeSlots = [];
-        _dateController.text = DateFormat('dd MMM yyyy').format(picked);
-      });
-      // Fetch available slots for the selected date
-      final playgroundId = _findPlaygroundId();
-      if (playgroundId != null) {
-        final dateStr = DateFormat('yyyy-MM-dd').format(picked);
-        playgroundsBloc.add(GetPlaygroundDetailsEvent(playgroundId: playgroundId, date: dateStr));
-      }
-    }
-  }
-
-  String _formatTimeSlot(String? startTime, String? endTime) {
-    if (startTime == null || endTime == null) return '';
-    return '$startTime - $endTime';
-  }
-
-  void _toggleTimeSlot(String slot) {
+    if (picked == null) return;
+    final pickedDay = DateTime(picked.year, picked.month, picked.day);
+    if (pickedDay == _selectedDate) return;
     setState(() {
-      if (_selectedTimeSlots.contains(slot)) {
-        _selectedTimeSlots.remove(slot);
-      } else {
-        _selectedTimeSlots.add(slot);
-      }
+      _selectedDate = pickedDay;
+      // Slots are per date, so earlier choices no longer apply.
+      _selectedSlots.clear();
+      _dateController.text = DateFormat('dd MMM yyyy').format(pickedDay);
     });
+    _loadSlots();
+  }
+
+  bool _isSameSlot(AvailableSlotModel a, AvailableSlotModel b) =>
+      a.startAt == b.startAt && a.endAt == b.endAt;
+
+  bool _isSelected(AvailableSlotModel slot) => _selectedSlots.any((s) => _isSameSlot(s, slot));
+
+  /// A slot can be picked when the API marks it available and it hasn't
+  /// started yet (same-day bookings).
+  bool _isSelectable(AvailableSlotModel slot) =>
+      slot.available == true &&
+      !BookingSlotUtils.hasStarted(_selectedDate, slot.startAt, slot.endAt, DateTime.now());
+
+  void _toggleTimeSlot(AvailableSlotModel slot) {
+    if (_isSelected(slot)) {
+      setState(() => _selectedSlots.removeWhere((s) => _isSameSlot(s, slot)));
+      return;
+    }
+    final overlaps = BookingSlotUtils.overlapsAny(_selectedDate, (
+      startAt: slot.startAt,
+      endAt: slot.endAt,
+    ), _selectedSlots.map((s) => (startAt: s.startAt, endAt: s.endAt)));
+    if (overlaps) {
+      context.showMessage(isError: true, LocaleKeys.slot_overlaps_selected.tr());
+      return;
+    }
+    setState(() => _selectedSlots.add(slot));
+  }
+
+  /// Drops selected slots that the latest availability no longer allows.
+  void _pruneSelection() {
+    if (_selectedSlots.isEmpty) return;
+    final stillValid = _selectedSlots
+        .where((selected) => _slots.any((s) => _isSameSlot(s, selected) && _isSelectable(s)))
+        .toList();
+    if (stillValid.length == _selectedSlots.length) return;
+    setState(() {
+      _selectedSlots
+        ..clear()
+        ..addAll(stillValid);
+    });
+    context.showMessage(isError: true, LocaleKeys.selected_slots_no_longer_available.tr());
+  }
+
+  Future<void> _proceed() async {
+    // Time may have passed while the user was on the page.
+    _pruneSelection();
+    if (_selectedSlots.isEmpty) return;
+
+    // Keep periods in the order the API lists them (chronological).
+    final ordered = _slots.where(_isSelected).toList();
+    final timeSlot = ordered.map((s) => BookingSlotUtils.formatSlot(s.startAt, s.endAt)).join(', ');
+
+    await context.router.push(
+      ConfirmBookingRoute(
+        playground: widget.playground,
+        date: _selectedDate,
+        timeSlot: timeSlot,
+        gameId: widget.gameId,
+      ),
+    );
+    // Availability may have changed while confirming (another user booked,
+    // or the booking was rejected), so always reload on return.
+    if (mounted) _loadSlots();
   }
 
   @override
@@ -160,89 +216,110 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
             // Booking Period Section
             Text(
               LocaleKeys.booking_period.tr(),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             12.heightBox(),
             CustomBlocConsumer<PlaygroundsBloc, PlaygroundsState>(
               bloc: playgroundsBloc,
-              listener: (context, state) {},
+              listener: (context, state) {
+                if (state is PlaygroundsSuccess && _hasSlotsFor(state)) {
+                  _pruneSelection();
+                }
+              },
               builder: (context, state) {
-                final details = playgroundsBloc.playgroundDetails;
-                final availableSlots = details?.availableSlots ?? [];
-
-                if (availableSlots.isEmpty && _selectedDate == null) {
-                  return const Center(
-                    child: Text(
-                      'Please select a date first',
-                      style: TextStyle(color: AppColors.lightTextColor, fontSize: 14),
+                if (!_hasSlotsFor(state)) {
+                  if (state is PlaygroundsError) {
+                    return _SlotsMessage(
+                      message: LocaleKeys.failed_to_load_time_slots.tr(),
+                      onRetry: _loadSlots,
+                    );
+                  }
+                  return Padding(
+                    padding: EdgeInsets.all(16.w),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
+                      ),
                     ),
                   );
                 }
 
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 8.w,
-                    mainAxisSpacing: 8.h,
-                    childAspectRatio: 2.5,
-                  ),
-                  itemCount: availableSlots.length,
-                  itemBuilder: (context, index) {
-                    final slot = availableSlots[index];
-                    final slotStr = _formatTimeSlot(slot.startAt, slot.endAt);
-                    final isAvailable = slot.available ?? false;
-                    final isSelected = _selectedTimeSlots.contains(slotStr);
+                final availableSlots = _slots;
+                if (availableSlots.isEmpty) {
+                  return _SlotsMessage(message: LocaleKeys.no_available_time_slots.tr());
+                }
+                final fullyBooked = !availableSlots.any(_isSelectable);
 
-                    return GestureDetector(
-                      onTap: isAvailable ? () => _toggleTimeSlot(slotStr) : null,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : isAvailable
-                              ? context.mutedBackground
-                              : AppColors.primaryGrey.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(8),
-                          border: isSelected
-                              ? Border.all(color: AppColors.primaryColor, width: 2)
-                              : null,
-                        ),
-                        child: Center(
-                          child: isAvailable
-                              ? Text(
-                                  slotStr,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? AppColors.primaryWhite
-                                        : context.textSecondary,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              : Stack(
-                                  children: [
-                                    Text(
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (fullyBooked) ...[
+                      _SlotsMessage(message: LocaleKeys.all_slots_booked.tr()),
+                      12.heightBox(),
+                    ],
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 8.w,
+                        mainAxisSpacing: 8.h,
+                        childAspectRatio: 2.5,
+                      ),
+                      itemCount: availableSlots.length,
+                      itemBuilder: (context, index) {
+                        final slot = availableSlots[index];
+                        final slotStr = BookingSlotUtils.formatSlot(slot.startAt, slot.endAt);
+                        final isAvailable = _isSelectable(slot);
+                        final isSelected = isAvailable && _isSelected(slot);
+
+                        return GestureDetector(
+                          onTap: isAvailable ? () => _toggleTimeSlot(slot) : null,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : isAvailable
+                                  ? context.mutedBackground
+                                  : AppColors.primaryGrey.withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(8),
+                              border: isSelected
+                                  ? Border.all(color: AppColors.primaryColor, width: 2)
+                                  : null,
+                            ),
+                            child: Center(
+                              child: isAvailable
+                                  ? Text(
                                       slotStr,
                                       style: TextStyle(
-                                        color: AppColors.primaryGrey,
+                                        color: isSelected
+                                            ? AppColors.primaryWhite
+                                            : context.textSecondary,
                                         fontSize: 11,
-                                        fontWeight: FontWeight.w400,
+                                        fontWeight: FontWeight.w500,
                                       ),
+                                    )
+                                  : Stack(
+                                      children: [
+                                        Text(
+                                          slotStr,
+                                          style: TextStyle(
+                                            color: AppColors.primaryGrey,
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Positioned.fill(
+                                          child: CustomPaint(painter: _StrikethroughPainter()),
+                                        ),
+                                      ],
                                     ),
-                                    Positioned.fill(
-                                      child: CustomPaint(painter: _StrikethroughPainter()),
-                                    ),
-                                  ],
-                                ),
-                        ),
-                      ),
-                    );
-                  },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 );
               },
             ),
@@ -261,37 +338,66 @@ class _BookPlaygroundPageState extends State<BookPlaygroundPage> {
             ),
           ],
         ),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: (_selectedDate != null && _selectedTimeSlots.isNotEmpty)
-                ? () {
-                    context.router.push(
-                      ConfirmBookingRoute(
-                        playground: widget.playground,
-                        date: _selectedDate!,
-                        timeSlot: _selectedTimeSlots.join(', '),
-                        gameId: widget.gameId,
-                      ),
-                    );
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              disabledBackgroundColor: AppColors.primaryGrey,
-              padding: EdgeInsets.symmetric(vertical: 16.h),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: Text(
-              LocaleKeys.proceed_to_payment.tr(),
-              style: const TextStyle(
-                color: AppColors.primaryWhite,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+        child: CustomBlocConsumer<PlaygroundsBloc, PlaygroundsState>(
+          bloc: playgroundsBloc,
+          listener: (context, state) {},
+          builder: (context, state) => SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              // Don't let the user continue on slots that are being refreshed.
+              onPressed: _hasSlotsFor(state) && _selectedSlots.isNotEmpty ? _proceed : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                disabledBackgroundColor: AppColors.primaryGrey,
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: Text(
+                LocaleKeys.proceed_to_payment.tr(),
+                style: const TextStyle(
+                  color: AppColors.primaryWhite,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _SlotsMessage extends StatelessWidget {
+  const _SlotsMessage({required this.message, this.onRetry});
+
+  final String message;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: context.mutedBackground,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            message,
+            style: const TextStyle(color: AppColors.lightTextColor, fontSize: 14),
+            textAlign: TextAlign.center,
+          ),
+          if (onRetry != null) ...[
+            8.heightBox(),
+            TextButton(
+              onPressed: onRetry,
+              style: TextButton.styleFrom(foregroundColor: context.brandOnSurface),
+              child: Text(LocaleKeys.retry.tr()),
+            ),
+          ],
+        ],
       ),
     );
   }

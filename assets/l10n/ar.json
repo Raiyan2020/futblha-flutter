@@ -544,5 +544,11 @@
   "remove_photo": "حذف الصورة",
   "photo_will_be_removed": "سيتم حذف الصورة عند الحفظ",
   "undo": "تراجع",
-  "profile_photo": "الصورة الشخصية"
+  "profile_photo": "الصورة الشخصية",
+  "slot_overlaps_selected": "هذه الفترة تتداخل مع فترة قمت باختيارها",
+  "all_slots_booked": "جميع الفترات محجوزة في هذا التاريخ، الرجاء اختيار تاريخ آخر",
+  "failed_to_load_time_slots": "تعذر تحميل الفترات المتاحة",
+  "selected_slots_no_longer_available": "بعض الفترات التي اخترتها لم تعد متاحة وتمت إزالتها",
+  "selected_time_has_passed": "الوقت المختار قد مضى، الرجاء اختيار وقت آخر",
+  "slot_just_booked": "تم حجز هذا الوقت للتو من قبل شخص آخر، الرجاء اختيار وقت آخر"
 }

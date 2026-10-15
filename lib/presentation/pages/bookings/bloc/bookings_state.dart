@@ -15,9 +15,11 @@ class BookingsSuccess extends BookingsState {}
 
 class BookingsError extends BookingsState {
   final String message;
-  const BookingsError({required this.message});
+  // HTTP status of the failed request, when known (e.g. 409 for a booking conflict).
+  final int? statusCode;
+  const BookingsError({required this.message, this.statusCode});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, statusCode];
 }
 

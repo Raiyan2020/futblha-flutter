@@ -542,5 +542,11 @@
   "remove_photo": "Remove photo",
   "photo_will_be_removed": "Photo will be removed when you save",
   "undo": "Undo",
-  "profile_photo": "Profile photo"
+  "profile_photo": "Profile photo",
+  "slot_overlaps_selected": "This time overlaps a period you already selected",
+  "all_slots_booked": "All time slots are booked for this date. Please choose another date.",
+  "failed_to_load_time_slots": "Couldn't load the available times",
+  "selected_slots_no_longer_available": "Some selected times are no longer available and were removed",
+  "selected_time_has_passed": "The selected time has already passed. Please choose another time.",
+  "slot_just_booked": "This time was just booked by someone else. Please choose another time."
 }

@@ -54,7 +54,7 @@ class _PlaygroundDetailsPageState extends State<PlaygroundDetailsPage> {
 
   void _loadPlaygroundDetails() {
     if (_selectedDate != null) {
-      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+      final dateStr = DateFormat('yyyy-MM-dd', 'en').format(_selectedDate!);
       // Use playground ID directly from the model
       final playgroundId = _findPlaygroundId();
       if (playgroundId != null) {

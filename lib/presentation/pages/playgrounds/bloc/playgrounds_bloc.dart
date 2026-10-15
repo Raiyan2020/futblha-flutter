@@ -30,6 +30,12 @@ class PlaygroundsBloc extends Bloc<PlaygroundsEvent, PlaygroundsState> {
   List<CapacityModel> capacities = [];
   List<PlaygroundModel> playgrounds = [];
   PlaygroundDetailResponseModel? playgroundDetails;
+  // The date (yyyy-MM-dd) that [playgroundDetails]' available slots belong to.
+  String? playgroundDetailsDate;
+  int? playgroundDetailsPlaygroundId;
+  // Bumped on every details request so an older, slower response can't
+  // overwrite the slots of a newer date or playground.
+  int _detailsRequestId = 0;
   PlaygroundFilterRequestModel? currentFilters;
 
   PlaygroundsBloc(this._remoteDataSource) : super(PlaygroundsInitial()) {
@@ -127,13 +133,17 @@ class PlaygroundsBloc extends Bloc<PlaygroundsEvent, PlaygroundsState> {
     GetPlaygroundDetailsEvent event,
     Emitter<PlaygroundsState> emit,
   ) async {
+    final requestId = ++_detailsRequestId;
     emit(PlaygroundsLoading());
     final ApiResultModel<PlaygroundDetailResponseModel?> result = await _remoteDataSource
         .getPlaygroundDetails(playgroundId: event.playgroundId, date: event.date);
+    if (requestId != _detailsRequestId) return;
     result.when(
       success: (data) {
         if (data != null) {
           playgroundDetails = data;
+          playgroundDetailsDate = event.date;
+          playgroundDetailsPlaygroundId = event.playgroundId;
           emit(PlaygroundsSuccess());
         } else {
           emit(const PlaygroundsError(message: errorMessage));

@@ -18,6 +18,7 @@ import 'package:futblha/generated/locale_keys.g.dart';
 import 'package:intl/intl.dart';
 import 'package:futblha/data/models/enums/position_enum.dart';
 import 'package:futblha/presentation/widgets/app_date_picker.dart';
+import 'package:futblha/presentation/pages/playgrounds/utils/booking_slot_utils.dart';
 
 enum GameType { myDiwaniyaOnly, privateGame, publicGame }
 
@@ -49,9 +50,18 @@ class _CreateGamePageState extends State<CreateGamePage> {
 
   /// Get available time slots from playground details
   List<String> get _availableTimeSlots {
+    final date = _selectedDate;
+    // Ignore slots loaded for another playground or date.
+    if (date == null ||
+        playgroundsBloc.playgroundDetailsPlaygroundId != _findPlaygroundId() ||
+        playgroundsBloc.playgroundDetailsDate != DateFormat('yyyy-MM-dd', 'en').format(date)) {
+      return [];
+    }
+    final now = DateTime.now();
     final slots = playgroundsBloc.playgroundDetails?.availableSlots ?? [];
     return slots
         .where((slot) => slot.available == true)
+        .where((slot) => !BookingSlotUtils.hasStarted(date, slot.startAt, slot.endAt, now))
         .map((slot) => '${slot.startAt ?? ''} - ${slot.endAt ?? ''}')
         .where((slot) => slot.isNotEmpty && slot != ' - ')
         .toList();
@@ -61,7 +71,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
   void _fetchPlaygroundDetails() {
     final playgroundId = _findPlaygroundId();
     if (playgroundId != null && _selectedDate != null) {
-      final dateStr = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+      final dateStr = DateFormat('yyyy-MM-dd', 'en').format(_selectedDate!);
       playgroundsBloc.add(GetPlaygroundDetailsEvent(playgroundId: playgroundId, date: dateStr));
     }
   }
@@ -191,7 +201,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
 
     final request = CreateGameRequestModel(
       playgroundId: playgroundId,
-      bookingDate: DateFormat('yyyy-MM-dd').format(_selectedDate!),
+      bookingDate: DateFormat('yyyy-MM-dd', 'en').format(_selectedDate!),
       periods: periods,
       type: gameType,
       players: _selectedPlayers!,

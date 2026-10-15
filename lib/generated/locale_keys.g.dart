@@ -549,4 +549,10 @@ abstract class LocaleKeys {
   static const photo_will_be_removed = 'photo_will_be_removed';
   static const undo = 'undo';
   static const profile_photo = 'profile_photo';
+  static const slot_overlaps_selected = 'slot_overlaps_selected';
+  static const all_slots_booked = 'all_slots_booked';
+  static const failed_to_load_time_slots = 'failed_to_load_time_slots';
+  static const selected_slots_no_longer_available = 'selected_slots_no_longer_available';
+  static const selected_time_has_passed = 'selected_time_has_passed';
+  static const slot_just_booked = 'slot_just_booked';
 }

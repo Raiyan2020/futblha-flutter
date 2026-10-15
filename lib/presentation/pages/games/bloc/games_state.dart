@@ -74,8 +74,10 @@ class GamesResultLoaded extends GamesState {
 
 class GamesError extends GamesState {
   final String message;
-  const GamesError({required this.message});
+  // HTTP status of the failed request, when known (e.g. 409 for a booking conflict).
+  final int? statusCode;
+  const GamesError({required this.message, this.statusCode});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, statusCode];
 }

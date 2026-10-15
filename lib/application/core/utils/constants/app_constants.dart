@@ -5,6 +5,7 @@ const String commonErrorUnexpectedMessage = 'Something went wrong please try aga
 const int timeoutRequestStatusCode = 1000;
 const int unAuthorizedStatusCode = 401;
 const int badRequestStatusCode = 400;
+const int conflictStatusCode = 409;
 
 /// app flavors strings
 const String devEnvironmentString = 'DEV';

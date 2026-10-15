@@ -23,7 +23,9 @@ import 'package:futblha/data/models/request_model/playgrounds/voucher_request_mo
 import 'package:futblha/data/models/request_model/games/update_game_booking_request_model.dart';
 import 'package:futblha/data/models/request_model/games/confirm_game_booking_request_model.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
-import 'package:intl/intl.dart';
+
+import '../../../application/core/utils/constants/app_constants.dart';
+import 'utils/booking_slot_utils.dart';
 
 @RoutePage()
 class ConfirmBookingPage extends StatefulWidget {
@@ -62,6 +64,9 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
   String? _voucherCode;
   final _walletBalance = locator<AuthenticationBloc>().user?.balance ?? '0';
   bool _isUpdating = false; // For game booking flow
+  // Set as soon as a booking request is sent, so a double tap can't send it
+  // twice. Stays set after success because the booking already exists.
+  bool _isSubmitting = false;
   final String? _walletUsagePercentage =
       locator<SettingsBloc>().settingsResponseMod?.walletUsagePercentage;
 
@@ -166,7 +171,48 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     });
   }
 
+  /// Re-checks the chosen periods right before submitting: time may have
+  /// passed while the user was on this page. The backend must still validate.
+  bool _ensureSlotsNotStarted() {
+    final now = DateTime.now();
+    final started = _timeSlotsList.any((slot) {
+      final parts = slot.split(' - ');
+      return parts.length == 2 &&
+          BookingSlotUtils.hasStarted(widget.date, parts[0].trim(), parts[1].trim(), now);
+    });
+    if (!started) return true;
+    context.showMessage(isError: true, LocaleKeys.selected_time_has_passed.tr());
+    // Back to the slot picker, which reloads availability.
+    if (!widget.skipUpdate) context.router.maybePop();
+    return false;
+  }
+
+  /// The backend rejected the booking because the time is taken (HTTP 409).
+  void _handleBookingConflict(String message) {
+    context.showMessage(
+      isError: true,
+      message.isNotEmpty ? message : LocaleKeys.slot_just_booked.tr(),
+    );
+    // Back to the previous page, which reloads availability.
+    context.router.maybePop();
+  }
+
+  void _onSubmitFailed(String message, int? statusCode) {
+    setState(() {
+      _isSubmitting = false;
+      _isUpdating = false;
+    });
+    if (statusCode == conflictStatusCode) {
+      _handleBookingConflict(message);
+    } else {
+      context.showMessage(isError: true, message);
+    }
+  }
+
   void _confirmBooking() {
+    if (_isSubmitting) return;
+    if (!_ensureSlotsNotStarted()) return;
+
     // If gameId is provided, use game booking flow
     if (widget.gameId != null) {
       // If skipUpdate is true, directly confirm booking (booking is already available)
@@ -208,12 +254,13 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     final bookingRequest = BookingRequestModel(
       code: _voucherCode,
       playgroundId: playgroundId,
-      bookingDate: DateFormat('yyyy-MM-dd').format(widget.date),
+      bookingDate: DateFormat('yyyy-MM-dd', 'en').format(widget.date),
       periods: periods,
       paymentMethod: _selectedPaymentMethod?.key ?? 'kent',
       useWallet: _useWalletBalance,
     );
 
+    setState(() => _isSubmitting = true);
     bookingsBloc.add(CreateBookingEvent(request: bookingRequest));
   }
 
@@ -241,6 +288,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     }
 
     setState(() {
+      _isSubmitting = true;
       _isUpdating = true;
       _voucherCode = _voucherController.text.isNotEmpty ? _voucherController.text : null;
     });
@@ -248,7 +296,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     final updateRequest = UpdateGameBookingRequestModel(
       code: _voucherCode,
       playgroundId: playgroundId,
-      bookingDate: DateFormat('yyyy-MM-dd').format(widget.date),
+      bookingDate: DateFormat('yyyy-MM-dd', 'en').format(widget.date),
       periods: periods,
       paymentMethod: _selectedPaymentMethod?.key ?? 'kent',
       useWallet: _useWalletBalance,
@@ -258,6 +306,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
   }
 
   void _confirmGameBooking() {
+    setState(() => _isSubmitting = true);
     final confirmRequest = ConfirmGameBookingRequestModel(
       paymentMethod: _selectedPaymentMethod?.key ?? 'kent',
       useWallet: _useWalletBalance,
@@ -676,9 +725,12 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                     } else if (state is BookingsSuccess) {
                       if (bookingsBloc.voucherDetails != null &&
                           _voucherController.text.isNotEmpty) {
-                        final discountPercentage = double.tryParse(
-                              bookingsBloc.voucherDetails!.discount
-                                  ?.replaceAll(RegExp(r'[^\d.]'), '') ??
+                        final discountPercentage =
+                            double.tryParse(
+                              bookingsBloc.voucherDetails!.discount?.replaceAll(
+                                    RegExp(r'[^\d.]'),
+                                    '',
+                                  ) ??
                                   '0',
                             ) ??
                             0.0;
@@ -698,10 +750,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                   bloc: gamesBloc,
                   listener: (context, state) {
                     if (state is GamesError) {
-                      context.showMessage(isError: true, state.message);
-                      setState(() {
-                        _isUpdating = false;
-                      });
+                      _onSubmitFailed(state.message, state.statusCode);
                     } else if (state is GamesSuccess) {
                       if (_isUpdating) {
                         setState(() {
@@ -709,17 +758,14 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         });
                         _confirmGameBooking();
                       } else {
-                        final paymentUrl =
-                            gamesBloc.gameDetails?.booking?.paymentUrl;
+                        final paymentUrl = gamesBloc.gameDetails?.booking?.paymentUrl;
                         if (paymentUrl != null && paymentUrl.isNotEmpty) {
-                          context.router
-                              .push(PaymentWebViewRoute(paymentUrl: paymentUrl));
+                          context.router.push(PaymentWebViewRoute(paymentUrl: paymentUrl));
                         } else {
                           showDialog(
                             context: context,
                             barrierColor: Colors.black.withValues(alpha: 0.7),
-                            builder: (context) =>
-                                _BookingSuccessDialog(isGameBooking: true),
+                            builder: (context) => _BookingSuccessDialog(isGameBooking: true),
                           );
                         }
                       }
@@ -736,7 +782,11 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
               bloc: bookingsBloc,
               listener: (context, state) {
                 if (state is BookingsError) {
-                  context.showMessage(isError: true, state.message);
+                  if (_isSubmitting) {
+                    _onSubmitFailed(state.message, state.statusCode);
+                  } else {
+                    context.showMessage(isError: true, state.message);
+                  }
                 } else if (state is BookingsSuccess) {
                   if (bookingsBloc.voucherDetails != null && _voucherController.text.isNotEmpty) {
                     // API returns discount as percentage (e.g. 10 means 10%)
@@ -792,7 +842,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: state is GamesLoading ? null : _confirmBooking,
+                      onPressed: state is GamesLoading || _isSubmitting ? null : _confirmBooking,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -839,7 +889,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                   child: SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: state is BookingsLoading ? null : _confirmBooking,
+                      onPressed: state is BookingsLoading || _isSubmitting ? null : _confirmBooking,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: EdgeInsets.symmetric(vertical: 16.h),

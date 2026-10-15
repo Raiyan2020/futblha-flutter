@@ -84,7 +84,7 @@ class BookingsBloc extends Bloc<BookingsEvent, BookingsState> {
         }
       },
       failure: (error) {
-        emit(BookingsError(message: error.message ?? errorMessage));
+        emit(BookingsError(message: error.message ?? errorMessage, statusCode: error.statusCode));
       },
     );
   }
