@@ -538,5 +538,10 @@
   "goalkeeper_position_filled": "مركز حارس المرمى ممتلئ لهذا الفريق",
   "sorry": "عذراً!",
   "playground_not_available_at_game_time": "{playground} غير متاح في وقت المباراة، الرجاء حجز ملعب آخر أو تغيير وقت المباراة",
-  "waiting_admin_response": "بانتظار رد مسؤول الديوانية"
+  "waiting_admin_response": "بانتظار رد مسؤول الديوانية",
+  "diwaniya_photo": "صورة الديوانية",
+  "change_photo": "تغيير الصورة",
+  "remove_photo": "حذف الصورة",
+  "photo_will_be_removed": "سيتم حذف الصورة عند الحفظ",
+  "undo": "تراجع"
 }

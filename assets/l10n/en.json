@@ -536,5 +536,10 @@
   "goalkeeper_position_filled": "Goalkeeper position is filled for this team",
   "sorry": "Sorry!",
   "playground_not_available_at_game_time": "{playground} not available at the game time , please book another playground or change game time",
-  "waiting_admin_response": "Waiting for the Diwaniya admin to respond"
+  "waiting_admin_response": "Waiting for the Diwaniya admin to respond",
+  "diwaniya_photo": "Diwaniya photo",
+  "change_photo": "Change photo",
+  "remove_photo": "Remove photo",
+  "photo_will_be_removed": "Photo will be removed when you save",
+  "undo": "Undo"
 }

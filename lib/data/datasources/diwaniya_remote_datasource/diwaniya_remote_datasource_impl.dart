@@ -165,6 +165,8 @@ class DiwaniyaRemoteDataSourceImpl implements DiwaniyaRemoteDataSource {
         'name': formDataMap['name'],
         'description': formDataMap['description'],
         'type': formDataMap['type'],
+        if (formDataMap['remove_image'] != null)
+          'remove_image': formDataMap['remove_image'],
       });
 
       if (formDataMap['image'] != null && formDataMap['image'] is File) {

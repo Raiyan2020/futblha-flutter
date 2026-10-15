@@ -543,4 +543,9 @@ abstract class LocaleKeys {
   static const sorry = 'sorry';
   static const playground_not_available_at_game_time = 'playground_not_available_at_game_time';
   static const waiting_admin_response = 'waiting_admin_response';
+  static const diwaniya_photo = 'diwaniya_photo';
+  static const change_photo = 'change_photo';
+  static const remove_photo = 'remove_photo';
+  static const photo_will_be_removed = 'photo_will_be_removed';
+  static const undo = 'undo';
 }
