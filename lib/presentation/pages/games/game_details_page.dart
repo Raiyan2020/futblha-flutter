@@ -194,7 +194,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
   ) {
     final game = bloc.gameDetails;
     if (game?.id == null) {
-      context.showMessage(isError: true, 'Game ID not found');
+      context.showMessage(isError: true, LocaleKeys.game_not_found.tr());
       return;
     }
 
@@ -212,7 +212,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
             .join(', ');
 
         if (timeSlots.isNotEmpty && booking.bookingDate != null) {
-          context.router.push(
+          _openPaymentFlow(
             ConfirmBookingRoute(
               playground: booking.playground!,
               date: booking.bookingDate!,
@@ -220,14 +220,15 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
               gameId: game.id!,
               skipUpdate: true,
             ),
+            game.id!,
           );
         } else if (booking.bookingDate == null) {
-          context.showMessage(isError: true, 'Invalid booking date');
+          context.showMessage(isError: true, LocaleKeys.booking_data_incomplete.tr());
         } else {
-          context.showMessage(isError: true, 'No time slots available');
+          context.showMessage(isError: true, LocaleKeys.no_available_time_slots.tr());
         }
       } else {
-        context.showMessage(isError: true, 'Booking data incomplete');
+        context.showMessage(isError: true, LocaleKeys.booking_data_incomplete.tr());
       }
     } else {
       PlaygroundNotAvailableDialog.show(
@@ -304,7 +305,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       child: ElevatedButton(
         onPressed: () {
           if (game.id == null) {
-            context.showMessage(isError: true, 'Game ID not found');
+            context.showMessage(isError: true, LocaleKeys.game_not_found.tr());
             return;
           }
           bloc.add(CheckBookingAvailableEvent(gameId: game.id!));
@@ -348,7 +349,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
 
   void _changePositionFromSlot(int teamIndex, int slotIndex, GameModel game) {
     if (game.id == null) {
-      context.showMessage(isError: true, 'Game ID not found');
+      context.showMessage(isError: true, LocaleKeys.game_not_found.tr());
       return;
     }
     final totalPlayers =
@@ -380,7 +381,7 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
 
   void _handleForfeitGame(BuildContext context, GameModel game) {
     if (game.id == null) {
-      context.showMessage(isError: true, 'Game ID not found');
+      context.showMessage(isError: true, LocaleKeys.game_not_found.tr());
       return;
     }
     showDialog(
@@ -418,10 +419,21 @@ class _GameDetailsPageState extends State<GameDetailsPage> {
       const PlaygroundSelectionRoute(),
     );
     if (playground != null && game.id != null) {
-      context.router.push(
+      _openPaymentFlow(
         BookPlaygroundRoute(playground: playground, gameId: game.id),
+        game.id!,
       );
     }
+  }
+
+  /// Opens the booking / payment flow, then reloads the game from the
+  /// backend on return. The payment screen uses its own bloc, so without this
+  /// the button would stay visible with stale booking data and could start a
+  /// second payment session.
+  Future<void> _openPaymentFlow(PageRouteInfo route, int gameId) async {
+    await context.router.push(route);
+    if (!mounted) return;
+    bloc.add(GetGameEvent(gameId: gameId));
   }
 
   /// Returns 0 if user must join creator team, 1 if opponent/other team, null if no restriction.

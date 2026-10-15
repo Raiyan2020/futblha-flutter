@@ -29,6 +29,9 @@ class GamesInvitationsPage extends StatefulWidget {
 class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
   final bloc = locator<GamesBloc>();
   int _selectedTab = 0; // 0 = Receiving Games, 1 = Sending Games
+  // The invitation being accepted / rejected. While set (and while the list
+  // reloads), the buttons are disabled so a double tap can't send two replies.
+  int? _respondingGameId;
 
   @override
   void initState() {
@@ -86,6 +89,9 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
     return CustomBlocConsumer<GamesBloc, GamesState>(
       bloc: bloc,
       listener: (context, state) {
+        if (state is! GamesLoading && _respondingGameId != null) {
+          setState(() => _respondingGameId = null);
+        }
         if (state is GamesError) {
           context.showMessage(isError: true, state.message);
         } else if (state is AcceptGameSuccess) {
@@ -146,7 +152,10 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                           final game = games[index];
                           return Padding(
                             padding: EdgeInsets.only(bottom: 16.h),
-                            child: _buildInvitationCard(game),
+                            child: _buildInvitationCard(
+                              game,
+                              isBusy: state is GamesLoading || _respondingGameId != null,
+                            ),
                           );
                         },
                       ),
@@ -185,7 +194,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
     );
   }
 
-  Widget _buildInvitationCard(GameModel game) {
+  Widget _buildInvitationCard(GameModel game, {required bool isBusy}) {
     final creatorDiwaniya = game.creatorDiwaniya;
     final opponentDiwaniya = game.opponentDiwaniya;
     final booking = game.booking;
@@ -312,7 +321,11 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                 child: Text(
                   LocaleKeys.waiting_admin_response.tr(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.primaryOrange, fontSize: 12, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    color: AppColors.primaryOrange,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -323,9 +336,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        _handleAccept(game);
-                      },
+                      onPressed: isBusy ? null : () => _handleAccept(game),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
                         padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -344,9 +355,7 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
                   12.widthBox(),
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () {
-                        _handleReject(game);
-                      },
+                      onPressed: isBusy ? null : () => _handleReject(game),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         side: const BorderSide(color: AppColors.primaryRed, width: 1),
@@ -438,15 +447,15 @@ class _GamesInvitationsPageState extends State<GamesInvitationsPage> {
   bool _canRespond(GameModel game) => game.opponentDiwaniya?.userPermission?.isAdmin == true;
 
   void _handleAccept(GameModel game) {
-    if (game.id != null) {
-      bloc.add(AcceptGameEvent(gameId: game.id!));
-    }
+    if (game.id == null || _respondingGameId != null) return;
+    setState(() => _respondingGameId = game.id);
+    bloc.add(AcceptGameEvent(gameId: game.id!));
   }
 
   void _handleReject(GameModel game) {
-    if (game.id != null) {
-      bloc.add(RejectGameEvent(gameId: game.id!));
-    }
+    if (game.id == null || _respondingGameId != null) return;
+    setState(() => _respondingGameId = game.id);
+    bloc.add(RejectGameEvent(gameId: game.id!));
   }
 }
 

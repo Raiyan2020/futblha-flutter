@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:futblha/generated/locale_keys.g.dart';
@@ -142,7 +143,7 @@ class GamesBloc extends Bloc<GamesEvent, GamesState> {
         add(GetGameInvitationsEvent());
         // The backend clears the invitation badge for every member.
         locator<NotificationsBloc>().add(GetUnreadCountEvent());
-        emit(AcceptGameSuccess(data ?? LocaleKeys.success));
+        emit(AcceptGameSuccess(data ?? LocaleKeys.success.tr()));
       },
       failure: (error) {
         emit(GamesError(message: error.message ?? errorMessage));

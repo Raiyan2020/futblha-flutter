@@ -561,4 +561,5 @@ abstract class LocaleKeys {
   static const pay_after_players_complete_description = 'pay_after_players_complete_description';
   static const game_created_payment_pending = 'game_created_payment_pending';
   static const complete_booking_process = 'complete_booking_process';
+  static const booking_data_incomplete = 'booking_data_incomplete';
 }

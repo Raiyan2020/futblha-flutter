@@ -554,5 +554,6 @@
   "pay_immediately_description": "You'll pay for the playground now. It is booked only after the payment succeeds.",
   "pay_after_players_complete_description": "You'll pay from the game page once all players have joined. The playground isn't booked until you pay.",
   "game_created_payment_pending": "The game was created, but the payment wasn't completed. The playground isn't booked yet.",
-  "complete_booking_process": "Complete booking & payment"
+  "complete_booking_process": "Complete booking & payment",
+  "booking_data_incomplete": "This game's booking details are incomplete. Please try again later."
 }
